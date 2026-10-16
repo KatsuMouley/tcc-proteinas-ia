@@ -1,0 +1,314 @@
+{
+ "grupos": {
+  "total": 791,
+  "singletons": 668,
+  "maior": 14,
+  "grupos_por_classe_puros": {
+   "Transferase": 413,
+   "Hidrolase": 378
+  },
+  "grupos_mistos": 0,
+  "proteinas_em_grupos_mistos": 0
+ },
+ "grupos_mistos_detalhe": [],
+ "evidencias": {
+  "com_evidencia_experimental_ECO_0000269": 177,
+  "por_classe_experimental": {
+   "Transferase": 118,
+   "Hidrolase": 59
+  },
+  "codigos_mais_frequentes": [
+   [
+    "ECO:0000255",
+    644
+   ],
+   [
+    "ECO:0000269",
+    177
+   ],
+   [
+    "ECO:0000250",
+    83
+   ],
+   [
+    "ECO:0000305",
+    64
+   ],
+   [
+    "ECO:0000303",
+    3
+   ]
+  ]
+ },
+ "ec_parcial": {
+  "Transferase": 128,
+  "Hidrolase": 157
+ },
+ "subclasses_ec_top": {
+  "Transferase": [
+   [
+    "2.1",
+    150
+   ],
+   [
+    "2.7",
+    98
+   ],
+   [
+    "2.3",
+    85
+   ],
+   [
+    "2.5",
+    66
+   ],
+   [
+    "2.4",
+    64
+   ],
+   [
+    "2.8",
+    21
+   ]
+  ],
+  "Hidrolase": [
+   [
+    "3.1",
+    189
+   ],
+   [
+    "3.6",
+    84
+   ],
+   [
+    "3.5",
+    79
+   ],
+   [
+    "3.4",
+    78
+   ],
+   [
+    "3.2",
+    53
+   ],
+   [
+    "3.7",
+    8
+   ]
+  ]
+ },
+ "organismos_distintos": 254,
+ "comprimento": {
+  "Hidrolase": {
+   "mediana": 272.0,
+   "p10": 142.9,
+   "p90": 445.1
+  },
+  "Transferase": {
+   "mediana": 338.0,
+   "p10": 209.9,
+   "p90": 455.0
+  }
+ },
+ "dobras": {
+  "0": {
+   "n": 212,
+   "T": 91
+  },
+  "1": {
+   "n": 173,
+   "T": 104
+  },
+  "2": {
+   "n": 191,
+   "T": 99
+  },
+  "3": {
+   "n": 216,
+   "T": 103
+  },
+  "4": {
+   "n": 208,
+   "T": 103
+  }
+ },
+ "teste_fixo": {
+  "classe_majoritaria": {
+   "n": 107,
+   "acuracia": 0.4485981308411215,
+   "acuracia_balanceada": 0.5,
+   "f1_macro": 0.30967741935483867,
+   "matriz_[Hid,Trans]": [
+    [
+     48,
+     0
+    ],
+    [
+     59,
+     0
+    ]
+   ]
+  },
+  "so_comprimento": {
+   "n": 107,
+   "acuracia": 0.5794392523364486,
+   "acuracia_balanceada": 0.5584392655367232,
+   "f1_macro": 0.5485232067510548,
+   "matriz_[Hid,Trans]": [
+    [
+     17,
+     31
+    ],
+    [
+     14,
+     45
+    ]
+   ]
+  },
+  "composicao_aa_20_logistica": {
+   "n": 107,
+   "acuracia": 0.6261682242990654,
+   "acuracia_balanceada": 0.631885593220339,
+   "f1_macro": 0.6261355695317958,
+   "matriz_[Hid,Trans]": [
+    [
+     33,
+     15
+    ],
+    [
+     25,
+     34
+    ]
+   ]
+  },
+  "composicao_aa_mais_log_comprimento": {
+   "n": 107,
+   "acuracia": 0.6915887850467289,
+   "acuracia_balanceada": 0.6853813559322034,
+   "f1_macro": 0.686217008797654,
+   "matriz_[Hid,Trans]": [
+    [
+     30,
+     18
+    ],
+    [
+     15,
+     44
+    ]
+   ]
+  },
+  "dipeptideos_400_logistica": {
+   "n": 107,
+   "acuracia": 0.6542056074766355,
+   "acuracia_balanceada": 0.6437146892655368,
+   "f1_macro": 0.6441348314606741,
+   "matriz_[Hid,Trans]": [
+    [
+     26,
+     22
+    ],
+    [
+     15,
+     44
+    ]
+   ]
+  },
+  "vizinho_mais_proximo_3mers": {
+   "n": 107,
+   "acuracia": 0.6542056074766355,
+   "acuracia_balanceada": 0.6534251412429379,
+   "f1_macro": 0.6522617479139219,
+   "matriz_[Hid,Trans]": [
+    [
+     31,
+     17
+    ],
+    [
+     20,
+     39
+    ]
+   ]
+  }
+ },
+ "cv5_por_grupo": {
+  "classe_majoritaria": {
+   "acuracia_media": 0.45636175317380456,
+   "acuracia_dp": 0.04065722357642742,
+   "acuracia_balanceada_media": 0.5,
+   "acuracia_balanceada_dp": 0.0,
+   "acuracia_balanceada_por_dobra": [
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    0.5
+   ]
+  },
+  "so_comprimento": {
+   "acuracia_media": 0.6258221076630507,
+   "acuracia_dp": 0.06489465730326929,
+   "acuracia_balanceada_media": 0.6266330153140028,
+   "acuracia_balanceada_dp": 0.06613570383791684,
+   "acuracia_balanceada_por_dobra": [
+    0.7178,
+    0.6552,
+    0.6237,
+    0.5959,
+    0.5405
+   ]
+  },
+  "composicao_aa_20_logistica": {
+   "acuracia_media": 0.5897203009646044,
+   "acuracia_dp": 0.01811322421594122,
+   "acuracia_balanceada_media": 0.5910706367148012,
+   "acuracia_balanceada_dp": 0.02101417474826154,
+   "acuracia_balanceada_por_dobra": [
+    0.6217,
+    0.5903,
+    0.5716,
+    0.6,
+    0.5718
+   ]
+  },
+  "composicao_aa_mais_log_comprimento": {
+   "acuracia_media": 0.6279273797953859,
+   "acuracia_dp": 0.03609212636886394,
+   "acuracia_balanceada_media": 0.6309680398887761,
+   "acuracia_balanceada_dp": 0.03900954645033382,
+   "acuracia_balanceada_por_dobra": [
+    0.6849,
+    0.6602,
+    0.6046,
+    0.5991,
+    0.606
+   ]
+  },
+  "dipeptideos_400_logistica": {
+   "acuracia_media": 0.5799896131549953,
+   "acuracia_dp": 0.04995063702559106,
+   "acuracia_balanceada_media": 0.5811677194202612,
+   "acuracia_balanceada_dp": 0.05055579943911577,
+   "acuracia_balanceada_por_dobra": [
+    0.6093,
+    0.6217,
+    0.5763,
+    0.6027,
+    0.4957
+   ]
+  },
+  "vizinho_mais_proximo_3mers": {
+   "acuracia_media": 0.7006747637834261,
+   "acuracia_dp": 0.036111557978444536,
+   "acuracia_balanceada_media": 0.70444811494755,
+   "acuracia_balanceada_dp": 0.03457680535986011,
+   "acuracia_balanceada_por_dobra": [
+    0.6835,
+    0.7157,
+    0.6796,
+    0.7605,
+    0.6829
+   ]
+  }
+ }
+}

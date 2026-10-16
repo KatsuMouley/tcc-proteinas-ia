@@ -1,0 +1,11 @@
+{
+  "tipo": "teste_tecnico_sintetico",
+  "modelo": "facebook/esm2_t6_8M_UR50D",
+  "revisao": "c731040fcd8d73dceaa04b0a8e6329b345b0f5df",
+  "dispositivo": "cpu",
+  "ok": true,
+  "segundos_carregamento_inclui_download_se_necessario": 12.281,
+  "residuos_teste": 20,
+  "dimensao_embedding": 320,
+  "segundos_inferencia": 0.134
+}

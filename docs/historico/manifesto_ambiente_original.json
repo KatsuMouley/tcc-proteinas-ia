@@ -1,0 +1,28 @@
+{
+  "tipo": "pacote_de_preparacao_do_ambiente",
+  "python_alvo": "3.13 de 64 bits; 3.12 e 3.11 de 64 bits aceitos",
+  "modelo": "facebook/esm2_t6_8M_UR50D",
+  "revisao": "c731040fcd8d73dceaa04b0a8e6329b345b0f5df",
+  "verificacoes_executadas": [
+    "Sintaxe Python",
+    "Relatorios de dependencias ausentes",
+    "CLI offline",
+    "Integridade do ZIP",
+    "Disponibilidade de wheels Windows x64 para Python 3.13 nos índices oficiais"
+  ],
+  "nao_executado": [
+    "Instalacao Windows",
+    "PowerShell",
+    "Download e inferencia ESM-2",
+    "Treinamento biologico"
+  ],
+  "sha256": {
+    "README.md": "a56dcd8b22fb3c5f91676c30cb285e1569efd845bd52a7bfd07ab2dfec0f7b0f",
+    "requirements.txt": "28b09e16c72b55fc34585b04dc274a777c8ad7bb487ec97ee05393176a1e06ff",
+    "setup_cpu.cmd": "94f4a898392f8b82e9c2259d3a2f3755b798e89e97a969e039cff3e1b4b34452",
+    "diagnostico_windows.ps1": "cca9c631866a51be9354ea98cc047f01a76630e08a7c544018a804314632bfbe",
+    "verificar_ambiente.py": "988d2003336984b5dd095076b7bb1864c9111b5269a8ccfb92f1ec4c2788d0fb",
+    "testar_esm.py": "272332174a61b4b3636c3bdf8987d6be418d5b1ac035b0c3362f3345a14428d2"
+  },
+  "revisao_pacote": "2026-10-06: aproveitar Python 3.13 instalado no computador"
+}

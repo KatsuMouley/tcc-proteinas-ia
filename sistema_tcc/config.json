@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "nome": "Proteínas · TCC",
+  "esperado": 1000000,
+  "semente": 42,
+  "threads_pytorch": 2,
+  "threads_mmseqs": 4,
+  "wsl": "Ubuntu",
+  "reserva_gib": 10,
+  "intervalo_segundos": 15,
+  "automatico_inicial": true,
+  "caminhos": {
+    "fontes": ["arquivos .gz", "arquivos csv"],
+    "embeddings": "dados/embeddings/base_ncbi_gpu",
+    "auditorias": "dados/validacao/base_ncbi_gpu",
+    "base": "dados/base_ia/base_1m",
+    "grupos": "dados/base_ia/agrupamento_global_1m",
+    "particoes": "dados/base_ia/particoes_1m",
+    "modelo": "dados/modelos/classificador_regra_aa_esm2",
+    "cache": "cache/huggingface",
+    "sistema": "dados/sistema_tcc"
+  }
+}

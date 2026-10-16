@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Proteínas · Central do TCC</title>
+  <link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="#visao"><span class="brand-mark">P</span><span>Proteínas<span class="brand-sub">CENTRAL DO TCC</span></span></a>
+    <p class="nav-label">SEU EXPERIMENTO</p>
+    <nav aria-label="Navegação principal">
+      <a href="#visao" data-tab="visao" class="selected"><span class="nav-icon">▦</span> Visão geral</a>
+      <a href="#pipeline" data-tab="pipeline"><span class="nav-icon">↳</span> Pipeline automático</a>
+      <a href="#consulta" data-tab="consulta"><span class="nav-icon">⌕</span> Consultar proteína</a>
+      <a href="#tarefas" data-tab="tarefas"><span class="nav-icon">≡</span> Tarefas e logs</a>
+    </nav>
+    <div class="side-note"><span class="dot"></span> Ambiente local<p>Dados e processamento<br>no seu computador.</p></div>
+    <div class="side-bottom"><span class="mono">v1.0</span><span>ESM-2 · MMseqs2 · MLP</span></div>
+  </aside>
+  <main>
+    <header class="topbar"><span class="breadcrumb">TCC <span>/</span> <strong id="page-title">Visão geral</strong></span><span id="connection" class="connection">Conectando…</span></header>
+    <div id="notice" class="notice" role="status" hidden></div>
+    <section id="visao" class="view active" aria-labelledby="heading-visao">
+      <div class="page-heading"><div><p class="eyebrow">SEQUÊNCIAS → REPRESENTAÇÕES → EXPERIMENTO</p><h1 id="heading-visao">Central do experimento</h1><p>Acompanhe seus dados, os resultados e as próximas tarefas.</p></div><span class="badge" id="base-tag">Lendo relatórios</span></div>
+      <div class="metrics-grid">
+        <article class="metric"><span class="metric-label">Vetores registrados</span><strong id="stat-vetores">—</strong><span id="stat-formato">320 valores por proteína</span></article>
+        <article class="metric"><span class="metric-label">Grupos globais</span><strong id="stat-grupos">—</strong><span>MMseqs2 · agrupamento global</span></article>
+        <article class="metric"><span class="metric-label">Acurácia balanceada</span><strong id="stat-accuracy">—</strong><span>MLP · conjunto de teste</span></article>
+        <article class="metric"><span class="metric-label">Espaço livre no disco</span><strong id="stat-disco">—</strong><span>Disco físico do projeto</span></article>
+      </div>
+      <article class="automation-strip"><div class="automation-icon">↻</div><div><h2 id="auto-heading">Carregando automação</h2><p id="auto-description">Consultando os arquivos locais.</p></div><a class="button ghost" href="#pipeline">Ver pipeline <span>→</span></a></article>
+      <div class="overview-grid">
+        <article class="panel"><div class="panel-heading"><div><h2>Distribuição dos rótulos</h2><p>Presença literal dos nove aminoácidos.</p></div><span class="tag">BASE</span></div>
+          <div class="distribution"><div><strong id="complete-number">—</strong><span>Completa</span></div><div><strong id="incomplete-number">—</strong><span>Incompleta</span></div></div>
+          <progress id="class-bar" max="100" value="0" aria-label="Proporção de proteínas rotuladas Completa"></progress>
+          <p class="muted" id="class-description">Nenhum relatório carregado.</p>
+          <div class="note">Esse rótulo não avalia qualidade nutricional, digestibilidade ou função biológica.</div>
+        </article>
+        <article class="panel"><div class="panel-heading"><div><h2>Divisão da base</h2><p>Os grupos identificados ficam em uma única partição.</p></div><span class="tag">SEM GRUPOS COMPARTILHADOS</span></div>
+          <div id="partitions" class="partition-list"><p class="muted">Aguardando relatório das partições.</p></div>
+          <p class="muted small">O Linclust é heurístico: grupos distintos não provam ausência de toda homologia.</p>
+        </article>
+        <article class="panel"><div class="panel-heading"><div><h2>Comparação no teste</h2><p>Resultados do experimento salvo.</p></div><span class="tag">TESTE</span></div>
+          <div class="table-wrap"><table><thead><tr><th>Método</th><th>Acurácia</th><th>Balanceada</th><th>F1 macro</th></tr></thead><tbody id="comparison"><tr><td colspan="4">Aguardando relatório de treino.</td></tr></tbody></table></div>
+          <p class="muted small">A regra direta define os rótulos. Sua concordância é esperada por construção; o MLP tenta aproximar essa regra.</p>
+        </article>
+        <article class="panel"><div class="panel-heading"><div><h2>Aprendizado do MLP</h2><p>Acurácia balanceada na validação, por época.</p></div><span class="tag" id="best-epoch">—</span></div>
+          <div class="chart" id="history-chart"><p class="muted">Sem histórico de treinamento.</p></div>
+        </article>
+      </div>
+      <div class="experiment-note"><strong>O que este painel já sabe</strong><p>Os números vêm dos relatórios e arquivos no seu projeto. Reconhecer uma etapa existente não executa novamente sua auditoria ou seu treinamento.</p></div>
+    </section>
+    <section id="pipeline" class="view" aria-labelledby="heading-pipeline" hidden>
+      <div class="page-heading"><div><p class="eyebrow">AUTOMAÇÃO COM DEPENDÊNCIAS</p><h1 id="heading-pipeline">Uma etapa por vez</h1><p>Prepare as etapas pendentes e preserve os resultados concluídos.</p></div></div>
+      <div class="controls panel"><div><h2>Agendamento automático</h2><p id="pipeline-description">Carregando configuração.</p></div><div class="control-actions"><button id="toggle-auto" class="button">—</button><button id="toggle-pause" class="button ghost">—</button></div></div>
+      <div class="pipeline-layout"><div id="steps" class="steps"></div><aside class="pipeline-aside panel">
+        <h2>Como funciona</h2><ol><li>O controlador confere as etapas existentes.</li><li>Agenda a primeira etapa pendente com dependências prontas.</li><li>Executa o script e acompanha seu log.</li><li>Confere o relatório final antes de seguir.</li></ol>
+        <div class="note">Preparação automática termina nas partições. O treino é um experimento solicitado pelo botão da etapa 6.</div>
+        <h3>Uso do computador</h3><label for="threads">Threads CPU do MMseqs2</label><select id="threads"><option value="4">4 · uso cotidiano</option><option value="8">8 · PC dedicado</option><option value="2">2 · menor uso de CPU</option><option value="12">12 · todas as threads lógicas</option></select><button id="save-threads" class="button ghost compact">Aplicar às próximas tarefas</button>
+        <p class="muted small" id="torch-threads">PyTorch: 2 threads CPU. Os modelos usam CUDA.</p>
+        <p class="muted small">Pausar a fila permite à tarefa ativa terminar. Falhas não são repetidas automaticamente. Downloads novos e novas versões da base exigem configuração própria.</p>
+      </aside></div>
+    </section>
+    <section id="consulta" class="view" aria-labelledby="heading-consulta" hidden>
+      <div class="page-heading"><div><p class="eyebrow">MODELO SALVO · SEM NOVO TREINO</p><h1 id="heading-consulta">Consultar uma proteína</h1><p>Compare a regra exata com o classificador experimental.</p></div><span class="badge" id="query-ready">Verificando modelo</span></div>
+      <div class="query-layout"><article class="panel query-form"><label for="sequence">Sequência de aminoácidos</label><textarea id="sequence" rows="8" maxlength="512" spellcheck="false" placeholder="Cole a sequência, sem cabeçalho FASTA"></textarea><div class="input-meta"><span id="sequence-length">0 / 512 resíduos</span><button id="example" class="link-button">Usar exemplo de 20 resíduos</button></div>
+        <button id="submit-query" class="button primary">Comparar regra e IA <span>→</span></button><p class="muted small" id="query-explanation">A consulta entra na mesma fila das tarefas. ESM-2 e MLP são carregados do seu cache local.</p><p class="small" id="query-state" role="status"></p>
+      </article><article class="panel query-result"><div class="panel-heading"><div><h2>Resultado da comparação</h2><p>O resultado aparece quando a GPU concluir a tarefa.</p></div></div><div id="query-output" class="empty-result"><span class="result-symbol">⌕</span><p>Insira uma sequência para começar.</p></div></article></div>
+      <div class="note wide">A regra direta é a referência para a presença de H, I, L, K, M, F, T, W e V. Escores softmax do MLP não são probabilidades de acerto validadas. Uma divergência permanece visível.</div>
+    </section>
+    <section id="tarefas" class="view" aria-labelledby="heading-tarefas" hidden>
+      <div class="page-heading"><div><p class="eyebrow">EXECUÇÃO E RASTREABILIDADE</p><h1 id="heading-tarefas">Tarefas e logs</h1><p>Histórico persistente da fila e saída real dos scripts.</p></div><span class="badge" id="queue-count">—</span></div>
+      <article class="panel"><div class="table-wrap"><table class="jobs-table"><thead><tr><th>ID</th><th>Tarefa</th><th>Origem</th><th>Estado</th><th>Progresso</th><th>Ação</th></tr></thead><tbody id="jobs"><tr><td colspan="6">Carregando tarefas.</td></tr></tbody></table></div></article>
+      <article class="panel log-panel"><div class="panel-heading"><div><h2>Saída da tarefa</h2><p id="log-description">Selecione uma tarefa para acompanhar.</p></div><span class="tag">ATUALIZAÇÃO A CADA 2 S</span></div><div class="log-controls"><label for="log-task">Tarefa</label><select id="log-task"></select><label for="log-source">Arquivo</label><select id="log-source"><option value="0">Saída do script</option><option value="1">Log interno do MMseqs2</option></select><button id="log-reload" class="button ghost compact">Último trecho</button><button id="log-copy" class="button ghost compact">Copiar trecho</button></div><pre id="log-output" tabindex="0">Nenhum log selecionado.</pre><p class="muted small">A janela mantém até 500 linhas. Os arquivos completos ficam em dados/sistema_tcc/logs; logs históricos são mostrados somente quando existem.</p></article>
+      <article class="panel"><h2>Matriz de confusão do teste</h2><p class="muted">Linhas: rótulos da regra. Colunas: previsões do MLP.</p><div id="confusion" class="table-wrap"></div></article>
+    </section>
+    <footer><span id="project-path">Conectando ao projeto local…</span><span id="gpu-status">GPU: aguardando dados</span><button id="stop-system" class="link-button">Encerrar sistema</button></footer>
+  </main>
+</body></html>

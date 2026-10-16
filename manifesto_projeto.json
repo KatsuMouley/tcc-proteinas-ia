@@ -1,0 +1,481 @@
+{
+  "schema": 1,
+  "nome": "Projeto Proteinas TCC Organizado",
+  "revisao": "2026-10-13",
+  "versao_sistema": "2.0.0",
+  "instalacao": "Atualizacao de codigo com backup; reutiliza ambiente existente.",
+  "dados_incluidos": false,
+  "venv_incluida": false,
+  "modelos_incluidos": false,
+  "pastas_preservadas": [
+    ".venv",
+    "cache",
+    "dados",
+    "arquivos .gz",
+    "arquivos csv"
+  ],
+  "validacao": "Testes reais de controlador, leitura e preparacao; MMseqs2, ESM-2 e treino simulados nos testes.",
+  "arquivos": {
+    "COMECE_AQUI_SISTEMA.md": {
+      "bytes": 2610,
+      "sha256": "1651a907f9a0ff3ff2346511784d417c0388f36f5184822106e26b57fafd73cd",
+      "origem": {
+        "tratamento": "Criado nesta organizacao."
+      }
+    },
+    "README.md": {
+      "bytes": 3406,
+      "sha256": "d0f6417f12223f4daec5a4d7dda85438371032320ab5b7d74e5b76ab97d30af1",
+      "origem": {
+        "tratamento": "Criado nesta organizacao."
+      }
+    },
+    "docs/ARQUITETURA.md": {
+      "bytes": 9703,
+      "sha256": "c6f3ca71e5d53517f4ffabf47e4e6b2208fbef9a0c114ac5fbfad0f67bfe4f9e",
+      "origem": {
+        "tratamento": "Criado nesta organizacao."
+      }
+    },
+    "docs/DEPENDENCIAS.md": {
+      "bytes": 3064,
+      "sha256": "18f7ef965e01118dd26bfd2f2efa9492b29f52e851e03612ab91bafaf73f36bc",
+      "origem": {
+        "tratamento": "Criado nesta organizacao."
+      }
+    },
+    "docs/HISTORICO_E_RESULTADOS.md": {
+      "bytes": 5220,
+      "sha256": "2b15bccea1f73df195aa9121dfb6e908766c3aa2cfdb614affc762af47c0b64e",
+      "origem": {
+        "tratamento": "Criado nesta organizacao."
+      }
+    },
+    "docs/MAPA_ARQUIVOS.md": {
+      "bytes": 4752,
+      "sha256": "72e7e273e4fb847fe2e982d6aeb4a80221494c6c000be496d38efcc454150e97",
+      "origem": {
+        "tratamento": "Criado nesta organizacao."
+      }
+    },
+    "docs/OPERACAO.md": {
+      "bytes": 5393,
+      "sha256": "02ea811d2ee3816f12b887d412ad838194bdf312f8af76336deefd9d09863583",
+      "origem": {
+        "tratamento": "Criado nesta organizacao."
+      }
+    },
+    "docs/historico/COMECE_AQUI_v1_original.md": {
+      "bytes": 13977,
+      "sha256": "c3a9328c96dc9733e2d765cc3bb2c64ebf46af494338f18b42ff2acbd1af6d6d",
+      "origem": {
+        "origem": "upload/COMECE_AQUI_SISTEMA.md",
+        "sha256_original": "c3a9328c96dc9733e2d765cc3bb2c64ebf46af494338f18b42ff2acbd1af6d6d",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/COMECE_AQUI_v2_antes_organizacao.md": {
+      "bytes": 8861,
+      "sha256": "b18fc3e553a5c7577510eef60a56d7686f5814b8c9c84e2da15feaeaed2fd618",
+      "origem": {
+        "origem": "COMECE_AQUI_SISTEMA.md",
+        "sha256_original": "b18fc3e553a5c7577510eef60a56d7686f5814b8c9c84e2da15feaeaed2fd618",
+        "tratamento": "Guia anterior do sistema v2 preservado como referencia."
+      }
+    },
+    "docs/historico/LEIA_ME.md": {
+      "bytes": 1859,
+      "sha256": "aa42db9f088de486f1b319ce18ce041ecca4fe6e7b8ab96bb4c069da7156fb57",
+      "origem": {
+        "tratamento": "Criado nesta organizacao."
+      }
+    },
+    "docs/historico/LEIA_ME_GPU_original.md": {
+      "bytes": 3485,
+      "sha256": "a36a898a116245d1f650365bf4febcf2155e136409fe9987980ed66dfea016c6",
+      "origem": {
+        "origem": "upload/LEIA_ME_GPU(1).md",
+        "sha256_original": "a36a898a116245d1f650365bf4febcf2155e136409fe9987980ed66dfea016c6",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/LEIA_ME_PILOTO_GPU_original.md": {
+      "bytes": 7078,
+      "sha256": "aabd19c990e3112c7abf8e406af3a96b3ffd2f0683d3a354ba69f87c51200cef",
+      "origem": {
+        "origem": "upload/LEIA_ME_PILOTO_GPU(1).md",
+        "sha256_original": "aabd19c990e3112c7abf8e406af3a96b3ffd2f0683d3a354ba69f87c51200cef",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/README_CPU_original.md": {
+      "bytes": 8632,
+      "sha256": "a56dcd8b22fb3c5f91676c30cb285e1569efd845bd52a7bfd07ab2dfec0f7b0f",
+      "origem": {
+        "origem": "upload/README(3).md",
+        "sha256_original": "a56dcd8b22fb3c5f91676c30cb285e1569efd845bd52a7bfd07ab2dfec0f7b0f",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/agrupar_gz_ncbi_colega.py.txt": {
+      "bytes": 12648,
+      "sha256": "51e918739a11bc85b4540d41e982219e6b23e7e740b970ee137248329ceae823",
+      "origem": {
+        "origem": "upload/agrupar_gz_ncbi(1).py",
+        "sha256_original": "51e918739a11bc85b4540d41e982219e6b23e7e740b970ee137248329ceae823",
+        "tratamento": "Extrator do colega preservado como referencia; caminhos antigos e downloads nao sao executados pelo novo fluxo."
+      }
+    },
+    "docs/historico/baixar_gz_colega.py.txt": {
+      "bytes": 3427,
+      "sha256": "7e83e17551221afd23f317e2d35eaf8156726e60ca23528b468c1175e17d6029",
+      "origem": {
+        "origem": "upload/baixar_gz(1).py",
+        "sha256_original": "7e83e17551221afd23f317e2d35eaf8156726e60ca23528b468c1175e17d6029",
+        "tratamento": "Extrator do colega preservado como referencia; caminhos antigos e downloads nao sao executados pelo novo fluxo."
+      }
+    },
+    "docs/historico/diagnostico_windows_original.ps1.txt": {
+      "bytes": 1677,
+      "sha256": "cca9c631866a51be9354ea98cc047f01a76630e08a7c544018a804314632bfbe",
+      "origem": {
+        "origem": "upload/diagnostico_windows(1).ps1",
+        "sha256_original": "cca9c631866a51be9354ea98cc047f01a76630e08a7c544018a804314632bfbe",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/iniciar_sistema_v1_original.cmd.txt": {
+      "bytes": 257,
+      "sha256": "193bbb4ddfc0c415fadd5cd526c2dcdd0b2b7f01a1f9d7751aaeff1a621234eb",
+      "origem": {
+        "origem": "upload/iniciar_sistema.cmd",
+        "sha256_original": "193bbb4ddfc0c415fadd5cd526c2dcdd0b2b7f01a1f9d7751aaeff1a621234eb",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/manifesto_ambiente_original.json": {
+      "bytes": 1228,
+      "sha256": "984cea12bac0e815da14947b105933d183b01e8323fcf24cc2f8fe92057db676",
+      "origem": {
+        "origem": "upload/manifesto_pacote(1).json",
+        "sha256_original": "984cea12bac0e815da14947b105933d183b01e8323fcf24cc2f8fe92057db676",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/requirements_CPU_original.txt": {
+      "bytes": 193,
+      "sha256": "28b09e16c72b55fc34585b04dc274a777c8ad7bb487ec97ee05393176a1e06ff",
+      "origem": {
+        "origem": "upload/requirements(1).txt",
+        "sha256_original": "28b09e16c72b55fc34585b04dc274a777c8ad7bb487ec97ee05393176a1e06ff",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/requirements_antes_GPU_original.txt": {
+      "bytes": 761,
+      "sha256": "14cd131b48edfe1397b7c17cbf8c1f50124ad6e5a4402c4d34d7ba312e0cb0d8",
+      "origem": {
+        "origem": "upload/requirements_antes_gpu(1).txt",
+        "sha256_original": "14cd131b48edfe1397b7c17cbf8c1f50124ad6e5a4402c4d34d7ba312e0cb0d8",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/requirements_instaladas_CPU_original.txt": {
+      "bytes": 761,
+      "sha256": "14cd131b48edfe1397b7c17cbf8c1f50124ad6e5a4402c4d34d7ba312e0cb0d8",
+      "origem": {
+        "origem": "upload/requirements.instaladas(1).txt",
+        "sha256_original": "14cd131b48edfe1397b7c17cbf8c1f50124ad6e5a4402c4d34d7ba312e0cb0d8",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/setup_cpu_original.cmd.txt": {
+      "bytes": 1778,
+      "sha256": "94f4a898392f8b82e9c2259d3a2f3755b798e89e97a969e039cff3e1b4b34452",
+      "origem": {
+        "origem": "upload/setup_cpu(1).cmd",
+        "sha256_original": "94f4a898392f8b82e9c2259d3a2f3755b798e89e97a969e039cff3e1b4b34452",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/setup_gpu_original.cmd.txt": {
+      "bytes": 1434,
+      "sha256": "9186d4ceb6b9001ccf05b268f3e582512751bc5ccf27b1838b55d73da213d28b",
+      "origem": {
+        "origem": "upload/setup_gpu(1).cmd",
+        "sha256_original": "9186d4ceb6b9001ccf05b268f3e582512751bc5ccf27b1838b55d73da213d28b",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/testar_esm_CPU_original.py.txt": {
+      "bytes": 2866,
+      "sha256": "272332174a61b4b3636c3bdf8987d6be418d5b1ac035b0c3362f3345a14428d2",
+      "origem": {
+        "origem": "upload/testar_esm(1).py",
+        "sha256_original": "272332174a61b4b3636c3bdf8987d6be418d5b1ac035b0c3362f3345a14428d2",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/testar_esm_GPU_original.py.txt": {
+      "bytes": 6550,
+      "sha256": "fdd7537e33a0208a0d3e2668e6feeea4faa51499f31f05d15f4504088396b4d7",
+      "origem": {
+        "origem": "upload/testar_esm_gpu(1).py",
+        "sha256_original": "fdd7537e33a0208a0d3e2668e6feeea4faa51499f31f05d15f4504088396b4d7",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "docs/historico/verificar_ambiente_CPU_original.py.txt": {
+      "bytes": 3850,
+      "sha256": "988d2003336984b5dd095076b7bb1864c9111b5269a8ccfb92f1ec4c2788d0fb",
+      "origem": {
+        "origem": "upload/verificar_ambiente(1).py",
+        "sha256_original": "988d2003336984b5dd095076b7bb1864c9111b5269a8ccfb92f1ec4c2788d0fb",
+        "tratamento": "Original arquivado byte a byte; nao faz parte da execucao normal."
+      }
+    },
+    "etapas/preparar_base_ia.py": {
+      "bytes": 31696,
+      "sha256": "29ed3027b58477290a6db464c0a28932c6403b8e85199562ef7805c8c959cdca",
+      "origem": {
+        "origem": "upload/preparar_base_ia.py",
+        "sha256_original": "29ed3027b58477290a6db464c0a28932c6403b8e85199562ef7805c8c959cdca",
+        "tratamento": "Script cientifico recebido anteriormente, mantido integralmente."
+      }
+    },
+    "etapas/processar_base_gpu.py": {
+      "bytes": 25918,
+      "sha256": "3f70308015dbf50ccd496b6239ee3cbcaa26ee36bc1aaf8374430419a8aa784b",
+      "origem": {
+        "origem": "upload/processar_base_gpu(1).py",
+        "sha256_original": "3f70308015dbf50ccd496b6239ee3cbcaa26ee36bc1aaf8374430419a8aa784b",
+        "tratamento": "Script cientifico recebido anteriormente, mantido integralmente."
+      }
+    },
+    "etapas/treinar_classificador_gpu.py": {
+      "bytes": 28504,
+      "sha256": "e771b3d74d656e688006752eb7f5a6786a485c42248812e9d54bbbd10f8f2623",
+      "origem": {
+        "origem": "upload/treinar_classificador_gpu.py",
+        "sha256_original": "e771b3d74d656e688006752eb7f5a6786a485c42248812e9d54bbbd10f8f2623",
+        "tratamento": "Script cientifico recebido anteriormente, mantido integralmente."
+      }
+    },
+    "etapas/validar_base_embeddings.py": {
+      "bytes": 17197,
+      "sha256": "2f8223ff49d2ea92d7e7ed3f5d6ff9781cd10eb0f77eee3afd942245d690d393",
+      "origem": {
+        "origem": "upload/validar_base_embeddings.py",
+        "sha256_original": "2f8223ff49d2ea92d7e7ed3f5d6ff9781cd10eb0f77eee3afd942245d690d393",
+        "tratamento": "Script cientifico recebido anteriormente, mantido integralmente."
+      }
+    },
+    "ferramentas/ambiente/diagnostico_windows.ps1": {
+      "bytes": 1725,
+      "sha256": "2f0347c71014d16218fe7b9cbb2a823e39ab2c43c2d546059595f1e61203364c",
+      "origem": {
+        "origem": "upload/diagnostico_windows(1).ps1",
+        "sha256_original": "cca9c631866a51be9354ea98cc047f01a76630e08a7c544018a804314632bfbe",
+        "tratamento": "Diagnostico relocacao; sera ajustado para guardar saidas em dados/diagnosticos.",
+        "alterado_no_pacote": true
+      }
+    },
+    "ferramentas/ambiente/exportar_dependencias.py": {
+      "bytes": 2224,
+      "sha256": "124fba0c3a8801aac111dd65cf70194173145fc7a1bd9f1eb5487c765fec0337",
+      "origem": {
+        "tratamento": "Criado nesta organizacao."
+      }
+    },
+    "ferramentas/ambiente/testar_esm_gpu.py": {
+      "bytes": 6590,
+      "sha256": "c294629541dbdd524e7b5603975b460374706d4991e88bb48585257b94288dd6",
+      "origem": {
+        "origem": "upload/testar_esm_gpu(1).py",
+        "sha256_original": "fdd7537e33a0208a0d3e2668e6feeea4faa51499f31f05d15f4504088396b4d7",
+        "tratamento": "Teste GPU relocacao; sera ajustado para usar a raiz do projeto.",
+        "alterado_no_pacote": true
+      }
+    },
+    "iniciar_fluxo_completo.cmd": {
+      "bytes": 267,
+      "sha256": "0b0125196b7f14ca64c717209b8166bbbae440db72f51140cc4f95618891caf7",
+      "origem": {
+        "origem": "iniciar_fluxo_completo.cmd",
+        "sha256_original": "0b0125196b7f14ca64c717209b8166bbbae440db72f51140cc4f95618891caf7",
+        "tratamento": "Inicializador atual do sistema v2, mantido."
+      }
+    },
+    "iniciar_sistema.cmd": {
+      "bytes": 257,
+      "sha256": "193bbb4ddfc0c415fadd5cd526c2dcdd0b2b7f01a1f9d7751aaeff1a621234eb",
+      "origem": {
+        "origem": "iniciar_sistema.cmd",
+        "sha256_original": "193bbb4ddfc0c415fadd5cd526c2dcdd0b2b7f01a1f9d7751aaeff1a621234eb",
+        "tratamento": "Inicializador atual do sistema v2, mantido."
+      }
+    },
+    "piloto_esm_gpu.py": {
+      "bytes": 20941,
+      "sha256": "0fee79555a352c8fadbffbee47ada00d86260251ceaad1cfa0ec8b1603c128f9",
+      "origem": {
+        "origem": "upload/piloto_esm_gpu(1).py",
+        "sha256_original": "0fee79555a352c8fadbffbee47ada00d86260251ceaad1cfa0ec8b1603c128f9",
+        "tratamento": "Copia recebida agora; identica a versao anterior. Mantida na raiz por ser importada pelo gerador."
+      }
+    },
+    "sistema_tcc/__init__.py": {
+      "bytes": 84,
+      "sha256": "94af0c9d41259af334eac7e35f9639d4f25bddf09b60c765b5f4e02cfc6dae5f",
+      "origem": {
+        "origem": "sistema_tcc/__init__.py",
+        "sha256_original": "94af0c9d41259af334eac7e35f9639d4f25bddf09b60c765b5f4e02cfc6dae5f",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "sistema_tcc/__main__.py": {
+      "bytes": 4953,
+      "sha256": "8a40880a43aaecb924017be24b6b44381b8909692a8c8a2bd9b807d16e41460d",
+      "origem": {
+        "origem": "sistema_tcc/__main__.py",
+        "sha256_original": "8a40880a43aaecb924017be24b6b44381b8909692a8c8a2bd9b807d16e41460d",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "sistema_tcc/config.json": {
+      "bytes": 671,
+      "sha256": "4deef5cec4d583a9856c3b3c5300e6cec473baea44c3c69be1d3732581c8b7d8",
+      "origem": {
+        "origem": "sistema_tcc/config.json",
+        "sha256_original": "4deef5cec4d583a9856c3b3c5300e6cec473baea44c3c69be1d3732581c8b7d8",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "sistema_tcc/core.py": {
+      "bytes": 53287,
+      "sha256": "c9ef3d91cf687a749b0754a7c6338a0dd395f108f46a640e26bce31aa33896d7",
+      "origem": {
+        "origem": "sistema_tcc/core.py",
+        "sha256_original": "c9ef3d91cf687a749b0754a7c6338a0dd395f108f46a640e26bce31aa33896d7",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "sistema_tcc/execucoes.py": {
+      "bytes": 10278,
+      "sha256": "f32eab9e7c980899334630dedf70f1f5951c5b5ffef9fbbfa670989992e43c4f",
+      "origem": {
+        "origem": "sistema_tcc/execucoes.py",
+        "sha256_original": "f32eab9e7c980899334630dedf70f1f5951c5b5ffef9fbbfa670989992e43c4f",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "sistema_tcc/fluxo.py": {
+      "bytes": 24249,
+      "sha256": "7c67f2a23dc374ae59d42f5e5df10cd4d962755893094a818ea73cf37b1f1c62",
+      "origem": {
+        "origem": "sistema_tcc/fluxo.py",
+        "sha256_original": "7c67f2a23dc374ae59d42f5e5df10cd4d962755893094a818ea73cf37b1f1c62",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "sistema_tcc/inferencia.py": {
+      "bytes": 6918,
+      "sha256": "e77fdb3dd9714ee735ba15504d237265de49020599b25ba86af5d2fa7c2b3520",
+      "origem": {
+        "origem": "sistema_tcc/inferencia.py",
+        "sha256_original": "e77fdb3dd9714ee735ba15504d237265de49020599b25ba86af5d2fa7c2b3520",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "sistema_tcc/instalar_inicio_automatico.ps1": {
+      "bytes": 1046,
+      "sha256": "5c4ba97122696dc1f4e9cb2f5900ae1ec01a8401dcb987d32147d9b7b0f1c7f7",
+      "origem": {
+        "origem": "sistema_tcc/instalar_inicio_automatico.ps1",
+        "sha256_original": "5c4ba97122696dc1f4e9cb2f5900ae1ec01a8401dcb987d32147d9b7b0f1c7f7",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "sistema_tcc/remover_inicio_automatico.ps1": {
+      "bytes": 637,
+      "sha256": "f5b365175b404252d80daf611bf94dc3697faf024714138bb7d509c87e757d02",
+      "origem": {
+        "origem": "sistema_tcc/remover_inicio_automatico.ps1",
+        "sha256_original": "f5b365175b404252d80daf611bf94dc3697faf024714138bb7d509c87e757d02",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "sistema_tcc/static/app.js": {
+      "bytes": 22984,
+      "sha256": "c8c296e62d205c66b948780acd76f62c09ff825bf1c53ff853d81f0bb886b410",
+      "origem": {
+        "origem": "sistema_tcc/static/app.js",
+        "sha256_original": "c8c296e62d205c66b948780acd76f62c09ff825bf1c53ff853d81f0bb886b410",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "sistema_tcc/static/favicon.svg": {
+      "bytes": 205,
+      "sha256": "b4b5b7bf953110e4286183fb9e4580f6431a97806794c9df81f0900d886aa966",
+      "origem": {
+        "origem": "sistema_tcc/static/favicon.svg",
+        "sha256_original": "b4b5b7bf953110e4286183fb9e4580f6431a97806794c9df81f0900d886aa966",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "sistema_tcc/static/index.html": {
+      "bytes": 13356,
+      "sha256": "7101419c76bda30d60f4281eb54639e92ddf499dd1dcb3ca65abbd74d2fe5a5f",
+      "origem": {
+        "origem": "sistema_tcc/static/index.html",
+        "sha256_original": "7101419c76bda30d60f4281eb54639e92ddf499dd1dcb3ca65abbd74d2fe5a5f",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "sistema_tcc/static/styles.css": {
+      "bytes": 15223,
+      "sha256": "fc31af7b71b74332f796f1c0980dfd177d098b2178441025c098c139470c0275",
+      "origem": {
+        "origem": "sistema_tcc/static/styles.css",
+        "sha256_original": "fc31af7b71b74332f796f1c0980dfd177d098b2178441025c098c139470c0275",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "sistema_tcc/web.py": {
+      "bytes": 11254,
+      "sha256": "b7482ec8cc6c826515c8c643c65bdc32da885655f17f5c85a3cff0b5ffb983b2",
+      "origem": {
+        "origem": "sistema_tcc/web.py",
+        "sha256_original": "b7482ec8cc6c826515c8c643c65bdc32da885655f17f5c85a3cff0b5ffb983b2",
+        "tratamento": "Codigo atual do sistema local v2, mantido."
+      }
+    },
+    "testes/test_fluxo_completo.py": {
+      "bytes": 10402,
+      "sha256": "81f72ea9887da872efe2d53deba41a1c64f31af0257bf8539e926d335a22be19",
+      "origem": {
+        "origem": "testes/test_fluxo_completo.py",
+        "sha256_original": "9199387f52c407f79323a4a3aa66cacaa5213f069c315e317a3071e579bf4a30",
+        "tratamento": "Teste do controlador/fluxo; o empacotamento removera a busca alternativa na pasta upload.",
+        "alterado_no_pacote": true
+      }
+    },
+    "testes/test_sistema_tcc.py": {
+      "bytes": 21812,
+      "sha256": "1d8031d524d4ba30acf1ef241418e2a3a2554cc43268fcd44e9ce7650e583d55",
+      "origem": {
+        "origem": "testes/test_sistema_tcc.py",
+        "sha256_original": "b9048129c992b0877155f76efbbc88a5d04d7907ca3ead7835a40f83833156e5",
+        "tratamento": "Teste do controlador/fluxo; o empacotamento removera a busca alternativa na pasta upload.",
+        "alterado_no_pacote": true
+      }
+    },
+    "docs/VERIFICACAO.md": {
+      "origem": {
+        "tratamento": "Criado nesta organizacao."
+      },
+      "bytes": 2297,
+      "sha256": "57cb280ac9f2676654308823dd04f0bb54a37b8dedeceee9c64cf48d3837eb8b"
+    }
+  }
+}
