@@ -3,7 +3,8 @@ __pycache__/
 *.pyc
 cache/
 dados/
-arquivoz .gz/
+arquivos .gz/
+arquivos csv/
 tcc_testes_*/
 fase1_extrator/genomic-data-extractor/
 *.gz
