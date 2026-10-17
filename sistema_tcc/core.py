@@ -877,6 +877,13 @@ class Executor:
 
     def estado(self, execucao=None):
         selecionada = execucao or self.store.get("execucao_selecionada", "original")
+        if not execucao and selecionada != "original":
+            try:
+                self.execucoes.obter(selecionada)
+            except (ValueError, OSError):
+                # A pasta da execução salva foi removida: volta para a base original em vez de travar o painel.
+                selecionada = "original"
+                self.store.set("execucao_selecionada", selecionada)
         cat, config = self.catalogo_execucao(selecionada)
         etapas = cat.refresh()
         tarefas = self.store.tarefas()
