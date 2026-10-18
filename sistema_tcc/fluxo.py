@@ -180,7 +180,7 @@ class Fluxo:
         total, lidas, descartadas, repetidas = 0, 0, 0, 0
         fontes_lidas = []
         try:
-            with self.db() as db, (tmp / "sequencias.fasta").open("w", encoding="ascii") as fasta:
+            with self.db() as db, (tmp / "sequencias.fasta").open("w", encoding="ascii", newline="\n") as fasta:
                 db.execute("DELETE FROM proteinas")
                 for fonte in self.m["fontes"]:
                     p = Path(fonte["arquivo"])
