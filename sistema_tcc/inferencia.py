@@ -15,6 +15,7 @@ import traceback
 
 PROJETO = Path(__file__).resolve().parents[1]
 MODELO = PROJETO / "dados/modelos/classificador_regra_aa_esm2/modelo.pt"
+MODELO_EC = PROJETO / "dados/modelos/classificador_ec2_ec3/modelo_ec.pt"
 CACHE = PROJETO / "cache/huggingface"
 ESSENCIAIS = "HILKMFTWV"
 ALFABETO = frozenset("ACDEFGHIKLMNPQRSTVWYBXZUO")
@@ -78,6 +79,7 @@ class Servico:
         self.mlp = p.criar_modelo(torch).to(self.dispositivo)
         self.mlp.load_state_dict(cp["estado"])
         self.mlp.eval()
+        self.ec = self.carregar_ec(MODELO_EC)
 
         from transformers import AutoTokenizer, EsmModel
         comum = {"revision": p.REVISAO_ESM, "cache_dir": str(args.cache),
@@ -91,6 +93,29 @@ class Servico:
             "dimensao_embedding": p.DIMENSAO, "melhor_epoca": cp["melhor_epoca"],
             "threads_cpu_pytorch": args.threads, "download_permitido": False,
             "treinamento_realizado_nesta_execucao": False, "limites": p.LIMITE}
+
+    def carregar_ec(self, caminho):
+        """Classificador EC 2 x EC 3 (piloto Swiss-Prot). Opcional: sem o arquivo, a consulta segue so com a regra."""
+        if not caminho.is_file():
+            return None
+        p, torch = self.p, self.torch
+        manifesto = p.ler_json(caminho.parent / "manifesto_ec.json")
+        p.conferir_hash(caminho, manifesto["hashes"]["modelo_ec.pt"])
+        p.exigir(manifesto.get("modelo_esm") == p.MODELO_ESM and manifesto.get("revisao_esm") == p.REVISAO_ESM,
+                 "Modelo EC gerado com outro ESM-2.")
+        cp = torch.load(caminho, map_location="cpu", weights_only=True)
+        p.exigir(list(cp.get("classes", [])) == ["Hidrolase", "Transferase"] and list(cp.get("arquitetura", [])) == [320, 64, 2],
+                 "Checkpoint EC incompativel.")
+        for chave in ("media", "dp"):
+            t = cp[chave]
+            p.exigir(isinstance(t, torch.Tensor) and t.shape == (p.DIMENSAO,) and bool(torch.isfinite(t).all()),
+                     "Normalizacao do modelo EC invalida.")
+        mlp = p.criar_modelo(torch).to(self.dispositivo)
+        mlp.load_state_dict(cp["estado"])
+        mlp.eval()
+        return {"mlp": mlp, "media": cp["media"].float().to(self.dispositivo), "dp": cp["dp"].float().to(self.dispositivo),
+                "classes": ["Hidrolase", "Transferase"], "exibicao": manifesto["rotulos_exibicao"],
+                "metricas": manifesto["metricas"], "limites": manifesto["limites"]}
 
     def saude(self):
         return dict(self.informacoes)
@@ -122,6 +147,16 @@ class Servico:
                 escores = self.mlp((vetor - self.media) / self.desvio).softmax(dim=1)[0]
                 p.exigir(bool(torch.isfinite(escores).all()), "Escores invalidos.")
                 escores = escores.cpu().tolist()
+                ec = None
+                if self.ec:
+                    e = self.ec
+                    esc = e["mlp"]((vetor - e["media"]) / e["dp"]).softmax(dim=1)[0]
+                    p.exigir(bool(torch.isfinite(esc).all()), "Escores EC invalidos.")
+                    esc = esc.cpu().tolist()
+                    classe = e["classes"][max(range(2), key=esc.__getitem__)]
+                    ec = {"classe": classe, "predicao": e["exibicao"][classe],
+                          "confianca": max(esc), "escores_softmax_nao_calibrados": dict(zip(e["classes"], esc)),
+                          "metricas_modelo": e["metricas"], "limites": e["limites"]}
             presentes = [aa for aa in ESSENCIAIS if aa in seq]
             ausentes = [aa for aa in ESSENCIAIS if aa not in seq]
             regra = "Incompleta" if ausentes else "Completa"
@@ -132,7 +167,7 @@ class Servico:
                 "escores_softmax_nao_calibrados": dict(zip(p.CLASSES, escores)),
                 "concorda_com_regra_direta": predicao == regra,
                 "dispositivo": str(self.dispositivo), "modelo_esm": p.MODELO_ESM,
-                "download_permitido": False, "limites": p.LIMITE}
+                "download_permitido": False, "limites": p.LIMITE, "ec": ec}
         finally:
             self.trava.release()
 
