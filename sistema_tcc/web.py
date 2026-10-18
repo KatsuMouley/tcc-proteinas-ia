@@ -7,6 +7,7 @@ import secrets
 import threading
 from urllib.parse import parse_qs, urlsplit
 
+from . import configuracoes
 from .core import ETAPAS, exigir
 
 
@@ -136,6 +137,10 @@ def servidor(executor, porta=8765):
                     r = cat.relatorios.get(etapa)
                     exigir(r is not None, "Relatório indisponível.")
                     self.resposta(200, r, arquivo="relatorio_" + etapa + ".json")
+                elif uri.path == "/api/configuracoes":
+                    self.resposta(200, configuracoes.ler(executor.c))
+                elif uri.path == "/api/diagnostico":
+                    self.resposta(200, configuracoes.diagnosticar(executor.c))
                 elif uri.path == "/api/saude":
                     self.resposta(200, {"ok": True, "fila_ativa": bool(executor.thread and executor.thread.is_alive()),
                         "gpu_carregada": executor.servico is not None, "versao": "2.0.0", "projeto": str(executor.c.raiz)})
@@ -186,6 +191,8 @@ def servidor(executor, porta=8765):
                     exigir(set(obj) == {"id"} and type(obj["id"]) is int, "Informe o ID da tarefa.")
                     executor.recuperar(obj["id"])
                     self.resposta(200, {"ok": True})
+                elif uri.path == "/api/configuracoes":
+                    self.resposta(200, configuracoes.salvar(executor.c, obj))
                 elif uri.path == "/api/encerrar":
                     exigir(not obj, "Encerrar não recebe parâmetros.")
                     executor.parar.set()

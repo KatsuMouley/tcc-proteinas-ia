@@ -217,6 +217,8 @@ def configurar_torch(args):
     except ImportError as e:
         raise RuntimeError("Execute com o Python do ambiente .venv que ja possui PyTorch.") from e
     torch.set_num_threads(args.threads)
+    if args.dispositivo == "auto":
+        args.dispositivo = "cuda" if torch.cuda.is_available() else "cpu"
     if args.dispositivo == "cuda":
         exigir(torch.cuda.is_available(), "CUDA indisponivel. Use .venv\\Scripts\\python.exe; CPU exige --dispositivo cpu explicito.")
         dispositivo = torch.device("cuda:0")
@@ -461,7 +463,7 @@ def main(argv=None):
     p.set_defaults(func=prever)
     for sub in (t, p):
         sub.add_argument("--threads", type=int, choices=range(1, 13), default=2)
-        sub.add_argument("--dispositivo", choices=("cuda", "cpu"), default="cuda")
+        sub.add_argument("--dispositivo", choices=("auto", "cuda", "cpu"), default="cuda")
         sub.add_argument("--semente", type=int, default=42)
     args = parser.parse_args(argv)
     if args.etapa == "treinar" and not (1 <= args.epocas <= 100 and 1 <= args.paciencia <= 100 and 1 <= args.lote <= 8192):

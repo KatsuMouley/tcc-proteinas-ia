@@ -9,6 +9,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlsplit
 import json
+import os
 import sys
 import threading
 import traceback
@@ -60,7 +61,7 @@ class Servico:
         p.exigir(self.relatorio.get("ok") is True, "O treino precisa estar concluido.")
         p.conferir_hash(args.modelo, self.relatorio["hashes_arquivos"]["modelo.pt"])
         self.torch, self.dispositivo = p.configurar_torch(Namespace(
-            threads=args.threads, dispositivo="cuda", semente=42))
+            threads=args.threads, dispositivo=os.environ.get("TCC_DISPOSITIVO", "auto"), semente=42))
         torch = self.torch
         cp = torch.load(args.modelo, map_location="cpu", weights_only=True)
         p.exigir(cp.get("schema") == 1 and cp.get("tipo") == "mlp_regra_nove_aa"

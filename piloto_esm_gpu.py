@@ -255,33 +255,48 @@ def salvar_csv(caminho, linhas, colunas):
         escritor.writerows(linhas)
 
 
+def resolver_dispositivo(torch, pedido=None):
+    """auto (padrao): GPU NVIDIA se houver, senao CPU. Configuravel pela tela Configuracoes (TCC_DISPOSITIVO)."""
+    pedido = (pedido or os.environ.get("TCC_DISPOSITIVO") or "auto").lower()
+    if pedido not in ("auto", "cuda", "cpu"):
+        raise RuntimeError("Dispositivo invalido: use auto, cuda ou cpu.")
+    if pedido == "cpu":
+        return torch.device("cpu")
+    if torch.cuda.is_available():
+        return torch.device("cuda:0")
+    if pedido == "cuda":
+        raise RuntimeError("GPU (CUDA) escolhida nas configuracoes, mas indisponivel. Use auto ou cpu.")
+    return torch.device("cpu")
+
+
 def exigir_gpu(threads, cache):
     for nome in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS"):
         os.environ[nome] = str(threads)
     import torch
     from transformers import AutoTokenizer, EsmModel
-    if not torch.cuda.is_available():
-        raise RuntimeError("CUDA indisponivel. Execute com .venv\\Scripts\\python.exe. Nao ha fallback para CPU.")
     torch.set_num_threads(threads)
     torch.set_num_interop_threads(1)
-    dispositivo = torch.device("cuda:0")
-    torch.cuda.set_device(dispositivo)
+    dispositivo = resolver_dispositivo(torch)
+    gpu = dispositivo.type == "cuda"
+    if gpu:
+        torch.cuda.set_device(dispositivo)
     if torch.arange(4, device=dispositivo).sum().item() != 6:
-        raise RuntimeError("A verificacao CUDA falhou.")
+        raise RuntimeError("A verificacao do dispositivo falhou.")
     comum = {"revision": REVISAO, "cache_dir": str(cache.resolve()),
              "local_files_only": True, "trust_remote_code": False}
-    print("Carregando o ESM-2 existente na GPU; nenhum download sera feito.", flush=True)
+    print(f"Carregando o ESM-2 existente na {'GPU' if gpu else 'CPU'}; nenhum download sera feito.", flush=True)
     inicio = time.perf_counter()
     tokenizador = AutoTokenizer.from_pretrained(MODELO, **comum)
     modelo = EsmModel.from_pretrained(MODELO, add_pooling_layer=False,
                                     attn_implementation="eager", use_safetensors=True,
                                     **comum).float().to(dispositivo).eval()
-    torch.cuda.synchronize()
-    if next(modelo.parameters()).device.type != "cuda":
-        raise RuntimeError("O modelo nao esta na GPU.")
+    if gpu:
+        torch.cuda.synchronize()
+    if next(modelo.parameters()).device.type != dispositivo.type:
+        raise RuntimeError("O modelo nao esta no dispositivo escolhido.")
     diagnostico = {"pytorch": torch.__version__, "cuda_compilada": torch.version.cuda,
-                  "dispositivo": str(dispositivo), "gpu": torch.cuda.get_device_name(dispositivo),
-                  "vram_total_mb": round(torch.cuda.get_device_properties(dispositivo).total_memory / 1024**2, 1),
+                  "dispositivo": str(dispositivo), "gpu": torch.cuda.get_device_name(dispositivo) if gpu else None,
+                  "vram_total_mb": round(torch.cuda.get_device_properties(dispositivo).total_memory / 1024**2, 1) if gpu else None,
                   "segundos_carregamento_modelo": round(time.perf_counter() - inicio, 3)}
     return torch, tokenizador, modelo, dispositivo, diagnostico
 
@@ -300,25 +315,29 @@ def gerar_embeddings(torch, tokenizador, modelo, dispositivo, amostra):
             raise RuntimeError("O tokenizer nao preservou um token por residuo.")
         estados = modelo(**entradas).last_hidden_state
         vetor = estados[0, mascara[0]].mean(dim=0)
-        if vetor.device.type != "cuda" or vetor.numel() != 320 or not torch.isfinite(vetor).all().item():
-            raise RuntimeError("Embedding invalido; esperado vetor finito de 320 valores na GPU.")
+        if vetor.device.type != dispositivo.type or vetor.numel() != 320 or not torch.isfinite(vetor).all().item():
+            raise RuntimeError("Embedding invalido; esperado vetor finito de 320 valores no dispositivo escolhido.")
         return vetor.detach().cpu().numpy().astype(np.float32, copy=False)
 
-    torch.cuda.reset_peak_memory_stats(dispositivo)
+    gpu = dispositivo.type == "cuda"
+    if gpu:
+        torch.cuda.reset_peak_memory_stats(dispositivo)
     with torch.inference_mode():
         inferir(amostra[0]["sequencia"])  # Aquecimento excluido do tempo medido.
-        torch.cuda.synchronize()
+        if gpu:
+            torch.cuda.synchronize()
         inicio = time.perf_counter()
         for indice, item in enumerate(amostra, 1):
             vetores.append(inferir(item["sequencia"]))
             if indice % 10 == 0 or indice == len(amostra):
-                print(f"GPU: {indice}/{len(amostra)} embeddings gerados.", flush=True)
-        torch.cuda.synchronize()
+                print(f"{'GPU' if gpu else 'CPU'}: {indice}/{len(amostra)} embeddings gerados.", flush=True)
+        if gpu:
+            torch.cuda.synchronize()
         segundos = time.perf_counter() - inicio
     matriz = np.stack(vetores)
     return matriz, {"segundos_embeddings_apos_aquecimento": round(segundos, 3),
-                    "memoria_pico_pytorch_mb": round(torch.cuda.max_memory_allocated(dispositivo) / 1024**2, 1),
-                    "dimensao_embedding": int(matriz.shape[1]), "precisao": "float32", "lote": 1}
+                    "memoria_pico_pytorch_mb": round(torch.cuda.max_memory_allocated(dispositivo) / 1024**2, 1) if gpu else None,
+                    "dispositivo": str(dispositivo), "dimensao_embedding": int(matriz.shape[1]), "precisao": "float32", "lote": 1}
 
 
 def main(argv=None):

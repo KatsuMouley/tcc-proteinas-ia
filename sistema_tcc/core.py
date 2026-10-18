@@ -39,6 +39,9 @@ REVISAO_ESM = "c731040fcd8d73dceaa04b0a8e6329b345b0f5df"
 ESSENCIAIS = "HILKMFTWV"
 ALFABETO = frozenset("ACDEFGHIKLMNPQRSTVWYBXZUO")
 ATIVOS = ("pendente", "executando", "recuperacao")
+CONFIG_LOCAL = "config_local.json"
+AJUSTES_LOCAIS = {"dispositivo": "Processamento (auto, cuda ou cpu)", "threads_pytorch": "Threads do PyTorch (1 a 4)",
+    "threads_mmseqs": "Threads do MMseqs2 (1 a 12)", "wsl": "Distribuição WSL com MMseqs2", "reserva_gib": "Espaço livre mínimo em disco (GiB)"}
 
 
 def agora():
@@ -114,6 +117,14 @@ class Config:
         raiz = Path(raiz).resolve()
         valores = ler_json(arquivo or raiz / "sistema_tcc/config.json")
         exigir(valores.get("schema") == 1, "Configuração incompatível.")
+        local = raiz / CONFIG_LOCAL
+        if arquivo is None and local.is_file():
+            # Ajustes deste computador (tela Configurações); o config.json versionado fica intacto.
+            ajustes = ler_json(local)
+            exigir(isinstance(ajustes, dict) and set(ajustes) <= set(AJUSTES_LOCAIS), "config_local.json inválido.")
+            valores = {**valores, **ajustes}
+        valores.setdefault("dispositivo", "auto")
+        exigir(valores["dispositivo"] in ("auto", "cuda", "cpu"), "Dispositivo inválido: use auto, cuda ou cpu.")
         for chave, minimo, maximo in (("esperado", 1, 100000000), ("threads_pytorch", 1, 4),
                 ("threads_mmseqs", 1, 12), ("semente", 0, 2147483647), ("intervalo_segundos", 2, 3600)):
             x = valores.get(chave)
@@ -521,7 +532,7 @@ def comando(config, etapa, parametros):
             "--saida", str(p["particoes"]), "--semente", str(c.valores["semente"]), "--reserva-gib", reserva]
     elif etapa == "treinar":
         args += ["treinar", "--base", str(p["base"]), "--particoes", str(p["particoes"]),
-            "--saida", str(p["modelo"]), "--threads", str(c.valores["threads_pytorch"]), "--dispositivo", "cuda",
+            "--saida", str(p["modelo"]), "--threads", str(c.valores["threads_pytorch"]), "--dispositivo", c.valores.get("dispositivo", "auto"),
             "--semente", str(c.valores["semente"])]
     else:
         raise ValueError("Etapa desconhecida.")

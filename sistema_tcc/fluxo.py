@@ -340,7 +340,7 @@ class Fluxo:
 
     def treinar(self):
         self.script("treinar_classificador_gpu.py", "treinar", "--base", self.pasta / "base", "--particoes", self.pasta / "particoes",
-            "--saida", self.pasta / "modelo", "--threads", self.m["threads_pytorch"], "--dispositivo", "cuda",
+            "--saida", self.pasta / "modelo", "--threads", self.m["threads_pytorch"], "--dispositivo", os.environ.get("TCC_DISPOSITIVO", "auto"),
             "--semente", self.m["semente"], "--epocas", self.m["epocas"])
         p = self.pasta / "modelo/relatorio_treino.json"
         r = ler_json(p)

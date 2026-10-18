@@ -18,3 +18,5 @@ fase1_extrator/genomic-data-extractor/
 *.lnk
 desktop.ini
 estrutura_pasta.txt
+
+config_local.json

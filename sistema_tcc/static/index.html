@@ -16,6 +16,7 @@
       <a href="#consulta" data-tab="consulta"><span class="nav-icon">⌕</span> Consultar proteína</a>
       <a href="#tarefas" data-tab="tarefas"><span class="nav-icon">≡</span> Tarefas e logs</a>
       <a href="#banco" data-tab="banco"><span class="nav-icon">▤</span> Banco de proteínas</a>
+      <a href="#config" data-tab="config"><span class="nav-icon">⚙</span> Configurações</a>
     </nav>
     <div class="side-note"><span class="dot"></span> Ambiente local<p>Dados e processamento<br>no seu computador.</p></div>
     <div class="side-bottom"><span class="mono">v2.0</span><span>ESM-2 · MMseqs2 · MLP</span></div>
@@ -79,6 +80,29 @@
       <article class="panel"><h2>Matriz de confusão do teste</h2><p class="muted">Linhas: rótulos da regra. Colunas: previsões do MLP.</p><div id="confusion" class="table-wrap"></div></article>
     </section>
     <section id="banco" class="view" aria-labelledby="heading-banco" hidden><div class="page-heading"><div><p class="eyebrow">SQLITE · DADOS DA EXECUÇÃO</p><h1 id="heading-banco">Banco de proteínas</h1><p>Sequências, rótulos, grupos e referências aos vetores da execução selecionada.</p></div></div><article class="panel"><p id="database-path" class="muted">Selecione uma execução nova para consultar seu banco.</p><div class="bank-search"><label for="protein-search">ID original ou UID da proteína</label><input id="protein-search" maxlength="100" placeholder="Ex.: CCJ32333.1"><button id="search-proteins" class="button ghost compact">Buscar</button></div><div class="table-wrap"><table><thead><tr><th>Proteína</th><th>Resíduos</th><th>Regra</th><th>Grupo inicial</th><th>Partição</th><th>Consulta</th></tr></thead><tbody id="proteins"><tr><td colspan="6">O banco desta tela pertence às execuções novas.</td></tr></tbody></table></div><p class="muted small">Até 50 resultados por consulta. Os vetores ficam no NPY; o banco guarda suas referências para evitar duplicação.</p></article></section>
+    <section id="config" class="view" aria-labelledby="heading-config" hidden>
+      <div class="page-heading"><div><p class="eyebrow">ESTE COMPUTADOR</p><h1 id="heading-config">Configurações</h1><p>Ajuste o sistema ao seu PC antes de rodar. Os ajustes ficam em config_local.json (fora do git) e valem ao reiniciar.</p></div><span id="config-ready" class="badge">Verificando…</span></div>
+      <div class="overview-grid">
+        <article class="panel">
+          <div class="panel-heading"><div><h2>Ajustes</h2><p>Padrões do projeto entre parênteses.</p></div></div>
+          <form id="config-form" class="config-form">
+            <label for="cfg-dispositivo">Processamento</label>
+            <select id="cfg-dispositivo"><option value="auto">Automático: GPU NVIDIA se houver, senão CPU</option><option value="cuda">Somente GPU NVIDIA (CUDA)</option><option value="cpu">Somente CPU (processador)</option></select>
+            <p class="muted small">CPU funciona em qualquer PC. A consulta leva cerca de 1 segundo; um fluxo de 1.000 proteínas fica alguns minutos mais lento.</p>
+            <label for="cfg-threads_pytorch">Threads do PyTorch (1 a 4)</label><input id="cfg-threads_pytorch" type="number" min="1" max="4" step="1">
+            <label for="cfg-threads_mmseqs">Threads do MMseqs2 (1 a 12)</label><input id="cfg-threads_mmseqs" type="number" min="1" max="12" step="1">
+            <label for="cfg-wsl">Distribuição WSL com MMseqs2</label><input id="cfg-wsl" type="text" maxlength="100">
+            <label for="cfg-reserva_gib">Espaço livre mínimo em disco (GiB)</label><input id="cfg-reserva_gib" type="number" min="0" max="500" step="1">
+            <button class="button primary" type="submit">Salvar configurações</button>
+            <p id="config-msg" class="muted"></p>
+          </form>
+        </article>
+        <article class="panel">
+          <div class="panel-heading"><div><h2>Diagnóstico do ambiente</h2><p>O que está instalado e para que serve cada item.</p></div><button id="run-diagnostic" class="button ghost compact" type="button">Verificar de novo</button></div>
+          <div class="table-wrap"><table class="diag-table"><thead><tr><th>Item</th><th>Situação</th><th>Necessário para</th></tr></thead><tbody id="diag-body"><tr><td colspan="3" class="muted">Verificando… (o teste do WSL pode levar até 1 minuto)</td></tr></tbody></table></div>
+        </article>
+      </div>
+    </section>
     <footer><span id="project-path">Conectando ao projeto local…</span><span id="gpu-status">GPU: aguardando dados</span><button id="stop-system" class="link-button">Encerrar sistema</button></footer>
   </main>
 </body></html>

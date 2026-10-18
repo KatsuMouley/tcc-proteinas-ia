@@ -4,6 +4,7 @@ import sys
 import threading
 import webbrowser
 import json
+import os
 from urllib.request import urlopen
 
 from .core import Catalogo, Config, Executor, Store, instancia_unica
@@ -25,6 +26,7 @@ def main():
         parser.error("Porta inválida.")
     try:
         c = Config.carregar(args.projeto, args.config)
+        os.environ["TCC_DISPOSITIVO"] = c.valores["dispositivo"]  # herdado pelos scripts das etapas
         # pythonw.exe não oferece stdout/stderr; conservar o diagnóstico em arquivo.
         c.caminhos["sistema"].mkdir(parents=True, exist_ok=True)
         if sys.stdout is None or sys.stderr is None:
