@@ -40,4 +40,4 @@ Na aba de consulta, informe de 1 a 512 resíduos. O modelo da execução selecio
 
 **Pausar fila** deixa a fase ativa terminar e interrompe antes da seguinte. **Retomar execução** reutiliza fases confirmadas após conferir hashes. **Encerrar sistema**, no rodapé, espera a fase ativa e encerra o serviço.
 
-Durante embeddings, a pausa entre fases aguarda o gerador concluir o recorte. A retomada dos lotes existentes é mantida, mas não há retomada do otimizador no meio do treino. Mais detalhes em [docs/OPERACAO.md](docs/OPERACAO.md).
+Durante embeddings, a pausa entre fases aguarda o gerador concluir o recorte. A retomada dos lotes existentes é mantida, mas não há retomada do otimizador no meio do treino. Mais detalhes em [docs/OPERACAO.md](OPERACAO.md).
