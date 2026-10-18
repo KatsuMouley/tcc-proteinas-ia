@@ -119,6 +119,24 @@ def _wsl_cmd(distro):
     return str(atalho)
 
 
+class _SubprocessVisivel:
+    """Igual ao subprocess, mas registra comando e erro quando algo falha (o original usa DEVNULL)."""
+    CalledProcessError = subprocess.CalledProcessError
+    DEVNULL = subprocess.DEVNULL
+
+    def run(self, cmd, check=False, stdout=None, stderr=None, **kw):
+        r = subprocess.run(cmd, capture_output=True, **kw)
+        if r.returncode != 0:
+            err = (r.stderr or b"").decode("utf-8", "replace").replace("\x00", "").strip().splitlines()
+            out = (r.stdout or b"").decode("utf-8", "replace").replace("\x00", "").strip().splitlines()
+            print("Comando falhou (codigo %s): %s" % (r.returncode, " ".join(map(str, cmd[1:]))), flush=True)
+            for linha in (err or out)[-15:]:
+                print("   " + linha, flush=True)
+            if check:
+                raise subprocess.CalledProcessError(r.returncode, cmd, r.stdout, r.stderr)
+        return r
+
+
 def pendentes():
     feitos = set(HISTORICO.read_text(encoding="utf-8").split()) if HISTORICO.is_file() else set()
     return sorted([p.name for p in DIR_GZ.glob("*.gz") if p.name not in feitos], key=_ordem) if DIR_GZ.is_dir() else []
@@ -132,6 +150,7 @@ def agrupar(distro="Ubuntu"):
                     ARQUIVO_LOG=HISTORICO, ARQUIVO_LOG_SISTEMA=PASTA / "log_fase1.txt", g_drive=PASTA)
     if os.name == "nt":
         mod.EXECUTAVEL_LINUX = _wsl_cmd(distro)
+    mod.subprocess = _SubprocessVisivel()  # mostra no log o erro que o script original descarta
     mod.setup_logging(str(PASTA / "log_fase1.txt"))
     fila = pendentes()
     print(f"{len(fila)} arquivo(s) .gz para agrupar com MMseqs2 (50% identidade, 80% cobertura).", flush=True)
