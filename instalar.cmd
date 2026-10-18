@@ -41,6 +41,11 @@ echo Sem placa NVIDIA: instalando PyTorch para CPU. O sistema funciona no proces
 "%VPY%" -m pip install "torch==2.9.1" --index-url https://download.pytorch.org/whl/cpu
 if errorlevel 1 goto falhou
 :esm
+if not exist "fase1_extrator\genomic-data-extractor\agrupar_gz_ncbi.py" (
+    echo Clonando a Fase 1 do Filipe para baixar e agrupar .gz do NCBI...
+    git clone https://github.com/filipecamargoprado/genomic-data-extractor.git fase1_extrator\genomic-data-extractor
+    if errorlevel 1 echo AVISO: nao foi possivel clonar a Fase 1. Veja o README.
+)
 "%VPY%" ferramentas\baixar_esm2.py
 if errorlevel 1 goto falhou
 echo.

@@ -12,6 +12,7 @@ O sistema lê proteínas do NCBI, agrupa sequências parecidas (MMseqs2), transf
 |---|---|
 | Abrir o painel e ver os resultados do milhão | Windows 10/11, Python 3.13, pacote de dados do Drive |
 | Consultar uma proteína (EC 2 × EC 3) | o item acima; GPU NVIDIA **opcional** (sem ela roda no processador) |
+| Baixar e agrupar .gz do NCBI (Fase 1 do Filipe) | Git, internet (FTP do NCBI); o agrupamento também precisa de WSL + MMseqs2 |
 | Rodar um fluxo novo com .gz do NCBI | o item acima + WSL (Ubuntu) com MMseqs2 + ~10 GB livres |
 
 ## Instalação em outro computador
@@ -20,7 +21,7 @@ O sistema lê proteínas do NCBI, agrupa sequências parecidas (MMseqs2), transf
    ```powershell
    git clone https://github.com/KatsuMouley/tcc-proteinas-ia.git C:\ai_tcc
    ```
-2. **Rode `instalar.cmd`** (duplo clique). Ele cria o `.venv`, instala as bibliotecas, escolhe o PyTorch certo (GPU NVIDIA ou CPU) e prepara o ESM-2 (~30 MB). Leva de 5 a 15 minutos.
+2. **Rode `instalar.cmd`** (duplo clique). Ele cria o `.venv`, instala as bibliotecas, escolhe o PyTorch certo (GPU NVIDIA ou CPU), prepara o ESM-2 (~30 MB) e clona a Fase 1 do Filipe em `fase1_extrator\`. Leva de 5 a 15 minutos.
 3. **Baixe o pacote de dados** (`pacote_dados_tcc.zip`, ~1,7 GB) da pasta do grupo no Google Drive e extraia **dentro de `C:\ai_tcc`**, mantendo as pastas (`dados\…` e `cache\…`):
    ```powershell
    tar -xf "$env:USERPROFILE\Downloads\pacote_dados_tcc.zip" -C C:\ai_tcc
@@ -34,14 +35,15 @@ O sistema lê proteínas do NCBI, agrupa sequências parecidas (MMseqs2), transf
 
 - **Visão geral:** resultados do milhão (vetores, grupos, acurácia, partições).
 - **Consultar proteína:** cole uma sequência (1 a 512 aminoácidos). Resposta: **Transferase (EC 2)** ou **Hidrolase (EC 3)** com a confiança, e a regra dos nove aminoácidos como prova de conceito.
-- **Pipeline automático:** fluxo novo com .gz do NCBI (10 etapas: leitura → MMseqs2 → rótulos → ESM-2 → auditoria → consolidação → agrupamento global → partições → treino → banco). **Use limite 1.000**; o padrão de 1 milhão ocupa mais de 20 GB.
+- **Pipeline automático → Fontes do NCBI:** escolha a divisão (bactérias, plantas…) e quantos arquivos baixar; depois, se quiser, "Agrupar por arquivo" gera os CSVs da Fase 1 em `arquivos csv\`. Usa os scripts originais do Filipe, sem alterá-los.
+- **Pipeline automático → Novo experimento completo:** fluxo novo com .gz do NCBI (10 etapas: leitura → MMseqs2 → rótulos → ESM-2 → auditoria → consolidação → agrupamento global → partições → treino → banco). **Use limite 1.000**; o padrão de 1 milhão ocupa mais de 20 GB.
 - **Tarefas e logs:** acompanhe cada etapa ao vivo.
 
 ## Fluxo novo (opcional): WSL + MMseqs2
 
 1. No PowerShell como administrador: `wsl --install -d Ubuntu` e reinicie.
 2. No Ubuntu: `sudo apt update && sudo apt install -y mmseqs2`.
-3. Coloque os `.gz` (ou `.zip` com `.gz`) do NCBI em `C:\ai_tcc\arquivos .gz\`.
+3. Baixe os `.gz` pelo painel (Fontes do NCBI) ou coloque `.gz`/`.zip` em `C:\ai_tcc\arquivos .gz\`.
 4. Confira em **Configurações → Diagnóstico** a linha "WSL + MMseqs2".
 
 ## Pastas
@@ -55,7 +57,8 @@ O sistema lê proteínas do NCBI, agrupa sequências parecidas (MMseqs2), transf
 | `docs\` | documentação técnica e resultados |
 | `legado\` | versões antigas, só para histórico |
 | `dados\` | bases, modelos e execuções (**fora do git**; vem no pacote do Drive) |
-| `fase1_extrator\` | Fase 1 do Filipe (**fora do git**): https://github.com/filipecamargoprado/genomic-data-extractor |
+| `fase1_extrator\` | Fase 1 do Filipe (**fora do git**; o `instalar.cmd` clona): https://github.com/filipecamargoprado/genomic-data-extractor |
+| `arquivos .gz\`, `arquivos csv\` | fontes do NCBI e CSVs da Fase 1 (**fora do git**) |
 
 ## Problemas comuns
 

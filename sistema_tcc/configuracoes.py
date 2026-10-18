@@ -101,6 +101,9 @@ def diagnosticar(c):
     n_fontes = sum(1 for pasta in p["fontes"] if pasta.is_dir() for x in pasta.rglob("*") if x.suffix.lower() in (".gz", ".zip"))
     itens.append(_item("Arquivos .gz do NCBI", n_fontes > 0 or None, f"{n_fontes} arquivo(s) .gz/.zip em: " + ", ".join(x.name for x in p["fontes"])
                        if n_fontes else "nenhum. Só é preciso para rodar um fluxo novo.", "Fluxo novo"))
+    f1 = c.raiz / "fase1_extrator/genomic-data-extractor/agrupar_gz_ncbi.py"
+    itens.append(_item("Fase 1 (Filipe)", f1.is_file() or None, "presente em fase1_extrator/" if f1.is_file()
+                       else "ausente. instalar.cmd clona o repositório do Filipe (ou veja o README).", "Baixar e agrupar .gz do NCBI"))
     distro = c.valores.get("wsl", "Ubuntu")
     try:
         if os.name == "nt":

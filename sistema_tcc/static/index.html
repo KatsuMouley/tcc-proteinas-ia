@@ -56,6 +56,16 @@
     </section>
     <section id="pipeline" class="view" aria-labelledby="heading-pipeline" hidden>
       <div class="page-heading"><div><p class="eyebrow">AUTOMAÇÃO COM DEPENDÊNCIAS</p><h1 id="heading-pipeline">Uma etapa por vez</h1><p>Prepare as etapas pendentes e preserve os resultados concluídos.</p></div></div>
+      <article class="panel fase1-panel" id="fase1-panel">
+        <div class="panel-heading"><div><p class="eyebrow">ETAPA 1 · FONTES DO NCBI (FASE 1 · FILIPE)</p><h2>Baixar e agrupar arquivos .gz</h2><p>Usa os scripts originais do Filipe: download do FTP do NCBI e MMseqs2 por arquivo (50% identidade, 80% cobertura). Os .gz vão para "arquivos .gz" e os CSVs para "arquivos csv".</p></div><span id="fase1-status" class="badge">—</span></div>
+        <div class="fase1-grid">
+          <div><label for="fase1-divisao">Divisão do GenBank</label><select id="fase1-divisao"></select></div>
+          <div><label for="fase1-qtd">Quantidade de arquivos (~150 MB cada)</label><input id="fase1-qtd" type="number" min="1" max="20" value="1"></div>
+          <div class="fase1-actions"><button id="fase1-baixar" class="button" type="button">Baixar do NCBI</button><button id="fase1-agrupar" class="button ghost" type="button">Agrupar por arquivo (MMseqs2)</button></div>
+        </div>
+        <div class="table-wrap"><table class="fase1-table"><thead><tr><th>Arquivo .gz</th><th>Tamanho</th><th>Agrupado (Fase 1)</th></tr></thead><tbody id="fase1-arquivos"><tr><td colspan="3" class="muted">Carregando…</td></tr></tbody></table></div>
+        <pre id="fase1-log" class="fase1-log" hidden></pre>
+      </article>
       <article class="panel new-run"><div><p class="eyebrow">EXECUTAR DO COMEÇO AO FIM</p><h2>Novo experimento completo</h2><p>Leia os GZ, execute MMseqs2, gere os embeddings e treine um novo MLP. O banco e os relatórios serão registrados em outra pasta.</p></div><div class="new-run-fields"><div><label for="run-source">Arquivo de entrada</label><select id="run-source"><option value="todas">Todas as fontes, até o limite</option></select></div><div><label for="run-limit">Limite de sequências candidatas</label><select id="run-limit"><option value="1000">1.000 · primeiro teste completo</option><option value="10000">10.000</option><option value="100000">100.000</option><option value="1000000">1.000.000</option></select></div><button id="start-run" class="button primary">Iniciar fluxo completo →</button></div><p class="muted small">O limite vale para candidatos elegíveis. O MMseqs2 seleciona representantes; a quantidade final de vetores pode ser menor. Treino do MLP: até 10 épocas; ESM-2 permanece pré-treinado.</p></article>
       <div class="controls panel"><div><h2>Executor local</h2><p id="pipeline-description">Carregando configuração.</p></div><div class="control-actions"><button id="toggle-auto" class="button" hidden>—</button><button id="resume-run" class="button" hidden>Retomar execução</button><button id="toggle-pause" class="button ghost">—</button></div></div>
       <div class="pipeline-layout"><div id="steps" class="steps"></div><aside class="pipeline-aside panel">

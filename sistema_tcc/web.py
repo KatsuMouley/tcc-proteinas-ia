@@ -8,6 +8,7 @@ import threading
 from urllib.parse import parse_qs, urlsplit
 
 from . import configuracoes
+from .fase1 import Gerenciador
 from .core import ETAPAS, exigir
 
 
@@ -51,6 +52,7 @@ def pagina_log(executor, ident, cursor=0, extra=False):
 
 def servidor(executor, porta=8765):
     token = secrets.token_urlsafe(32)
+    fase1 = Gerenciador(executor.c)
     assets = Path(__file__).parent / "static"
     rotas = {"/": ("index.html", "text/html; charset=utf-8"),
         "/app.js": ("app.js", "text/javascript; charset=utf-8"),
@@ -116,7 +118,7 @@ def servidor(executor, porta=8765):
                     estado["token"] = token
                     self.resposta(200, estado)
                 elif uri.path == "/api/fontes":
-                    fontes = executor.execucoes.inventario()
+                    fontes = executor.execucoes.inventario(forcar=parse_qs(uri.query).get("forcar", ["0"])[0] == "1")
                     self.resposta(200, {"ok": True, "fontes": [{"id": x["id"], "nome": x["nome"],
                         "bytes_gz": x["bytes_gz"], "membro": x["membro"], "arquivo": x["arquivo"]} for x in fontes]})
                 elif uri.path == "/api/proteinas":
@@ -139,6 +141,8 @@ def servidor(executor, porta=8765):
                     self.resposta(200, r, arquivo="relatorio_" + etapa + ".json")
                 elif uri.path == "/api/configuracoes":
                     self.resposta(200, configuracoes.ler(executor.c))
+                elif uri.path == "/api/fase1":
+                    self.resposta(200, fase1.estado())
                 elif uri.path == "/api/diagnostico":
                     self.resposta(200, configuracoes.diagnosticar(executor.c))
                 elif uri.path == "/api/saude":
@@ -193,6 +197,8 @@ def servidor(executor, porta=8765):
                     self.resposta(200, {"ok": True})
                 elif uri.path == "/api/configuracoes":
                     self.resposta(200, configuracoes.salvar(executor.c, obj))
+                elif uri.path == "/api/fase1":
+                    self.resposta(202, fase1.iniciar(obj))
                 elif uri.path == "/api/encerrar":
                     exigir(not obj, "Encerrar não recebe parâmetros.")
                     executor.parar.set()
