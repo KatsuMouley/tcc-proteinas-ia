@@ -918,7 +918,7 @@ class Executor:
             "fluxo": self.execucoes.status(selecionada) if selecionada != "original" else None,
             "esperado": config.esperado, "automatico": self.store.get("automatico"), "pausado": self.store.get("pausado"),
             "threads_mmseqs": self.store.get("threads_mmseqs", self.c.valores["threads_mmseqs"]),
-            "threads_pytorch": self.c.valores["threads_pytorch"], "ativo": self.ativo,
+            "threads_pytorch": self.c.valores["threads_pytorch"], "dispositivo": self.c.valores.get("dispositivo", "auto"), "ativo": self.ativo,
             "gpu_modelo_carregado": self.servico is not None,
             "espaco_livre_gib": round(shutil.disk_usage(self.c.raiz).free / 1024**3, 2),
             "etapas": [{"id": e, "nome": NOMES[e], **etapas[e], "dependencia": cat.bloqueio(e) if etapas[e]["estado"] != "concluido" else None} for e in ETAPAS],

@@ -62,7 +62,7 @@
         <h2>Como funciona</h2><ol><li>Uma execução nova recebe uma pasta e um banco próprios.</li><li>Os GZ entram no MMseqs2 e seus representantes recebem embeddings.</li><li>Auditoria e partições liberam o treino automático do MLP.</li><li>O dashboard recebe os resultados e o banco registra os vínculos.</li></ol>
         <div class="note">Nas execuções novas, o treino está incluído no fluxo. Resultados da base original continuam disponíveis pelo seletor de execução.</div>
         <h3>Uso do computador</h3><label for="threads">Threads CPU do MMseqs2</label><select id="threads"><option value="4">4 · uso cotidiano</option><option value="8">8 · PC dedicado</option><option value="2">2 · menor uso de CPU</option><option value="12">12 · todas as threads lógicas</option></select><button id="save-threads" class="button ghost compact">Aplicar às próximas tarefas</button>
-        <p class="muted small" id="torch-threads">PyTorch: 2 threads CPU. Os modelos usam CUDA.</p>
+        <p class="muted small" id="torch-threads">PyTorch: 2 threads CPU. Ajuste o processamento em Configurações.</p>
         <p class="muted small">Pausar permite que a etapa atual do fluxo termine e preserva as etapas confirmadas. Use Retomar execução para continuar. Falhas não são repetidas indefinidamente.</p>
       </aside></div>
     </section>
