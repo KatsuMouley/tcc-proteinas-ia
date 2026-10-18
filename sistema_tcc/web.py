@@ -219,4 +219,11 @@ def servidor(executor, porta=8765):
         daemon_threads = True
         allow_reuse_address = True
 
+        def handle_error(self, request, client_address):
+            # O navegador fechou a conexão (troca de tela, F5): não é falha do sistema.
+            import sys
+            if isinstance(sys.exc_info()[1], (ConnectionAbortedError, ConnectionResetError, BrokenPipeError)):
+                return
+            super().handle_error(request, client_address)
+
     return LocalServer(("127.0.0.1", porta), Handler)
