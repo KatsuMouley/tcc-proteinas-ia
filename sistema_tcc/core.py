@@ -841,9 +841,13 @@ class Executor:
             exigir(t and t["estado"] == "recuperacao", "Tarefa não precisa de conciliação.")
             exigir(not pid_ativo(t["pid"]), "O processo anterior ainda parece ativo. Aguarde seu encerramento; a fila permanece pausada.")
             if t["etapa"] == "fluxo":
-                row, _ = self.execucoes.obter(t["parametros"]["execucao"])
-                path = Path(row["pasta"]) / "banco.sqlite3"
-                if path.is_file():
+                try:
+                    row, _ = self.execucoes.obter(t["parametros"]["execucao"])
+                    path = Path(row["pasta"]) / "banco.sqlite3"
+                except OSError:
+                    # A pasta da execução foi removida: não há subprocesso nem saída a conferir.
+                    path = None
+                if path and path.is_file():
                     with sqlite3.connect(path.as_uri()+"?mode=ro", uri=True, timeout=2) as db:
                         exigir(not any(pid_ativo(r[0]) for r in db.execute("SELECT pid FROM etapas WHERE pid IS NOT NULL")), "Um subprocesso da execução ainda está ativo.")
             completo = t["etapa"] in ETAPAS and self.catalogo.refresh(True)[t["etapa"]]["estado"] == "concluido"
