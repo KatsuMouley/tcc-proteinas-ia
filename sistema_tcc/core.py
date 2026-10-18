@@ -802,7 +802,7 @@ class Executor:
                 if m or e:
                     r = e or m
                     atual["detalhe"] = r[1] + ("/"+r[2] if r[2] else "") + (" épocas" if e else " proteínas")
-                    metricas = re.search(r"Epoca (\d+)/(\d+): perda treino ([0-9.]+); acuracia balanceada validacao ([0-9.]+); F1 macro ([0-9.]+)", linha)
+                    metricas = re.search(r"Epoca (\d+)/(\d+): perda treino ([0-9]+(?:\.[0-9]+)?); acuracia balanceada validacao ([0-9]+(?:\.[0-9]+)?); F1 macro ([0-9]+(?:\.[0-9]+)?)", linha)
                     if metricas:
                         hist = atual.setdefault("historico_parcial", [])
                         hist.append({"epoca": int(metricas[1]), "perda_treino_ponderada": float(metricas[3]),
