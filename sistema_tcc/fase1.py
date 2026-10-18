@@ -158,7 +158,10 @@ def agrupar(distro="Ubuntu"):
         print(f"[{i}/{len(fila)}] {arquivo}", flush=True)
         fasta = TEMP / (arquivo.split(".")[0] + ".fas")
         try:
-            if mod.descompactar_gz(str(DIR_GZ / arquivo), str(fasta)) and mod.rodar_mmseqs(str(fasta), str(TEMP)):
+            ok = mod.descompactar_gz(str(DIR_GZ / arquivo), str(fasta))
+            ok = ok and (mod.rodar_mmseqs(str(fasta), str(TEMP))
+                         or (print("Nova tentativa (o WSL pode ter demorado a iniciar)...", flush=True) or mod.rodar_mmseqs(str(fasta), str(TEMP))))
+            if ok:
                 mod.salvar_resultados_no_csv(str(TEMP), arquivo, str(fasta))
                 mod.registrar_sucesso(arquivo)
                 print(f"OK: {arquivo} -> arquivos csv/{arquivo.replace('.gz', '')}.csv", flush=True)
