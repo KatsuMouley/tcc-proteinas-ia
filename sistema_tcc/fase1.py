@@ -79,6 +79,33 @@ def listar(divisao):
     return sorted(nomes, key=_ordem)
 
 
+HISTORICO_FILIPE = REPO / "historico_arquivos_processados.txt"
+
+
+def ja_temos():
+    """(locais, processados): arquivos NCBI ja presentes neste PC (bloqueiam novo download)
+    e arquivos ja processados antes, pela Fase 1 original ou pelo painel (so aviso)."""
+    import zipfile
+    processados = {}
+    for hist, origem in ((HISTORICO_FILIPE, "Fase 1 original do Filipe"), (HISTORICO, "agrupamento pelo painel")):
+        if hist.is_file():
+            for nome in hist.read_text(encoding="utf-8", errors="replace").split():
+                processados.setdefault(nome.strip(), origem)
+    conhecidos = {}
+    if DIR_GZ.is_dir():
+        for zp in DIR_GZ.glob("*.zip"):
+            try:
+                with zipfile.ZipFile(zp) as z:
+                    for info in z.infolist():
+                        if info.filename.lower().endswith(".gz"):
+                            conhecidos[Path(info.filename).name] = "dentro de " + zp.name
+            except zipfile.BadZipFile:
+                pass
+        for gz in DIR_GZ.glob("*.gz"):
+            conhecidos[gz.name] = "na pasta arquivos .gz"
+    return conhecidos, processados
+
+
 def _gzip_integro(path):
     try:
         with gzip.open(path, "rb") as f:
@@ -97,8 +124,19 @@ def baixar(divisao, quantidade, reserva_gib=10):
     mod = _carregar("baixar_gz.py", PASTA_DESTINO=DIR_GZ)
     print(f"Listando {DIVISOES[divisao]} (gb{divisao}) no FTP do NCBI...", flush=True)
     todos = listar(divisao)
-    novos = [n for n in todos if not (DIR_GZ / n).exists()][:quantidade]
-    print(f"{len(todos)} arquivo(s) no NCBI; {len(novos)} novo(s) para baixar.", flush=True)
+    locais, processados = ja_temos()
+    repetidos = [n for n in todos if n in locais]
+    novos = [n for n in todos if n not in locais][:quantidade]
+    print(f"{len(todos)} arquivo(s) no NCBI; {len(repetidos)} ja estao neste PC (pulados); {len(novos)} para baixar.", flush=True)
+    origens = {}
+    for nome in repetidos:
+        origens[locais[nome]] = origens.get(locais[nome], 0) + 1
+    for origem, qtd in origens.items():
+        print(f"   ja no PC ({qtd}): {origem}", flush=True)
+    ja_proc = [n for n in novos if n in processados]
+    if ja_proc:
+        print(f"   Aviso: {len(ja_proc)} destes ja foram processados antes ({processados[ja_proc[0]]}); "
+              "baixando porque nao estao neste PC. Duplicatas de sequencia sao removidas no fluxo (SHA-256).", flush=True)
     for i, nome in enumerate(novos, 1):
         mod.baixar_arquivo_individual(nome, i, len(novos))  # funcao original do Filipe
         destino = DIR_GZ / nome
