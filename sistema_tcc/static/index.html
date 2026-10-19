@@ -16,6 +16,7 @@
       <a href="#consulta" data-tab="consulta"><span class="nav-icon">⌕</span> Consultar proteína</a>
       <a href="#tarefas" data-tab="tarefas"><span class="nav-icon">≡</span> Tarefas e logs</a>
       <a href="#banco" data-tab="banco"><span class="nav-icon">▤</span> Banco de proteínas</a>
+      <a href="#explorar" data-tab="explorar"><span class="nav-icon">◌</span> Explorar grupos</a>
       <a href="#config" data-tab="config"><span class="nav-icon">⚙</span> Configurações</a>
     </nav>
     <div class="side-note"><span class="dot"></span> Ambiente local<p>Dados e processamento<br>no seu computador.</p></div>
@@ -90,6 +91,25 @@
       <article class="panel"><h2>Matriz de confusão do teste</h2><p class="muted">Linhas: rótulos da regra. Colunas: previsões do MLP.</p><div id="confusion" class="table-wrap"></div></article>
     </section>
     <section id="banco" class="view" aria-labelledby="heading-banco" hidden><div class="page-heading"><div><p class="eyebrow">SQLITE · DADOS DA EXECUÇÃO</p><h1 id="heading-banco">Banco de proteínas</h1><p>Sequências, rótulos, grupos e referências aos vetores da execução selecionada.</p></div></div><article class="panel"><p id="database-path" class="muted">Selecione uma execução nova para consultar seu banco.</p><div class="bank-search"><label for="protein-search">ID original ou UID da proteína</label><input id="protein-search" maxlength="100" placeholder="Ex.: CCJ32333.1"><button id="search-proteins" class="button ghost compact">Buscar</button></div><div class="table-wrap"><table><thead><tr><th>Proteína</th><th>Resíduos</th><th>Regra</th><th>Grupo inicial</th><th>Partição</th><th>Consulta</th></tr></thead><tbody id="proteins"><tr><td colspan="6">O banco desta tela pertence às execuções novas.</td></tr></tbody></table></div><p class="muted small">Até 50 resultados por consulta. Os vetores ficam no NPY; o banco guarda suas referências para evitar duplicação.</p></article></section>
+    <section id="explorar" class="view" aria-labelledby="heading-explorar" hidden>
+      <div class="page-heading"><div><p class="eyebrow">MAPA DOS GRUPOS · EMBEDDINGS ESM-2</p><h1 id="heading-explorar">Explorar grupos</h1><p>Cada bolha é o representante de um grupo MMseqs2. Clique numa bolha para ver sequência, ID, grupo, tipo e classe.</p></div><span id="explorar-base" class="badge">—</span></div>
+      <article class="panel">
+        <div class="explorar-controles">
+          <div><label for="explorar-cor">Agrupar e colorir por</label><select id="explorar-cor"><option value="tipo">Tipo nutricional (regra dos 9 aminoácidos)</option><option value="ec">Classe enzimática prevista (EC 2 × EC 3)</option></select></div>
+          <div><span class="rotulo-campo" id="explorar-n-rotulo">Representantes por categoria</span><div class="segmentado" role="group" aria-labelledby="explorar-n-rotulo"><button type="button" data-n="10" aria-pressed="true">10</button><button type="button" data-n="50" aria-pressed="false">50</button><button type="button" data-n="100" aria-pressed="false">100</button></div></div>
+          <div id="explorar-legenda" class="legenda" aria-label="Legenda"></div>
+        </div>
+        <div class="explorar-layout">
+          <div class="mapa-wrap"><svg id="explorar-mapa" viewBox="0 0 640 430" role="img" aria-label="Mapa dos representantes"></svg><p id="explorar-info" class="muted small">Abra esta tela para carregar o mapa.</p></div>
+          <aside id="explorar-detalhe" class="detalhe" aria-live="polite"><p class="muted">Clique numa bolha para ver os detalhes da proteína.</p></aside>
+        </div>
+        <div id="explorar-limites" class="note"></div>
+      </article>
+      <article class="panel wide">
+        <div class="panel-heading"><div><h2>Representantes exibidos</h2><p>A mesma seleção do mapa, em lista. Clique numa linha para abrir o detalhe.</p></div></div>
+        <div class="table-wrap lista-explorar"><table><thead><tr><th>Proteína</th><th>Grupo</th><th>Membros</th><th>Tipo</th><th>Classe EC prevista</th><th>Resíduos</th><th>Partição</th></tr></thead><tbody id="explorar-lista"><tr><td colspan="7" class="muted">Aguardando o mapa.</td></tr></tbody></table></div>
+      </article>
+    </section>
     <section id="config" class="view" aria-labelledby="heading-config" hidden>
       <div class="page-heading"><div><p class="eyebrow">ESTE COMPUTADOR</p><h1 id="heading-config">Configurações</h1><p>Ajuste o sistema ao seu PC antes de rodar. Os ajustes ficam em config_local.json (fora do git) e valem ao reiniciar.</p></div><span id="config-ready" class="badge">Verificando…</span></div>
       <div class="overview-grid">

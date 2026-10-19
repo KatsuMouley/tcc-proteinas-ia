@@ -7,7 +7,7 @@ import secrets
 import threading
 from urllib.parse import parse_qs, urlsplit
 
-from . import configuracoes
+from . import configuracoes, explorar
 from .fase1 import Gerenciador
 from .core import ETAPAS, exigir
 
@@ -143,6 +143,10 @@ def servidor(executor, porta=8765):
                     self.resposta(200, configuracoes.ler(executor.c))
                 elif uri.path == "/api/fase1":
                     self.resposta(200, fase1.estado())
+                elif uri.path == "/api/explorar":
+                    qs = parse_qs(uri.query)
+                    self.resposta(200, explorar.representantes(executor, qs.get("execucao", ["original"])[0],
+                        int(qs.get("n", ["10"])[0]), qs.get("cor", ["tipo"])[0]))
                 elif uri.path == "/api/diagnostico":
                     self.resposta(200, configuracoes.diagnosticar(executor.c))
                 elif uri.path == "/api/saude":
