@@ -1,5 +1,8 @@
 # Dependências e ambiente
 
+> **Registro de 13–14/10/2026.** Este documento descreve o sistema antes da validação de 18–19/10. O estado atual (consulta EC, GPU/CPU, Configurações, Fase 1 pelo painel, instalação) está no [README](../README.md) e na seção 3.2 do Dossiê Técnico.
+
+
 Esta entrega atualiza o código. Reutilize a `.venv`, o driver NVIDIA, o cache ESM-2 e Ubuntu WSL/MMseqs2 que já funcionaram no seu PC. Não é necessário reinstalar pacotes para abrir o controlador e o dashboard.
 
 ## O que cada parte usa
@@ -14,7 +17,7 @@ Esta entrega atualiza o código. Reutilize a `.venv`, o driver NVIDIA, o cache E
 
 O histórico de execução recebido confirmou PyTorch `2.9.1+cu126`, CUDA compilada `12.6` e GTX 1650 de 4 GiB. Isso descreve o ambiente que passou no teste; a lista efetivamente instalada precisa ser exportada do seu computador.
 
-Os arquivos `requirements_instaladas_CPU_original.txt` e `requirements_antes_GPU_original.txt` recebidos ainda contêm `torch==2.7.1+cpu` e são idênticos. Eles ficam em `docs/historico/` e não são a receita de reinstalação do ambiente GPU atual. O antigo `requirements_CPU_original.txt` também pertence à preparação inicial.
+Os arquivos `requirements_instaladas_CPU_original.txt` e `requirements_antes_GPU_original.txt` recebidos ainda contêm `torch==2.7.1+cpu` e são idênticos. Eles ficam em `legado/docs_originais/` e não são a receita de reinstalação do ambiente GPU atual. O antigo `requirements_CPU_original.txt` também pertence à preparação inicial.
 
 ## Registrar o ambiente atual
 

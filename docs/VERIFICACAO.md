@@ -1,5 +1,8 @@
 # Verificação da entrega — 2026-10-13
 
+> **Registro de 13–14/10/2026.** Este documento descreve o sistema antes da validação de 18–19/10. O estado atual (consulta EC, GPU/CPU, Configurações, Fase 1 pelo painel, instalação) está no [README](../README.md) e na seção 3.2 do Dossiê Técnico.
+
+
 ## Concluído neste pacote
 
 - 28 testes do sistema passaram na cópia organizada do projeto.

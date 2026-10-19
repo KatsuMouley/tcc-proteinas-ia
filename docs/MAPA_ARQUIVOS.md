@@ -1,5 +1,8 @@
 # Mapa dos arquivos
 
+> **Registro de 13–14/10/2026.** Este documento descreve o sistema antes da validação de 18–19/10. O estado atual (consulta EC, GPU/CPU, Configurações, Fase 1 pelo painel, instalação) está no [README](../README.md) e na seção 3.2 do Dossiê Técnico.
+
+
 ## Entradas e ambiente do PC
 
 | Pasta existente | Responsabilidade | Tratamento ao aplicar o pacote |
@@ -42,11 +45,11 @@ O piloto foi mantido na raiz por compatibilidade com o gerador. As etapas foram 
 | `ferramentas/ambiente/testar_esm_gpu.py` | Teste sintético CUDA/ESM-2, com cache localizado na raiz do projeto |
 | `ferramentas/ambiente/diagnostico_windows.ps1` | Hardware e espaço livre; relatório em `dados/diagnosticos/` |
 | `ferramentas/ambiente/exportar_dependencias.py` | Exporta as dependências reais da `.venv` usada para executá-lo |
-| `docs/historico/` | Manuais e scripts anteriores, com identificação de versão |
+| `legado/docs_originais/` | Manuais e scripts anteriores, com identificação de versão |
 | `testes/` | Testes do sistema; não treinam uma IA real |
 | `manifesto_projeto.json` | Versão do pacote, integridade dos arquivos e origem dos códigos recebidos |
 
-Scripts antigos em `docs/historico` têm extensão adicional `.txt` para não se tornarem comandos de execução por engano. As cópias preservam os bytes recebidos. Os manuais históricos continuam descrevendo seu contexto original; o README principal desta versão é o ponto de entrada atual.
+Scripts antigos em `legado/docs_originais` têm extensão adicional `.txt` para não se tornarem comandos de execução por engano. As cópias preservam os bytes recebidos. Os manuais históricos continuam descrevendo seu contexto original; o README principal desta versão é o ponto de entrada atual.
 
 ## Saídas de cada experimento
 

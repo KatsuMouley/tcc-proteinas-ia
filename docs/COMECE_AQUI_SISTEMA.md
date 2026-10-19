@@ -1,5 +1,8 @@
 # Comece aqui — execução local
 
+> **Registro de 13–14/10/2026.** Este documento descreve o sistema antes da validação de 18–19/10. O estado atual (consulta EC, GPU/CPU, Configurações, Fase 1 pelo painel, instalação) está no [README](../README.md) e na seção 3.2 do Dossiê Técnico.
+
+
 ## 1. Abrir o dashboard
 
 ```powershell

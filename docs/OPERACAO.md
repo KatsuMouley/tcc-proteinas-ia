@@ -1,5 +1,8 @@
 # Operação do sistema
 
+> **Registro de 13–14/10/2026.** Este documento descreve o sistema antes da validação de 18–19/10. O estado atual (consulta EC, GPU/CPU, Configurações, Fase 1 pelo painel, instalação) está no [README](../README.md) e na seção 3.2 do Dossiê Técnico.
+
+
 ## Abrir e acompanhar
 
 `iniciar_sistema.cmd` abre o dashboard. A base anterior de um milhão aparece com seus relatórios importados; isso não significa que foi processada novamente. O catálogo confere arquivos, formato, referências dos relatórios e alterações de tamanho/data sem repetir a auditoria inteira a cada atualização da tela.
