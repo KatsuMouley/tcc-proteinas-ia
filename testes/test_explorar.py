@@ -3,7 +3,7 @@ import unittest
 
 import numpy as np
 
-from sistema_tcc import explorar
+from sistema_tcc import estatisticas, explorar
 
 
 class TesteExplorar(unittest.TestCase):
@@ -34,6 +34,25 @@ class TesteExplorar(unittest.TestCase):
         self.assertEqual(len(r["pontos"]), 20)
         with self.assertRaises(ValueError):
             explorar.representantes(exe, "x", 10, "ec")
+
+
+class TesteEstatisticas(unittest.TestCase):
+    def test_mann_whitney_separacao_total(self):
+        r = estatisticas.mann_whitney([4, 5, 6], [1, 2, 3])
+        self.assertEqual(r["u"], 9.0)
+        self.assertEqual(r["delta_cliff"], 1.0)
+        self.assertEqual(r["efeito"], "grande")
+        self.assertAlmostEqual(r["p"], 0.0495, places=3)  # aproximacao normal de z = 1,964
+
+    def test_mann_whitney_grupos_iguais(self):
+        r = estatisticas.mann_whitney([1, 2, 3, 4], [1, 2, 3, 4])
+        self.assertEqual(r["delta_cliff"], 0.0)
+        self.assertAlmostEqual(r["p"], 1.0)
+        self.assertEqual(r["efeito"], "desprezível")
+
+    def test_postos_com_empate(self):
+        r, cont = estatisticas._postos(np.array([10, 20, 20, 30]))
+        self.assertEqual(r.tolist(), [1.0, 2.5, 2.5, 4.0])
 
 
 if __name__ == "__main__":
