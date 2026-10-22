@@ -5,6 +5,7 @@ Uso (na raiz C:\\ai_tcc, com a .venv):
     python experimentos\\ec7\\rodar_ec7.py coletar     # 1. baixa do Swiss-Prot (EC 1 a 7)
     python experimentos\\ec7\\rodar_ec7.py preparar    # 2. MMseqs2 + particoes por grupo
     python experimentos\\ec7\\rodar_ec7.py treinar     # 3. ESM-2 + MLP 320->64->7 + validacao cruzada
+    python experimentos\\ec7\\rodar_ec7.py continuar   # 2 e 3, reaproveitando a ultima coleta
     python experimentos\\ec7\\rodar_ec7.py resumo      # mostra o resultado do ultimo treino
 
 Cada etapa usa a pasta mais recente CONCLUIDA da etapa anterior. Nada aqui altera o painel,
@@ -57,6 +58,23 @@ def coletar():
     return coletar_ec7.main(["--projeto", str(PROJETO)])
 
 
+def acordar_wsl(distro, tentativas=3):
+    """O WSL pode dormir durante a coleta; a 1a chamada as vezes passa de 30 s (mesmo caso do fluxo principal)."""
+    import subprocess
+    for n in range(1, tentativas + 1):
+        print(f"Acordando o WSL ({distro}) para o MMseqs2... tentativa {n}/{tentativas}", flush=True)
+        try:
+            r = subprocess.run(["wsl.exe", "--distribution", distro, "--exec", "mmseqs", "version"],
+                               capture_output=True, text=True, timeout=120)
+            if r.returncode == 0:
+                print("MMseqs2 " + r.stdout.strip() + " pronto.", flush=True)
+                return True
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+    print("O WSL nao respondeu. Abra o Ubuntu uma vez, rode 'mmseqs version' e tente de novo.")
+    return False
+
+
 def preparar():
     import preparar_ec7
     coleta = ultima("swissprot_*", "relatorio_coleta.json")
@@ -66,6 +84,8 @@ def preparar():
     a = ajustes()
     args = ["--coleta", str(coleta), "--threads", str(a["threads_mmseqs"])]
     if os.name == "nt":
+        if not acordar_wsl(a["wsl"]):
+            return 1
         args += ["--wsl", a["wsl"]]
     print(f"== 2/3 Agrupamento MMseqs2 + particoes: {coleta.name} ==", flush=True)
     return preparar_ec7.main(args)
@@ -125,8 +145,8 @@ def main(argv=None):
         return treinar(argv[1:])
     if acao == "resumo":
         return resumo()
-    if acao == "tudo":
-        for etapa in (coletar, preparar, treinar):
+    if acao in ("tudo", "continuar"):
+        for etapa in ((coletar, preparar, treinar) if acao == "tudo" else (preparar, treinar)):
             codigo = etapa()
             if codigo:
                 print(f"Parado em {etapa.__name__} (codigo {codigo}). Corrija e rode a partir dessa etapa.")

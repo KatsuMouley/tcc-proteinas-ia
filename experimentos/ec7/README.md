@@ -24,6 +24,7 @@ Dois cliques em `experimentos\ec7\rodar_ec7.cmd` roda tudo. Também dá para rod
 experimentos\ec7\rodar_ec7.cmd coletar    1. Swiss-Prot, até 500 enzimas revisadas por classe (internet)
 experimentos\ec7\rodar_ec7.cmd preparar   2. MMseqs2 (50% id., 80% cob.) + partições por grupo (WSL)
 experimentos\ec7\rodar_ec7.cmd treinar    3. Embeddings ESM-2 + MLP + validação cruzada de 5 dobras
+experimentos\ec7\rodar_ec7.cmd continuar  2 e 3, reaproveitando a última coleta
 experimentos\ec7\rodar_ec7.cmd resumo     Mostra o resultado do último treino
 ```
 
