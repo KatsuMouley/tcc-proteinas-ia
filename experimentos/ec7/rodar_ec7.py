@@ -65,13 +65,18 @@ def acordar_wsl(distro, tentativas=3):
         print(f"Acordando o WSL ({distro}) para o MMseqs2... tentativa {n}/{tentativas}", flush=True)
         try:
             r = subprocess.run(["wsl.exe", "--distribution", distro, "--exec", "mmseqs", "version"],
-                               capture_output=True, text=True, timeout=120)
+                               capture_output=True, timeout=120)
+            texto = lambda b: (b.decode("utf-16-le", "ignore") if b[1:2] == b"\x00" else b.decode("utf-8", "ignore")).strip()
             if r.returncode == 0:
-                print("MMseqs2 " + r.stdout.strip() + " pronto.", flush=True)
+                print("MMseqs2 " + texto(r.stdout) + " pronto.", flush=True)
                 return True
-        except (OSError, subprocess.TimeoutExpired):
-            pass
-    print("O WSL nao respondeu. Abra o Ubuntu uma vez, rode 'mmseqs version' e tente de novo.")
+            print(f"  WSL respondeu com codigo {r.returncode}: {texto(r.stderr) or texto(r.stdout) or '(sem mensagem)'}", flush=True)
+        except subprocess.TimeoutExpired:
+            print("  Sem resposta em 120 s.", flush=True)
+        except OSError as e:
+            print(f"  Nao foi possivel chamar o wsl.exe: {e}", flush=True)
+    print("O WSL nao respondeu. Use um PowerShell NORMAL (nao 'como administrador'), rode 'wsl -l -v' para ver o nome\n"
+          "da distribuicao e confira em Configuracoes do painel o campo 'Distribuicao WSL'. Depois tente de novo.")
     return False
 
 
