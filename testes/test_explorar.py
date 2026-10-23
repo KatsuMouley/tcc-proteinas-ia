@@ -28,12 +28,21 @@ class TesteExplorar(unittest.TestCase):
         explorar._memoria.clear()
         exe = types.SimpleNamespace(c=None, execucoes=types.SimpleNamespace(
             obter=lambda i: ({"pasta": "/nao/existe"}, {})))
-        explorar._memoria[("x", 0)] = dados
+        explorar._memoria[("x", 0, explorar._ec7.assinatura())] = dados
         r = explorar.representantes(exe, "x", 10, "tipo")
         self.assertEqual([c["exibidos"] for c in r["categorias"]], [10, 10])
         self.assertEqual(len(r["pontos"]), 20)
         with self.assertRaises(ValueError):
             explorar.representantes(exe, "x", 10, "ec")
+        with self.assertRaises(ValueError):  # sem treino EC7 no pool
+            explorar.representantes(exe, "x", 10, "ec7")
+        classes = explorar.CATEGORIAS["ec7"]
+        for i, item in enumerate(pool):
+            item["ec7"] = classes[i % 7]
+        r = explorar.representantes(exe, "x", 10, "ec7")
+        self.assertEqual(len(r["categorias"]), 7)
+        self.assertTrue(r["categorias"][0]["rotulo"].startswith("EC 1"))
+        self.assertEqual(sum(c["exibidos"] for c in r["categorias"]), 30)
 
 
 class TesteEstatisticas(unittest.TestCase):
