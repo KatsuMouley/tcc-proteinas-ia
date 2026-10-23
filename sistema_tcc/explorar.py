@@ -17,10 +17,12 @@ from pathlib import Path
 import numpy as np
 
 from .core import exigir, ler_json
+from . import ec7 as _ec7
 
-VERSAO = 1
+VERSAO = 2
 QUANTIDADES = (10, 50, 100)
-CATEGORIAS = {"tipo": ("Completa", "Incompleta"), "ec": ("Transferase", "Hidrolase")}
+CATEGORIAS = {"tipo": ("Completa", "Incompleta"), "ec": ("Transferase", "Hidrolase"),
+              "ec7": ("Oxidorredutase", "Transferase", "Hidrolase", "Liase", "Isomerase", "Ligase", "Translocase")}
 POOL_MILHAO = 4000      # maiores grupos do milhão considerados no mapa
 MEMBROS = 12            # membros listados por grupo no detalhe
 AMOSTRA_PCA = 20000
@@ -28,7 +30,7 @@ EXIBICAO_EC = {"Hidrolase": "Hidrolase (EC 3)", "Transferase": "Transferase (EC 
 LIMITES = [
     "Cada ponto é o representante de um grupo MMseqs2 (50% de identidade, 80% de cobertura).",
     "Posição: 2 componentes principais (PCA) dos embeddings ESM-2. Pontos próximos tendem a ser parecidos, mas a projeção perde informação.",
-    "Classe EC prevista pelo modelo EC 2 × EC 3: ele sempre escolhe uma das duas, mesmo para proteínas de outra classe ou que não são enzimas.",
+    "Classe EC prevista pelo modelo EC 2 × EC 3: ele sempre escolhe uma das duas, mesmo para proteínas de outra classe ou que não são enzimas. O modelo de 7 classes (experimento) também sempre escolhe uma classe e não reconhece não-enzimas.",
 ]
 
 _trava = threading.Lock()
@@ -81,8 +83,22 @@ def _completar(raiz, pool, emb, amostra):
     mu, v = _pca(amostra)
     xy = (np.asarray(emb, np.float64) - mu) @ v.T
     p = _prever_ec(raiz, emb)
+    p7 = None
+    m7 = _ec7.pesos_numpy()
+    if m7 is not None and len(emb):
+        classes7, (w0, b0, w2, b2, mu7, dp7) = m7
+        h = np.maximum(((np.asarray(emb, np.float64) - mu7) / dp7) @ w0.T + b0, 0)
+        z = h @ w2.T + b2
+        z -= z.max(axis=1, keepdims=True)
+        p7 = np.exp(z)
+        p7 /= p7.sum(axis=1, keepdims=True)
     for i, item in enumerate(pool):
         item["x"], item["y"] = round(float(xy[i, 0]), 4), round(float(xy[i, 1]), 4)
+        if p7 is not None:
+            k = int(p7[i].argmax())
+            item["ec7"] = classes7[k]
+            item["ec7_codigo"] = "EC " + str(k + 1)
+            item["ec7_confianca"] = round(float(p7[i, k]), 4)
         if p is not None:
             classe = "Transferase" if p[i, 1] >= p[i, 0] else "Hidrolase"
             item["ec"] = classe
@@ -102,7 +118,9 @@ def _milhao(c):
     if cache.is_file():
         try:
             dados = json.loads(cache.read_text(encoding="utf-8"))
-            if dados.get("assinatura") == assinatura and (dados.get("ec_ok") or _ec_modelo(c.raiz) is None):
+            if (dados.get("assinatura") == assinatura and (dados.get("ec_ok") or _ec_modelo(c.raiz) is None)
+                    and dados.get("ec7_treino") == _ec7.assinatura()
+                    and (dados.get("ec7_ok") or _ec7.assinatura() is None)):
                 return dados
         except (ValueError, OSError):
             pass
@@ -154,7 +172,7 @@ def _milhao(c):
     rng = np.random.default_rng(42)
     amostra = e[np.sort(rng.choice(e.shape[0], min(AMOSTRA_PCA, e.shape[0]), replace=False))]
     ec_ok = _completar(c.raiz, pool, emb, amostra)
-    dados = {"assinatura": assinatura, "ec_ok": ec_ok, "base": "Base original · 1 milhão",
+    dados = {"assinatura": assinatura, "ec_ok": ec_ok, "ec7_treino": _ec7.assinatura(), "ec7_ok": "ec7" in pool[0], "base": "Base original · 1 milhão",
              "proteinas": int(len(g)), "grupos": int(len(reps)),
              "selecao": "Os " + format(len(pool), ",").replace(",", ".") + " maiores grupos do milhão (mais membros primeiro).",
              "pool": pool}
@@ -205,7 +223,7 @@ def _execucao(execucoes, ident):
 
 def representantes(executor, ident, n, cor):
     exigir(n in QUANTIDADES, "Escolha 10, 50 ou 100 representantes por categoria.")
-    exigir(cor in CATEGORIAS, "Agrupe por tipo nutricional ou por classe EC.")
+    exigir(cor in CATEGORIAS, "Agrupe por tipo nutricional, classe EC 2 × 3 ou 7 classes EC.")
     ident = ident or "original"
     with _trava:
         if ident == "original":
@@ -213,19 +231,22 @@ def representantes(executor, ident, n, cor):
         else:
             row, _ = executor.execucoes.obter(ident)
             banco = Path(row["pasta"]) / "banco.sqlite3"
-            chave = (ident, banco.stat().st_mtime if banco.is_file() else 0)
+            chave = (ident, banco.stat().st_mtime if banco.is_file() else 0, _ec7.assinatura())
             if chave not in _memoria:
                 _memoria.clear()
                 _memoria[chave] = _execucao(executor.execucoes, ident)
             dados = _memoria[chave]
     exigir(cor != "ec" or dados["ec_ok"], "Modelo EC indisponível neste PC (PyTorch ou modelo_ec.pt ausente). Use o tipo nutricional.")
-    campo = "tipo" if cor == "tipo" else "ec"
+    exigir(cor != "ec7" or any("ec7" in x for x in dados["pool"][:1]),
+           "Modelo EC7 indisponível: rode o experimento das 7 classes (Pipeline → Experimento EC7).")
+    campo = cor
     categorias, pontos = [], []
     for nome in CATEGORIAS[cor]:
         itens = [p for p in dados["pool"] if p.get(campo) == nome]
-        categorias.append({"nome": nome, "rotulo": EXIBICAO_EC.get(nome, nome) if cor == "ec" else nome,
+        rotulo = EXIBICAO_EC.get(nome, nome) if cor == "ec" else (_ec7.ROTULOS[nome] + " · " + nome) if cor == "ec7" else nome
+        categorias.append({"nome": nome, "rotulo": rotulo,
                            "no_conjunto": len(itens), "exibidos": min(n, len(itens))})
         pontos += [dict(p, categoria=nome) for p in itens[:n]]
     return {"ok": True, "base": dados["base"], "proteinas": dados["proteinas"], "grupos": dados["grupos"],
             "conjunto": len(dados["pool"]), "selecao": dados["selecao"], "cor": cor, "quantidade": n,
-            "ec_disponivel": dados["ec_ok"], "categorias": categorias, "pontos": pontos, "limites": LIMITES}
+            "ec_disponivel": dados["ec_ok"], "ec7_disponivel": any("ec7" in x for x in dados["pool"][:1]), "categorias": categorias, "pontos": pontos, "limites": LIMITES}

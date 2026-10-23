@@ -7,7 +7,7 @@ import secrets
 import threading
 from urllib.parse import parse_qs, urlsplit
 
-from . import configuracoes, estatisticas, explorar
+from . import configuracoes, ec7, estatisticas, explorar
 from .fase1 import Gerenciador
 from .core import ETAPAS, exigir
 
@@ -53,6 +53,7 @@ def pagina_log(executor, ident, cursor=0, extra=False):
 def servidor(executor, porta=8765):
     token = secrets.token_urlsafe(32)
     fase1 = Gerenciador(executor.c)
+    exp_ec7 = ec7.Gerenciador()
     assets = Path(__file__).parent / "static"
     rotas = {"/": ("index.html", "text/html; charset=utf-8"),
         "/app.js": ("app.js", "text/javascript; charset=utf-8"),
@@ -143,6 +144,8 @@ def servidor(executor, porta=8765):
                     self.resposta(200, configuracoes.ler(executor.c))
                 elif uri.path == "/api/fase1":
                     self.resposta(200, fase1.estado())
+                elif uri.path == "/api/ec7":
+                    self.resposta(200, exp_ec7.estado())
                 elif uri.path == "/api/estatisticas":
                     self.resposta(200, dict(estatisticas.obter(executor, parse_qs(uri.query).get("execucao", ["original"])[0]), ok=True))
                 elif uri.path == "/api/explorar":
@@ -205,6 +208,9 @@ def servidor(executor, porta=8765):
                     self.resposta(200, configuracoes.salvar(executor.c, obj))
                 elif uri.path == "/api/fase1":
                     self.resposta(202, fase1.iniciar(obj))
+                elif uri.path == "/api/ec7":
+                    exigir(not (executor.thread and executor.thread.is_alive() and executor.ativo), "Há uma tarefa do sistema em andamento. Espere terminar para usar a GPU no EC7.")
+                    self.resposta(202, exp_ec7.iniciar(obj))
                 elif uri.path == "/api/encerrar":
                     exigir(not obj, "Encerrar não recebe parâmetros.")
                     executor.parar.set()

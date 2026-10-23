@@ -81,6 +81,12 @@ class Servico:
         self.mlp.load_state_dict(cp["estado"])
         self.mlp.eval()
         self.ec = self.carregar_ec(MODELO_EC)
+        try:  # Experimento EC7 (opcional): sem treino concluido, a consulta segue sem ele.
+            from .ec7 import carregar_torch
+            self.ec7 = carregar_torch(torch, self.dispositivo)
+        except Exception as e:
+            self.ec7 = None
+            print("Modelo EC7 nao carregado:", type(e).__name__, e)
 
         from transformers import AutoTokenizer, EsmModel
         comum = {"revision": p.REVISAO_ESM, "cache_dir": str(args.cache),
@@ -158,6 +164,16 @@ class Servico:
                     ec = {"classe": classe, "predicao": e["exibicao"][classe],
                           "confianca": max(esc), "escores_softmax_nao_calibrados": dict(zip(e["classes"], esc)),
                           "metricas_modelo": e["metricas"], "limites": e["limites"]}
+                ec7 = None
+                if self.ec7:
+                    e7 = self.ec7
+                    esc = e7["mlp"]((vetor - e7["media"]) / e7["dp"]).softmax(dim=1)[0]
+                    p.exigir(bool(torch.isfinite(esc).all()), "Escores EC7 invalidos.")
+                    esc = esc.cpu().tolist()
+                    ordem = sorted(range(7), key=esc.__getitem__, reverse=True)
+                    ec7 = {"classe": e7["classes"][ordem[0]], "ec": "EC " + str(ordem[0] + 1), "confianca": esc[ordem[0]],
+                           "ranking": [{"classe": e7["classes"][i], "ec": "EC " + str(i + 1), "escore": esc[i]} for i in ordem],
+                           "metricas_modelo": e7["metricas"], "experimento": e7["pasta"]}
             presentes = [aa for aa in ESSENCIAIS if aa in seq]
             ausentes = [aa for aa in ESSENCIAIS if aa not in seq]
             regra = "Incompleta" if ausentes else "Completa"
@@ -168,7 +184,7 @@ class Servico:
                 "escores_softmax_nao_calibrados": dict(zip(p.CLASSES, escores)),
                 "concorda_com_regra_direta": predicao == regra,
                 "dispositivo": str(self.dispositivo), "modelo_esm": p.MODELO_ESM,
-                "download_permitido": False, "limites": p.LIMITE, "ec": ec}
+                "download_permitido": False, "limites": p.LIMITE, "ec": ec, "ec7": ec7}
         finally:
             self.trava.release()
 

@@ -67,6 +67,12 @@
         <div class="table-wrap"><table class="fase1-table"><thead><tr><th>Arquivo .gz</th><th>Tamanho</th><th>Agrupado (Fase 1)</th></tr></thead><tbody id="fase1-arquivos"><tr><td colspan="3" class="muted">Carregando…</td></tr></tbody></table></div>
         <pre id="fase1-log" class="fase1-log" hidden></pre>
       </article>
+      <article class="panel fase1-panel" id="ec7-pipeline">
+        <div class="panel-heading"><div><p class="eyebrow">EXPERIMENTO SEPARADO · 7 CLASSES EC</p><h2>Experimento EC7</h2><p>Coleta até 500 enzimas revisadas por classe no Swiss-Prot (precisa de internet), agrupa com MMseqs2 (WSL), gera os embeddings e treina o MLP de 7 classes com validação cruzada. O modelo EC 2 × EC 3 do painel não muda.</p></div><span id="ec7p-status" class="badge">—</span></div>
+        <div class="fase1-actions ec7-acoes"><button class="button" type="button" data-ec7="tudo">Rodar tudo</button><button class="button ghost" type="button" data-ec7="continuar">Continuar (reaproveita a coleta)</button><button class="button ghost compact" type="button" data-ec7="coletar">1 · Coletar</button><button class="button ghost compact" type="button" data-ec7="preparar">2 · Agrupar</button><button class="button ghost compact" type="button" data-ec7="treinar">3 · Treinar</button></div>
+        <p id="ec7p-resultado" class="muted"></p>
+        <pre id="ec7p-log" class="fase1-log" hidden></pre>
+      </article>
       <article class="panel new-run"><div><p class="eyebrow">EXECUTAR DO COMEÇO AO FIM</p><h2>Novo experimento completo</h2><p>Leia os GZ, execute MMseqs2, gere os embeddings e treine um novo MLP. O banco e os relatórios serão registrados em outra pasta.</p></div><div class="new-run-fields"><div><label for="run-source">Arquivo de entrada</label><select id="run-source"><option value="todas">Todas as fontes, até o limite</option></select></div><div><label for="run-limit">Limite de sequências candidatas</label><select id="run-limit"><option value="1000">1.000 · primeiro teste completo</option><option value="10000">10.000</option><option value="100000">100.000</option><option value="1000000">1.000.000</option></select></div><button id="start-run" class="button primary">Iniciar fluxo completo →</button></div><p class="muted small">O limite vale para candidatos elegíveis. O MMseqs2 seleciona representantes; a quantidade final de vetores pode ser menor. Treino do MLP: até 10 épocas; ESM-2 permanece pré-treinado.</p></article>
       <div class="controls panel"><div><h2>Executor local</h2><p id="pipeline-description">Carregando configuração.</p></div><div class="control-actions"><button id="toggle-auto" class="button" hidden>—</button><button id="resume-run" class="button" hidden>Retomar execução</button><button id="toggle-pause" class="button ghost">—</button></div></div>
       <div class="pipeline-layout"><div id="steps" class="steps"></div><aside class="pipeline-aside panel">
@@ -95,7 +101,7 @@
       <div class="page-heading"><div><p class="eyebrow">MAPA DOS GRUPOS · ESTATÍSTICA DO TESTE</p><h1 id="heading-explorar">Explorar e analisar</h1><p>No mapa, cada bolha é o representante de um grupo MMseqs2: clique para ver sequência, ID, grupo, tipo e classe. Abaixo, os gráficos estatísticos do conjunto de teste.</p></div><span id="explorar-base" class="badge">—</span></div>
       <article class="panel">
         <div class="explorar-controles">
-          <div><label for="explorar-cor">Agrupar e colorir por</label><select id="explorar-cor"><option value="tipo">Tipo nutricional (regra dos 9 aminoácidos)</option><option value="ec">Classe enzimática prevista (EC 2 × EC 3)</option></select></div>
+          <div><label for="explorar-cor">Agrupar e colorir por</label><select id="explorar-cor"><option value="tipo">Tipo nutricional (regra dos 9 aminoácidos)</option><option value="ec">Classe enzimática prevista (EC 2 × EC 3)</option><option value="ec7">Classe enzimática entre as 7 (experimento EC7)</option></select></div>
           <div><span class="rotulo-campo" id="explorar-n-rotulo">Representantes por categoria</span><div class="segmentado" role="group" aria-labelledby="explorar-n-rotulo"><button type="button" data-n="10" aria-pressed="true">10</button><button type="button" data-n="50" aria-pressed="false">50</button><button type="button" data-n="100" aria-pressed="false">100</button></div></div>
           <div id="explorar-legenda" class="legenda" aria-label="Legenda"></div>
         </div>
@@ -113,9 +119,15 @@
         <article class="panel"><div class="panel-heading"><div><h2>Dispersão: comprimento × escore do MLP</h2><p>Amostra de até 1.500 proteínas do teste; reta ajustada em todas.</p></div></div><svg id="estat-disp-svg" class="estat-svg" viewBox="0 0 520 330" role="img"></svg><p id="estat-disp-txt" class="estat-txt"></p></article>
       </div>
       <div id="estat-limites" class="note"></div>
+      <article class="panel wide" id="ec7-painel">
+        <div class="panel-heading"><div><p class="eyebrow">EXPERIMENTO SEPARADO · 7 CLASSES EC</p><h2>Modelo EC 1 a EC 7</h2><p>Mesmo pipeline (ESM-2 + MLP 320 → 64 → 7) com 3.500 enzimas revisadas do Swiss-Prot. Não substitui o modelo EC 2 × EC 3.</p></div><span id="ec7-badge" class="badge">—</span></div>
+        <div id="ec7-metricas" class="ec7-metricas"></div>
+        <div class="ec7-layout"><div><h3>Matriz de confusão no teste (% de cada classe real)</h3><svg id="ec7-matriz" class="estat-svg" viewBox="0 0 520 400" role="img" aria-label="Matriz de confusão das 7 classes EC"></svg></div><div><h3>Sensibilidade por classe (teste)</h3><div id="ec7-sens" class="ec7-sens"></div><p id="ec7-txt" class="estat-txt"></p></div></div>
+        <div id="ec7-limites" class="note"></div>
+      </article>
       <article class="panel wide">
         <div class="panel-heading"><div><h2>Representantes exibidos</h2><p>A mesma seleção do mapa, em lista. Clique numa linha para abrir o detalhe.</p></div></div>
-        <div class="table-wrap lista-explorar"><table><thead><tr><th>Proteína</th><th>Grupo</th><th>Membros</th><th>Tipo</th><th>Classe EC prevista</th><th>Resíduos</th><th>Partição</th></tr></thead><tbody id="explorar-lista"><tr><td colspan="7" class="muted">Aguardando o mapa.</td></tr></tbody></table></div>
+        <div class="table-wrap lista-explorar"><table><thead><tr><th>Proteína</th><th>Grupo</th><th>Membros</th><th>Tipo</th><th>EC 2 × EC 3</th><th>EC (7 classes)</th><th>Resíduos</th><th>Partição</th></tr></thead><tbody id="explorar-lista"><tr><td colspan="8" class="muted">Aguardando o mapa.</td></tr></tbody></table></div>
       </article>
     </section>
     <section id="config" class="view" aria-labelledby="heading-config" hidden>
