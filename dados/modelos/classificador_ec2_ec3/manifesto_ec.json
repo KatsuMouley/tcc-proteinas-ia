@@ -1,0 +1,40 @@
+{
+  "tipo": "manifesto_modelo_ec",
+  "schema": 1,
+  "origem": "dados\\piloto_ec2_ec3\\swissprot_20261014T021908726567Z_46400a\\preparacao_ec_20261014T032918475574Z_5b4d54\\treino_ec_20261014T042535Z_f4ff0b",
+  "hashes": {
+    "modelo_ec.pt": "3ad57ff1768ec9f4afb49d2b8ece13e26943ac801a8916f4bb0f6c5ff17c00fb",
+    "relatorio_treino_ec.json": "dd50d82729de9ea6a3a06053b243980ff4bf203428633f4f5a24b385fe4cef4f",
+    "predicoes_teste.csv": "f033d31010b7d9021c04b3ab5b5ff32ec8f45dcaac828350eeb79d310c5300c4"
+  },
+  "sha256_script_treino": "f5a0d0b50c85cb0389bd4229a94503fee2f2671f265e0de2dbe9769991592579",
+  "classes": [
+    "Hidrolase",
+    "Transferase"
+  ],
+  "rotulos_exibicao": {
+    "Hidrolase": "Hidrolase (EC 3)",
+    "Transferase": "Transferase (EC 2)"
+  },
+  "arquitetura": [
+    320,
+    64,
+    2
+  ],
+  "modelo_esm": "facebook/esm2_t6_8M_UR50D",
+  "revisao_esm": "c731040fcd8d73dceaa04b0a8e6329b345b0f5df",
+  "metricas": {
+    "teste_fixo_n": 107,
+    "teste_fixo_acuracia_balanceada": 0.83,
+    "validacao_cruzada_acuracia_balanceada_media": 0.8599,
+    "validacao_cruzada_acuracia_balanceada_dp": 0.0394
+  },
+  "limites": [
+    "Treinado so com Transferases (EC 2) e Hidrolases (EC 3) do Swiss-Prot: sempre responde uma das duas, mesmo para proteinas que nao sao enzimas ou sao de outra classe EC.",
+    "Piloto de 1.000 enzimas revisadas do Swiss-Prot (recorte por accession, nao aleatorio).",
+    "Teste fixo pequeno (cerca de 100 proteinas); usar tambem a validacao cruzada.",
+    "Linclust a 50% nao elimina homologia remota entre treino e teste.",
+    "ESM-2 foi pre-treinado em UniRef50, que pode conter estas proteinas.",
+    "Escores softmax nao calibrados."
+  ]
+}

@@ -1,0 +1,332 @@
+{
+  "tipo": "treino_classificador_regra_aa_esm2",
+  "schema": 1,
+  "ok": true,
+  "treinamento_realizado": true,
+  "esm2_retreinado": false,
+  "embeddings_regenerados": false,
+  "dispositivo": "cuda:0",
+  "gpu_utilizada": true,
+  "gpu": "NVIDIA GeForce GTX 1650",
+  "threads_cpu_pytorch": 2,
+  "pytorch": "2.9.1+cu126",
+  "numpy": "2.2.6",
+  "cuda_compilada": "12.6",
+  "python": "3.13.15",
+  "memoria_pico_pytorch_mb": 73.3,
+  "arquitetura": [
+    320,
+    64,
+    2
+  ],
+  "parametros_treinaveis": 20674,
+  "alvo": "Presenca literal dos nove aminoacidos HILKMFTWV",
+  "classes": [
+    "Incompleta",
+    "Completa"
+  ],
+  "epocas_executadas": 10,
+  "melhor_epoca": 10,
+  "passos_otimizacao": 3930,
+  "selecao_modelo": "Maior acuracia balanceada na validacao; empate preserva a epoca anterior; paciencia fixa.",
+  "teste_usado_para_ajuste": false,
+  "normalizacao_calculada_somente_no_treino": true,
+  "grupos_identificados_compartilhados": 0,
+  "validacao_melhor_modelo": {
+    "proteinas": 98165,
+    "acuracia": 0.8958793867468039,
+    "acuracia_balanceada": 0.8924227250543382,
+    "f1_macro": 0.8673770187299423,
+    "ordem_classes": [
+      "Incompleta",
+      "Completa"
+    ],
+    "matriz_confusao_linhas_reais_colunas_previstas": [
+      [
+        21218,
+        2739
+      ],
+      [
+        7482,
+        66726
+      ]
+    ],
+    "por_classe": {
+      "Incompleta": {
+        "suporte": 23957,
+        "precisao": 0.7393031358885017,
+        "sensibilidade": 0.8856701590349376,
+        "f1": 0.8058947528343811
+      },
+      "Completa": {
+        "suporte": 74208,
+        "precisao": 0.9605700712589074,
+        "sensibilidade": 0.8991752910737387,
+        "f1": 0.9288592846255037
+      }
+    },
+    "divisao_por_zero": "Resultado 0 quando nao ha previsoes da classe.",
+    "perda_sem_pesos": 0.24363584781223738
+  },
+  "teste_mlp": {
+    "proteinas": 98668,
+    "acuracia": 0.898538533263064,
+    "acuracia_balanceada": 0.8934438262067952,
+    "f1_macro": 0.8674864415397556,
+    "ordem_classes": [
+      "Incompleta",
+      "Completa"
+    ],
+    "matriz_confusao_linhas_reais_colunas_previstas": [
+      [
+        20447,
+        2687
+      ],
+      [
+        7324,
+        68210
+      ]
+    ],
+    "por_classe": {
+      "Incompleta": {
+        "suporte": 23134,
+        "precisao": 0.7362716502826689,
+        "sensibilidade": 0.8838506094925218,
+        "f1": 0.8033395540713093
+      },
+      "Completa": {
+        "suporte": 75534,
+        "precisao": 0.962099947811614,
+        "sensibilidade": 0.9030370429210687,
+        "f1": 0.9316333290082018
+      }
+    },
+    "divisao_por_zero": "Resultado 0 quando nao ha previsoes da classe.",
+    "perda_sem_pesos": 0.23896036207224072
+  },
+  "teste_baseline_classe_mais_frequente": {
+    "classe_escolhida_no_treino": "Completa",
+    "proteinas": 98668,
+    "acuracia": 0.7655369522033486,
+    "acuracia_balanceada": 0.5,
+    "f1_macro": 0.43360007347791646,
+    "ordem_classes": [
+      "Incompleta",
+      "Completa"
+    ],
+    "matriz_confusao_linhas_reais_colunas_previstas": [
+      [
+        0,
+        23134
+      ],
+      [
+        0,
+        75534
+      ]
+    ],
+    "por_classe": {
+      "Incompleta": {
+        "suporte": 23134,
+        "precisao": 0.0,
+        "sensibilidade": 0.0,
+        "f1": 0.0
+      },
+      "Completa": {
+        "suporte": 75534,
+        "precisao": 0.7655369522033486,
+        "sensibilidade": 1.0,
+        "f1": 0.8672001469558329
+      }
+    },
+    "divisao_por_zero": "Resultado 0 quando nao ha previsoes da classe."
+  },
+  "teste_regra_direta": {
+    "proteinas": 98668,
+    "acuracia": 1.0,
+    "acuracia_balanceada": 1.0,
+    "f1_macro": 1.0,
+    "ordem_classes": [
+      "Incompleta",
+      "Completa"
+    ],
+    "matriz_confusao_linhas_reais_colunas_previstas": [
+      [
+        23134,
+        0
+      ],
+      [
+        0,
+        75534
+      ]
+    ],
+    "por_classe": {
+      "Incompleta": {
+        "suporte": 23134,
+        "precisao": 1.0,
+        "sensibilidade": 1.0,
+        "f1": 1.0
+      },
+      "Completa": {
+        "suporte": 75534,
+        "precisao": 1.0,
+        "sensibilidade": 1.0,
+        "f1": 1.0
+      }
+    },
+    "divisao_por_zero": "Resultado 0 quando nao ha previsoes da classe."
+  },
+  "historico": [
+    {
+      "epoca": 1,
+      "perda_treino_ponderada": 0.33742854430599156,
+      "perda_validacao": 0.3033597775279902,
+      "acuracia_balanceada_validacao": 0.8675976627387041,
+      "f1_macro_validacao": 0.8312290083650503,
+      "segundos": 8.77647799999977
+    },
+    {
+      "epoca": 2,
+      "perda_treino_ponderada": 0.2663648349010282,
+      "perda_validacao": 0.29266411515071084,
+      "acuracia_balanceada_validacao": 0.8730388511480331,
+      "f1_macro_validacao": 0.8372913986521033,
+      "segundos": 1.8040782000025501
+    },
+    {
+      "epoca": 3,
+      "perda_treino_ponderada": 0.249249534179608,
+      "perda_validacao": 0.2862176051392665,
+      "acuracia_balanceada_validacao": 0.8828346201634836,
+      "f1_macro_validacao": 0.8447945399643737,
+      "segundos": 1.785334399995918
+    },
+    {
+      "epoca": 4,
+      "perda_treino_ponderada": 0.23876005235709158,
+      "perda_validacao": 0.2642823325727291,
+      "acuracia_balanceada_validacao": 0.8824844496548663,
+      "f1_macro_validacao": 0.8524662224571954,
+      "segundos": 1.811253100000613
+    },
+    {
+      "epoca": 5,
+      "perda_treino_ponderada": 0.2313016252690093,
+      "perda_validacao": 0.2673409372159796,
+      "acuracia_balanceada_validacao": 0.8864848882731229,
+      "f1_macro_validacao": 0.854416211260024,
+      "segundos": 1.893064099996991
+    },
+    {
+      "epoca": 6,
+      "perda_treino_ponderada": 0.22584675289529776,
+      "perda_validacao": 0.2695772118073683,
+      "acuracia_balanceada_validacao": 0.8881446842272547,
+      "f1_macro_validacao": 0.8550330700937689,
+      "segundos": 1.8905312999995658
+    },
+    {
+      "epoca": 7,
+      "perda_treino_ponderada": 0.22112522248686808,
+      "perda_validacao": 0.25938481542804603,
+      "acuracia_balanceada_validacao": 0.8904283154503876,
+      "f1_macro_validacao": 0.8598482871410353,
+      "segundos": 1.8299608999950578
+    },
+    {
+      "epoca": 8,
+      "perda_treino_ponderada": 0.21707710242871944,
+      "perda_validacao": 0.2626542032253771,
+      "acuracia_balanceada_validacao": 0.8900352169101198,
+      "f1_macro_validacao": 0.8580285526490636,
+      "segundos": 1.8413127999956487
+    },
+    {
+      "epoca": 9,
+      "perda_treino_ponderada": 0.2141551442806895,
+      "perda_validacao": 0.25717713499751693,
+      "acuracia_balanceada_validacao": 0.8888842149500895,
+      "f1_macro_validacao": 0.8600127677605277,
+      "segundos": 1.8594644000040716
+    },
+    {
+      "epoca": 10,
+      "perda_treino_ponderada": 0.21109483778748142,
+      "perda_validacao": 0.24363584781223738,
+      "acuracia_balanceada_validacao": 0.8924227250543382,
+      "f1_macro_validacao": 0.8673770187299423,
+      "segundos": 1.8240375999957905
+    }
+  ],
+  "proveniencia": {
+    "base": "C:\\ai_tcc\\dados\\base_ia\\base_1m",
+    "particoes": "C:\\ai_tcc\\dados\\base_ia\\particoes_1m",
+    "agrupamento": "C:\\ai_tcc\\dados\\base_ia\\agrupamento_global_1m",
+    "relatorio_consolidacao_sha256": "e2f4b3e697300fc2afc0d7ce780b5bcc30858be557bebbda84997be69fa8cb3d",
+    "relatorio_particoes_sha256": "149b691166c33e28ad74f257c6a504bff1ef12842b64678278223cc42a1c1dd8",
+    "hashes_base": {
+      "sequencias.fasta": "e085d4348ddb2cefd9c4fd0868ac9f247eeeea1d1cb02d51d890e911dcaccdb6",
+      "indice.csv": "bafbff14d5d36b165a4b30258370eb5b0bac71b71aeb84397dd2040631c9e787",
+      "embeddings.npy": "2a5ac3a42441e95566e32167127be958b0d45273c364d430e69801829a8bb3f6"
+    },
+    "hashes_particoes": {
+      "particoes.csv": "68fd302cf08d497ff89208c91f21b979033dac34222909f8c5fbd6bf4ef358fd",
+      "grupos_por_linha.npy": "addd717692f994ca198e8cb03ed9d179edd8fe1948c85982cdd6efdc2cc08e2a",
+      "treino_indices.npy": "d7576c8374d5393ebad7a35d1c42d954ce3e6aa9523a2bdd5c60c71e71dacb84",
+      "validacao_indices.npy": "4bf66f2277a9165c4502a41d7c5abe7ed5e296d0ee98c58a43d979e626b69013",
+      "teste_indices.npy": "f4b158e9c49e77a31b8c76a7a3231ed1e5c6e2ae1b6248cd9479ee4a866eda91"
+    },
+    "tsv_sha256": "bbd56c24910b2b08ce0f812637455d0d35c69e39333ea5c5a86340315ba9c10c",
+    "semente_particoes": 42,
+    "distribuicao_particoes": {
+      "treino": {
+        "proteinas": 803167,
+        "grupos": 448747,
+        "fracao_observada": 0.803167,
+        "rotulos": {
+          "Completa": 612377,
+          "Incompleta": 190790
+        }
+      },
+      "validacao": {
+        "proteinas": 98165,
+        "grupos": 55894,
+        "fracao_observada": 0.098165,
+        "rotulos": {
+          "Completa": 74208,
+          "Incompleta": 23957
+        }
+      },
+      "teste": {
+        "proteinas": 98668,
+        "grupos": 56037,
+        "fracao_observada": 0.098668,
+        "rotulos": {
+          "Completa": 75534,
+          "Incompleta": 23134
+        }
+      }
+    },
+    "histograma_comprimentos": {
+      "1_a_9": 1931,
+      "10_a_29": 9117,
+      "30_a_99": 124959,
+      "100_a_512": 863993
+    },
+    "recorte_ncbi": "Primeiro milhao de sequencias unicas elegiveis na ordem do processamento; nao amostra aleatoria de todo NCBI."
+  },
+  "limites": [
+    "Rotulo calculado pela presenca literal de HILKMFTWV; nao avalia digestibilidade, qualidade nutricional ou funcao biologica.",
+    "Regra direta e o proprio criterio que gerou os rotulos; sua exatidao e esperada por construcao.",
+    "Linclust pode perder homologos; grupos identificados disjuntos nao provam independencia biologica total.",
+    "Escores softmax nao foram calibrados. Metricas sao por sequencia, sem intervalo de confianca por grupo.",
+    "Inclui o recorte de comprimentos 1 a 512 da base fornecida; nao equivale a amostragem aleatoria de todo NCBI."
+  ],
+  "pasta_saida": "C:\\ai_tcc\\dados\\modelos\\classificador_regra_aa_esm2",
+  "segundos": 302.655,
+  "hashes_arquivos": {
+    "modelo.pt": "ad76dca5f69965bf955198ac8380906637ee802d655aec8809b1eb850eab6460",
+    "historico.csv": "289abf4ddb36484805f690b565b4f7af3e762bcc1c928fef03452351a088255f",
+    "predicoes_teste.csv": "04d993b196d49afb3d638d2478c7566408c6141b9f7d566af4867e26608eac50",
+    "configuracao.json": "869af7d876e60c6deed8cf1aa07770f05c5490a4d6be1beb52819f716539c528"
+  }
+}

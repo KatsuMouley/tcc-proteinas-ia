@@ -1,0 +1,274 @@
+[
+ {
+  "epoca": 1,
+  "perda_treino": 1.501767787745858,
+  "acuracia_balanceada_validacao": 0.5876188661094321,
+  "melhor": true
+ },
+ {
+  "epoca": 2,
+  "perda_treino": 1.0337583665893384,
+  "acuracia_balanceada_validacao": 0.646061746978189,
+  "melhor": true
+ },
+ {
+  "epoca": 3,
+  "perda_treino": 0.8387343945167101,
+  "acuracia_balanceada_validacao": 0.6790828689557992,
+  "melhor": true
+ },
+ {
+  "epoca": 4,
+  "perda_treino": 0.7265841592046499,
+  "acuracia_balanceada_validacao": 0.6958655628659479,
+  "melhor": true
+ },
+ {
+  "epoca": 5,
+  "perda_treino": 0.645410793177253,
+  "acuracia_balanceada_validacao": 0.6862564512314223
+ },
+ {
+  "epoca": 6,
+  "perda_treino": 0.580240680015007,
+  "acuracia_balanceada_validacao": 0.693673526804062
+ },
+ {
+  "epoca": 7,
+  "perda_treino": 0.5286381911226422,
+  "acuracia_balanceada_validacao": 0.7110670931772203,
+  "melhor": true
+ },
+ {
+  "epoca": 8,
+  "perda_treino": 0.4862571079343336,
+  "acuracia_balanceada_validacao": 0.7120771941873212,
+  "melhor": true
+ },
+ {
+  "epoca": 9,
+  "perda_treino": 0.4501731547952923,
+  "acuracia_balanceada_validacao": 0.7302685323632571,
+  "melhor": true
+ },
+ {
+  "epoca": 10,
+  "perda_treino": 0.41045574972150684,
+  "acuracia_balanceada_validacao": 0.7556565230573702,
+  "melhor": true
+ },
+ {
+  "epoca": 11,
+  "perda_treino": 0.3840253969645863,
+  "acuracia_balanceada_validacao": 0.7409516512096411
+ },
+ {
+  "epoca": 12,
+  "perda_treino": 0.3499943511286738,
+  "acuracia_balanceada_validacao": 0.766571844561833,
+  "melhor": true
+ },
+ {
+  "epoca": 13,
+  "perda_treino": 0.32762508392545125,
+  "acuracia_balanceada_validacao": 0.7634680671800426
+ },
+ {
+  "epoca": 14,
+  "perda_treino": 0.3032455737978019,
+  "acuracia_balanceada_validacao": 0.7605526152849987
+ },
+ {
+  "epoca": 15,
+  "perda_treino": 0.28491186685305914,
+  "acuracia_balanceada_validacao": 0.7625529883057799
+ },
+ {
+  "epoca": 16,
+  "perda_treino": 0.26124554701489927,
+  "acuracia_balanceada_validacao": 0.7671128728656644,
+  "melhor": true
+ },
+ {
+  "epoca": 17,
+  "perda_treino": 0.24654200463283582,
+  "acuracia_balanceada_validacao": 0.7767485886238292,
+  "melhor": true
+ },
+ {
+  "epoca": 18,
+  "perda_treino": 0.2273228820222006,
+  "acuracia_balanceada_validacao": 0.7680197060173956
+ },
+ {
+  "epoca": 19,
+  "perda_treino": 0.2145253321960215,
+  "acuracia_balanceada_validacao": 0.7694007163702966
+ },
+ {
+  "epoca": 20,
+  "perda_treino": 0.20227626746232064,
+  "acuracia_balanceada_validacao": 0.771300177453431
+ },
+ {
+  "epoca": 21,
+  "perda_treino": 0.1922460610150573,
+  "acuracia_balanceada_validacao": 0.7616212698153398
+ },
+ {
+  "epoca": 22,
+  "perda_treino": 0.1783845201213859,
+  "acuracia_balanceada_validacao": 0.7713019925495859
+ },
+ {
+  "epoca": 23,
+  "perda_treino": 0.16405205095527953,
+  "acuracia_balanceada_validacao": 0.7640958200372909
+ },
+ {
+  "epoca": 24,
+  "perda_treino": 0.15689873001780696,
+  "acuracia_balanceada_validacao": 0.7657302400390578
+ },
+ {
+  "epoca": 25,
+  "perda_treino": 0.14589246063949451,
+  "acuracia_balanceada_validacao": 0.7717811779344316
+ },
+ {
+  "epoca": 26,
+  "perda_treino": 0.13723997412934988,
+  "acuracia_balanceada_validacao": 0.7581940904543908
+ },
+ {
+  "epoca": 27,
+  "perda_treino": 0.1259811395106905,
+  "acuracia_balanceada_validacao": 0.7562887395694481
+ },
+ {
+  "epoca": 28,
+  "perda_treino": 0.12197002277089651,
+  "acuracia_balanceada_validacao": 0.7660060790904072
+ },
+ {
+  "epoca": 29,
+  "perda_treino": 0.11503564026120956,
+  "acuracia_balanceada_validacao": 0.7608485759737204
+ },
+ {
+  "epoca": 30,
+  "perda_treino": 0.12046340705046323,
+  "acuracia_balanceada_validacao": 0.759607791059466
+ },
+ {
+  "epoca": 31,
+  "perda_treino": 0.0999417773722082,
+  "acuracia_balanceada_validacao": 0.7759333400380762
+ },
+ {
+  "epoca": 32,
+  "perda_treino": 0.09414800876976538,
+  "acuracia_balanceada_validacao": 0.7814560108668696,
+  "melhor": true
+ },
+ {
+  "epoca": 33,
+  "perda_treino": 0.08861922634764846,
+  "acuracia_balanceada_validacao": 0.7645109028936521
+ },
+ {
+  "epoca": 34,
+  "perda_treino": 0.07935201029748179,
+  "acuracia_balanceada_validacao": 0.7734772926840696
+ },
+ {
+  "epoca": 35,
+  "perda_treino": 0.0749044112235656,
+  "acuracia_balanceada_validacao": 0.7693582097817755
+ },
+ {
+  "epoca": 36,
+  "perda_treino": 0.07034861526821169,
+  "acuracia_balanceada_validacao": 0.7788555151974482
+ },
+ {
+  "epoca": 37,
+  "perda_treino": 0.07010246268689653,
+  "acuracia_balanceada_validacao": 0.7672303244039862
+ },
+ {
+  "epoca": 38,
+  "perda_treino": 0.06338578521224875,
+  "acuracia_balanceada_validacao": 0.7715593287329906
+ },
+ {
+  "epoca": 39,
+  "perda_treino": 0.058575844190938225,
+  "acuracia_balanceada_validacao": 0.7632656543245684
+ },
+ {
+  "epoca": 40,
+  "perda_treino": 0.05691892265421683,
+  "acuracia_balanceada_validacao": 0.7647242137346103
+ },
+ {
+  "epoca": 41,
+  "perda_treino": 0.05155015310976592,
+  "acuracia_balanceada_validacao": 0.7654368797533987
+ },
+ {
+  "epoca": 42,
+  "perda_treino": 0.049166456031178564,
+  "acuracia_balanceada_validacao": 0.7620746363834543
+ },
+ {
+  "epoca": 43,
+  "perda_treino": 0.046303253329226704,
+  "acuracia_balanceada_validacao": 0.7559845813138073
+ },
+ {
+  "epoca": 44,
+  "perda_treino": 0.047841409484555945,
+  "acuracia_balanceada_validacao": 0.7535091976293361
+ },
+ {
+  "epoca": 45,
+  "perda_treino": 0.041612068780381505,
+  "acuracia_balanceada_validacao": 0.7731664111641008
+ },
+ {
+  "epoca": 46,
+  "perda_treino": 0.03973122707921438,
+  "acuracia_balanceada_validacao": 0.7705600256928713
+ },
+ {
+  "epoca": 47,
+  "perda_treino": 0.037304418077715486,
+  "acuracia_balanceada_validacao": 0.7756399797524172
+ },
+ {
+  "epoca": 48,
+  "perda_treino": 0.03511986486235019,
+  "acuracia_balanceada_validacao": 0.7688698007450413
+ },
+ {
+  "epoca": 49,
+  "perda_treino": 0.03194385873072319,
+  "acuracia_balanceada_validacao": 0.7654692736633437
+ },
+ {
+  "epoca": 50,
+  "perda_treino": 0.03036996324784497,
+  "acuracia_balanceada_validacao": 0.7499311430308734
+ },
+ {
+  "epoca": 51,
+  "perda_treino": 0.028895592536372135,
+  "acuracia_balanceada_validacao": 0.765656913858685
+ },
+ {
+  "epoca": 52,
+  "perda_treino": 0.027695440209866244,
+  "acuracia_balanceada_validacao": 0.7693557093942153
+ }
+]

@@ -2,7 +2,8 @@
 __pycache__/
 *.pyc
 cache/
-dados/
+dados/*
+!dados/modelos/
 arquivos .gz/
 arquivos csv/
 tcc_testes_*/
@@ -20,3 +21,7 @@ desktop.ini
 estrutura_pasta.txt
 
 config_local.json
+
+# Os modelos do TCC (pequenos) vao no git, para o painel consultar sem o pacote de dados.
+!dados/modelos/**/*.pt
+saida/

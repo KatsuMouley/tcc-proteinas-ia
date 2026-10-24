@@ -4,3 +4,6 @@
 *.ps1 text eol=crlf
 *.pt binary
 *.npy binary
+
+# Modelos do TCC: bytes exatos (os hashes sao conferidos pelos manifestos/relatorios)
+dados/modelos/** -text

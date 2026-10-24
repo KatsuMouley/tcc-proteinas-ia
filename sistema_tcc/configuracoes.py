@@ -84,7 +84,7 @@ def diagnosticar(c):
                        else "ausente. Rode instalar.cmd (baixa ~30 MB uma única vez).", "Consulta, embeddings"))
     regra = p["modelo"] / "modelo.pt"
     itens.append(_item("Modelo da regra (prova de conceito)", regra.is_file(), str(regra.relative_to(c.raiz)) if regra.is_file()
-                       else "ausente. Extraia o pacote de dados do Drive.", "Consulta"))
+                       else "ausente. Rode git pull: os modelos vêm no repositório.", "Consulta"))
     ec = c.raiz / "dados/modelos/classificador_ec2_ec3/modelo_ec.pt"
     if ec.is_file():
         try:
@@ -94,10 +94,19 @@ def diagnosticar(c):
         except Exception as e:
             itens.append(_item("Modelo EC 2 × EC 3", False, f"manifesto ilegível: {e}", "Consulta"))
     else:
-        itens.append(_item("Modelo EC 2 × EC 3", False, "ausente. Extraia o pacote de dados do Drive.", "Consulta"))
+        itens.append(_item("Modelo EC 2 × EC 3", False, "ausente. Rode git pull: os modelos vêm no repositório.", "Consulta"))
+    try:
+        from .ec7 import ultimo_treino
+        pasta7, _ = ultimo_treino()
+    except Exception:
+        pasta7 = None
+    itens.append(_item("Modelo EC (7 classes)", True if pasta7 else None, str(pasta7.relative_to(c.raiz)) if pasta7
+                       else "ausente (opcional). Rode o experimento em Pipeline → Experimento EC7.", "Consulta (experimento)"))
     base = [p["base"] / n for n in ("embeddings.npy", "indice.csv", "sequencias.fasta")]
-    itens.append(_item("Base do milhão", all(x.is_file() for x in base), "presente" if all(x.is_file() for x in base)
-                       else "ausente. Extraia o pacote de dados do Drive.", "Visão geral e consulta"))
+    tem_base = all(x.is_file() for x in base)
+    itens.append(_item("Base do milhão", True if tem_base else None, "presente" if tem_base
+                       else "ausente (opcional). A consulta usa os modelos do repositório; a base só é necessária para o mapa e as estatísticas do milhão.",
+                       "Mapa e estatísticas do milhão"))
     n_fontes = sum(1 for pasta in p["fontes"] if pasta.is_dir() for x in pasta.rglob("*") if x.suffix.lower() in (".gz", ".zip"))
     itens.append(_item("Arquivos .gz do NCBI", n_fontes > 0 or None, f"{n_fontes} arquivo(s) .gz/.zip em: " + ", ".join(x.name for x in p["fontes"])
                        if n_fontes else "nenhum. Só é preciso para rodar um fluxo novo.", "Fluxo novo"))
@@ -121,6 +130,6 @@ def diagnosticar(c):
     reserva = c.valores.get("reserva_gib", 10)
     itens.append(_item("Espaço em disco", livre > reserva + 5, f"{livre:.1f} GiB livres · reserva mínima {reserva} GiB", "Fluxo novo"))
     pronto_consulta = all(i["ok"] for i in itens if i["nome"] in ("Python", "PyTorch", "Processamento", "Transformers",
-        "Modelo ESM-2 em cache", "Modelo da regra (prova de conceito)", "Modelo EC 2 × EC 3", "Base do milhão"))
+        "Modelo ESM-2 em cache", "Modelo da regra (prova de conceito)", "Modelo EC 2 × EC 3"))
     pronto_fluxo = pronto_consulta and all(i["ok"] for i in itens if i["nome"] in ("Arquivos .gz do NCBI", "WSL + MMseqs2", "Espaço em disco"))
     return {"ok": True, "itens": itens, "pronto_consulta": pronto_consulta, "pronto_fluxo": pronto_fluxo}

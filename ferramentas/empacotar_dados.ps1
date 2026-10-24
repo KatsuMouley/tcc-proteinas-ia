@@ -1,9 +1,9 @@
-# Gera o pacote de dados para o Google Drive (rodar no PC do Katsu).
+﻿# Gera o pacote de dados para o Google Drive (rodar no PC do Katsu).
 # Contem o necessario para a Visao geral do milhao e a consulta EC: base consolidada,
 # agrupamento, particoes, relatorios, modelos, piloto EC e o ESM-2 em cache.
 # Uso: powershell -ExecutionPolicy Bypass -File ferramentas\empacotar_dados.ps1
-param([string]$Saida = "E:\ai_tcc_arquivo\pacote_dados_tcc.zip")
-$raiz = "C:\ai_tcc"
+param([string]$Saida = (Join-Path (Split-Path $PSScriptRoot -Parent) "saida\pacote_dados_tcc.zip"))
+$raiz = Split-Path $PSScriptRoot -Parent
 $itens = @(
   "dados\base_ia\base_1m",
   "dados\base_ia\agrupamento_global_1m\global_cluster.tsv",

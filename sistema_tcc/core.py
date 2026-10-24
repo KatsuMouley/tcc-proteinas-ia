@@ -65,6 +65,21 @@ def exigir(condicao, mensagem):
         raise ValueError(mensagem)
 
 
+def modelo_portatil(config):
+    """Modelo da regra versionado no git, usado quando a base do milhao nao esta neste PC.
+
+    Vale so se o relatorio de treino estiver concluido e o modelo.pt tiver exatamente o hash registrado nele.
+    """
+    pasta = config.caminhos["modelo"]
+    try:
+        r = ler_json(pasta / "relatorio_treino.json")
+        if r.get("ok") is True and (pasta / "modelo.pt").is_file() and sha(pasta / "modelo.pt") == r["hashes_arquivos"]["modelo.pt"]:
+            return r
+    except (OSError, ValueError, KeyError, TypeError, UnicodeError):
+        pass
+    return None
+
+
 def ler_json(path):
     path = Path(path)
     exigir(path.stat().st_size <= 5 * 1024**2, "Relatório JSON excede 5 MiB.")
@@ -700,7 +715,10 @@ class Executor:
                 log.write(agora() + " · Início: " + NOMES.get(etapa, "Consulta de proteína") + "\n")
                 if etapa == "prever":
                     cat, config = self.catalogo_execucao(task["parametros"].get("execucao", "original"))
-                    exigir(cat.refresh(True)["treinar"]["estado"] == "concluido", "Modelo indisponível ou alterado.")
+                    portatil = task["parametros"].get("execucao", "original") == "original" and modelo_portatil(config) is not None
+                    exigir(cat.refresh(True)["treinar"]["estado"] == "concluido" or portatil, "Modelo indisponível ou alterado.")
+                    if portatil and cat.estados["treinar"]["estado"] != "concluido":
+                        log.write("Base do milhão ausente: usando o modelo versionado no git (hash conferido).\n")
                     log.write("Carregando/reutilizando ESM-2 e MLP locais, sem download.\n")
                     resultado = self.carregar_servico(config).prever(task["parametros"]["sequencia"])
                     resultado.update(regra_direta(task["parametros"]["sequencia"]))
@@ -912,6 +930,12 @@ class Executor:
         treinado = rels.get("treinar", {}) if etapas["treinar"]["estado"] == "concluido" else {}
         base = rels.get("consolidar", {}) if etapas["consolidar"]["estado"] == "concluido" else {}
         part = rels.get("separar", {}) if etapas["separar"]["estado"] == "concluido" else {}
+        portatil = False
+        if not treinado and selecionada == "original":
+            treinado = modelo_portatil(config) or {}
+            portatil = bool(treinado)
+            if portatil and not part:
+                part = {"particoes": treinado.get("proveniencia", {}).get("distribuicao_particoes", {})}
         geracao = rels.get("embeddings", {})
         return {"ok": True, "versao": "2.0.0", "nome": config.valores["nome"], "projeto": str(self.c.raiz),
             "execucao_selecionada": selecionada, "execucoes": self.execucoes.lista(),
@@ -929,7 +953,7 @@ class Executor:
                 "teste": treinado.get("teste_mlp", {}), "baseline": treinado.get("teste_baseline_classe_mais_frequente", {}),
                 "regra": treinado.get("teste_regra_direta", {}), "historico": treinado.get("historico", []),
                 "gpu_treino": treinado.get("gpu"), "melhor_epoca": treinado.get("melhor_epoca")},
-            "tarefas": expostas, "consulta_disponivel": bool(treinado),
+            "tarefas": expostas, "consulta_disponivel": bool(treinado), "modo_portatil": portatil,
             "limite_rotulos": "Completa/Incompleta indica a presença literal de HILKMFTWV. Não mede digestibilidade, qualidade nutricional ou função biológica."}
 
     def encerrar(self):

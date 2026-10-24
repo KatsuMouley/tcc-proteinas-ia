@@ -1,0 +1,374 @@
+{
+  "tipo": "piloto_ec2_ec3_embeddings_e_mlp",
+  "ok": true,
+  "iniciado_utc": "2026-10-14T04:25:35.562242+00:00",
+  "pasta_saida": "dados\\piloto_ec2_ec3\\swissprot_20261014T021908726567Z_46400a\\preparacao_ec_20261014T032918475574Z_5b4d54\\treino_ec_20261014T042535Z_f4ff0b",
+  "proteinas": 1000,
+  "rotulos": {
+    "Hidrolase": 500,
+    "Transferase": 500
+  },
+  "hashes_entradas": {
+    "piloto_rotulado.csv": "393a271a891e43f1f45a89e66df9f2b7ca1f0459db98a99326b054a19588695c",
+    "particoes.csv": "0c93f44f08e5c01699458848c12735f680af500fda1820aaec0d4b57a18cbebc",
+    "treino_indices.npy": "f9f65abba7066318113e2ec4e7ee4f249494fccf366c3c3989b699dfe3fcdb7c",
+    "validacao_indices.npy": "664d04793e0e68c212f6cc1e9983fa768e22af48d7f076cb24327c599b580c0a",
+    "teste_indices.npy": "dd5db2134ab913214781bcb9a9e98d914b91346790bafe1bbb164ac25f69b1c4"
+  },
+  "sha256_script": "f5a0d0b50c85cb0389bd4229a94503fee2f2671f265e0de2dbe9769991592579",
+  "semente": 42,
+  "hiperparametros_fixos": {
+    "arquitetura": [
+      320,
+      64,
+      2
+    ],
+    "otimizador": "Adam",
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "lote": 64,
+    "epocas_max": 200,
+    "paciencia": 20,
+    "selecao": "maior acuracia balanceada na validacao",
+    "normalizacao_e_pesos": "calculados somente no treino de cada rodada"
+  },
+  "teste_usado_para_ajuste": false,
+  "embeddings": {
+    "modelo": "facebook/esm2_t6_8M_UR50D",
+    "revisao": "c731040fcd8d73dceaa04b0a8e6329b345b0f5df",
+    "diagnostico_gpu": {
+      "pytorch": "2.9.1+cu126",
+      "cuda_compilada": "12.6",
+      "dispositivo": "cuda:0",
+      "gpu": "NVIDIA GeForce GTX 1650",
+      "vram_total_mb": 4095.7,
+      "segundos_carregamento_modelo": 0.386
+    },
+    "desempenho": {
+      "segundos_embeddings_apos_aquecimento": 15.497,
+      "memoria_pico_pytorch_mb": 81.9,
+      "dimensao_embedding": 320,
+      "precisao": "float32",
+      "lote": 1
+    },
+    "sha256_piloto_esm_gpu": "0fee79555a352c8fadbffbee47ada00d86260251ceaad1cfa0ec8b1603c128f9",
+    "formato": [
+      1000,
+      320
+    ],
+    "precisao": "float32",
+    "sha256_salvo": "38594292a7c2060a1b31cfdd6fef12dc9df8e9e8fa02e3d42440f892efa2b498"
+  },
+  "dispositivo_mlp": "cuda:0",
+  "pytorch": "2.9.1+cu126",
+  "particao_fixa": {
+    "epocas_executadas": 27,
+    "melhor_epoca": 7,
+    "validacao_acuracia_balanceada": 0.9130434782608696,
+    "teste_mlp": {
+      "n": 107,
+      "acuracia": 0.8317757009345794,
+      "acuracia_balanceada": 0.829978813559322,
+      "f1_macro": 0.829978813559322,
+      "ordem_classes": [
+        "Hidrolase",
+        "Transferase"
+      ],
+      "matriz_confusao_linhas_reais_colunas_previstas": [
+        [
+          39,
+          9
+        ],
+        [
+          9,
+          50
+        ]
+      ],
+      "sensibilidade_por_classe": {
+        "Hidrolase": 0.8125,
+        "Transferase": 0.847457627118644
+      }
+    },
+    "teste_classe_majoritaria_do_treino": {
+      "n": 107,
+      "acuracia": 0.4485981308411215,
+      "acuracia_balanceada": 0.5,
+      "f1_macro": 0.30967741935483867,
+      "ordem_classes": [
+        "Hidrolase",
+        "Transferase"
+      ],
+      "matriz_confusao_linhas_reais_colunas_previstas": [
+        [
+          48,
+          0
+        ],
+        [
+          59,
+          0
+        ]
+      ],
+      "sensibilidade_por_classe": {
+        "Hidrolase": 1.0,
+        "Transferase": 0.0
+      }
+    },
+    "teste_mlp_por_faixa_comprimento": {
+      "1-199": {
+        "n": 15,
+        "acuracia": 0.9333333333333333,
+        "acuracia_balanceada": 0.8333333333333333,
+        "f1_macro": 0.8800000000000001,
+        "ordem_classes": [
+          "Hidrolase",
+          "Transferase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            12,
+            0
+          ],
+          [
+            1,
+            2
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Hidrolase": 1.0,
+          "Transferase": 0.6666666666666666
+        }
+      },
+      "200-299": {
+        "n": 30,
+        "acuracia": 0.8,
+        "acuracia_balanceada": 0.7873303167420814,
+        "f1_macro": 0.7916666666666667,
+        "ordem_classes": [
+          "Hidrolase",
+          "Transferase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            9,
+            4
+          ],
+          [
+            2,
+            15
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Hidrolase": 0.6923076923076923,
+          "Transferase": 0.8823529411764706
+        }
+      },
+      "300-399": {
+        "n": 41,
+        "acuracia": 0.8292682926829268,
+        "acuracia_balanceada": 0.8131868131868132,
+        "f1_macro": 0.8067340067340067,
+        "ordem_classes": [
+          "Hidrolase",
+          "Transferase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            10,
+            3
+          ],
+          [
+            4,
+            24
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Hidrolase": 0.7692307692307693,
+          "Transferase": 0.8571428571428571
+        }
+      },
+      "400-512": {
+        "n": 21,
+        "acuracia": 0.8095238095238095,
+        "acuracia_balanceada": 0.8090909090909091,
+        "f1_macro": 0.8090909090909092,
+        "ordem_classes": [
+          "Hidrolase",
+          "Transferase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            8,
+            2
+          ],
+          [
+            2,
+            9
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Hidrolase": 0.8,
+          "Transferase": 0.8181818181818182
+        }
+      }
+    }
+  },
+  "validacao_cruzada_5_dobras_por_grupo": {
+    "regra_dobras": "SHA256(semente:grupo_global) mod 5; validacao interna = SHA256(semente:validacao_interna:grupo) mod 10 == 0",
+    "observacao": "Todas as 1.000 proteinas participam; nenhuma escolha de hiperparametro foi feita com estas dobras.",
+    "acuracia_media": 0.8602812373291122,
+    "acuracia_dp": 0.03827292959111798,
+    "acuracia_balanceada_media": 0.859930258992929,
+    "acuracia_balanceada_dp": 0.039446587257086996,
+    "f1_macro_media": 0.858761942567204,
+    "f1_macro_dp": 0.038807812845730504,
+    "dobras": [
+      {
+        "n": 212,
+        "acuracia": 0.7971698113207547,
+        "acuracia_balanceada": 0.7950685677958405,
+        "f1_macro": 0.7938256247879678,
+        "ordem_classes": [
+          "Hidrolase",
+          "Transferase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            98,
+            23
+          ],
+          [
+            20,
+            71
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Hidrolase": 0.8099173553719008,
+          "Transferase": 0.7802197802197802
+        },
+        "dobra": 0,
+        "treino": 696,
+        "validacao_interna": 92,
+        "epocas": 67
+      },
+      {
+        "n": 173,
+        "acuracia": 0.8959537572254336,
+        "acuracia_balanceada": 0.8988294314381271,
+        "f1_macro": 0.8929455445544554,
+        "ordem_classes": [
+          "Hidrolase",
+          "Transferase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            63,
+            6
+          ],
+          [
+            12,
+            92
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Hidrolase": 0.9130434782608695,
+          "Transferase": 0.8846153846153846
+        },
+        "dobra": 1,
+        "treino": 726,
+        "validacao_interna": 101,
+        "epocas": 29
+      },
+      {
+        "n": 191,
+        "acuracia": 0.8586387434554974,
+        "acuracia_balanceada": 0.8586407553798858,
+        "f1_macro": 0.8584991082453011,
+        "ordem_classes": [
+          "Hidrolase",
+          "Transferase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            79,
+            13
+          ],
+          [
+            14,
+            85
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Hidrolase": 0.8586956521739131,
+          "Transferase": 0.8585858585858586
+        },
+        "dobra": 2,
+        "treino": 704,
+        "validacao_interna": 105,
+        "epocas": 32
+      },
+      {
+        "n": 216,
+        "acuracia": 0.8842592592592593,
+        "acuracia_balanceada": 0.8816479078958673,
+        "f1_macro": 0.8831548198636807,
+        "ordem_classes": [
+          "Hidrolase",
+          "Transferase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            106,
+            7
+          ],
+          [
+            18,
+            85
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Hidrolase": 0.9380530973451328,
+          "Transferase": 0.8252427184466019
+        },
+        "dobra": 3,
+        "treino": 679,
+        "validacao_interna": 105,
+        "epocas": 30
+      },
+      {
+        "n": 208,
+        "acuracia": 0.8653846153846154,
+        "acuracia_balanceada": 0.8654646324549237,
+        "f1_macro": 0.8653846153846153,
+        "ordem_classes": [
+          "Hidrolase",
+          "Transferase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            90,
+            15
+          ],
+          [
+            13,
+            90
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Hidrolase": 0.8571428571428571,
+          "Transferase": 0.8737864077669902
+        },
+        "dobra": 4,
+        "treino": 695,
+        "validacao_interna": 97,
+        "epocas": 29
+      }
+    ]
+  },
+  "segundos": 847.7,
+  "limites": [
+    "Piloto de 1.000 enzimas revisadas do Swiss-Prot (recorte por accession, nao aleatorio).",
+    "Teste fixo pequeno (cerca de 100 proteinas); usar tambem a validacao cruzada.",
+    "Linclust a 50% nao elimina homologia remota entre treino e teste.",
+    "ESM-2 foi pre-treinado em UniRef50, que pode conter estas proteinas."
+  ]
+}

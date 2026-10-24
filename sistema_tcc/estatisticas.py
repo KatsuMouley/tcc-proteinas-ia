@@ -161,6 +161,8 @@ def obter(executor, ident):
             c = executor.c
             base, part, pred = c.caminhos["base"], c.caminhos["particoes"], c.caminhos["modelo"] / "predicoes_teste.csv"
             exigir(pred.is_file(), "Predições de teste do milhão não encontradas.")
+            exigir((base / "indice.csv").is_file() and (base / "sequencias.fasta").is_file() and (part / "grupos_por_linha.npy").is_file(),
+                   "A base do milhão não está neste PC. Escolha uma execução nova no seletor do topo ou extraia o pacote de dados.")
             assinatura = _assinatura(pred, part / "grupos_por_linha.npy", base / "indice.csv")
             cache = c.raiz / "dados/sistema_tcc/estatisticas_original.json"
             if cache.is_file():

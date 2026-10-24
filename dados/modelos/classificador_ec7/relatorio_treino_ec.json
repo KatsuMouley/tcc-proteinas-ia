@@ -1,0 +1,1117 @@
+{
+  "tipo": "experimento_ec7_embeddings_e_mlp",
+  "classes": [
+    "Oxidorredutase",
+    "Transferase",
+    "Hidrolase",
+    "Liase",
+    "Isomerase",
+    "Ligase",
+    "Translocase"
+  ],
+  "acaso": 0.14285714285714285,
+  "ok": true,
+  "iniciado_utc": "2026-10-23T14:09:15.919562+00:00",
+  "pasta_saida": "C:\\ai_tcc\\dados\\experimento_ec7\\swissprot_20261022T164113360454Z_be1ceb\\preparacao_ec_20261023T140912956145Z_eab336\\treino_ec_20261023T140915Z_b0d476",
+  "proteinas": 3500,
+  "rotulos": {
+    "Oxidorredutase": 500,
+    "Transferase": 500,
+    "Hidrolase": 500,
+    "Liase": 500,
+    "Isomerase": 500,
+    "Ligase": 500,
+    "Translocase": 500
+  },
+  "hashes_entradas": {
+    "piloto_rotulado.csv": "8177591d39d667d0add827bfe7943516acea4b774fc514e8818c9e4701f428f1",
+    "particoes.csv": "3da565a9f38218883daaa21ea1f317ae7f517c28c61e1e66f7e97fd584491840",
+    "treino_indices.npy": "9147bd2201b56198540389d8eb7e7a273e96142617edbc344f648faab38ed420",
+    "validacao_indices.npy": "cef08d37461318f3dac47552d4b605bf70a67d32a7830250cf69b340467371e2",
+    "teste_indices.npy": "30be29f4757d39d66bd346df8c52fc5ae9381caa1c295b36dfec7013a2a2f646"
+  },
+  "sha256_script": "b254b83961a492aff7853c2f3ad733089eb8eecde1e8dd04e24ed1c6e6b12caa",
+  "semente": 42,
+  "hiperparametros_fixos": {
+    "arquitetura": [
+      320,
+      64,
+      7
+    ],
+    "otimizador": "Adam",
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "lote": 64,
+    "epocas_max": 200,
+    "paciencia": 20,
+    "selecao": "maior acuracia balanceada na validacao",
+    "normalizacao_e_pesos": "calculados somente no treino de cada rodada"
+  },
+  "teste_usado_para_ajuste": false,
+  "embeddings": {
+    "modelo": "facebook/esm2_t6_8M_UR50D",
+    "revisao": "c731040fcd8d73dceaa04b0a8e6329b345b0f5df",
+    "diagnostico_gpu": {
+      "pytorch": "2.9.1+cu126",
+      "cuda_compilada": "12.6",
+      "dispositivo": "cuda:0",
+      "gpu": "NVIDIA GeForce GTX 1650",
+      "vram_total_mb": 4095.7,
+      "segundos_carregamento_modelo": 4.381
+    },
+    "desempenho": {
+      "segundos_embeddings_apos_aquecimento": 50.926,
+      "memoria_pico_pytorch_mb": 81.9,
+      "dispositivo": "cuda:0",
+      "dimensao_embedding": 320,
+      "precisao": "float32",
+      "lote": 1
+    },
+    "sha256_piloto_esm_gpu": "112f78884009078a9f5c67f43480c69a8091925d3fdc1c2c20df9b328bf42cbb",
+    "formato": [
+      3500,
+      320
+    ],
+    "precisao": "float32",
+    "sha256_salvo": "8dd00d122beaa3ca674db43adc5d5c4e6123615341f5f0db7f48cb4400475273"
+  },
+  "dispositivo_mlp": "cuda:0",
+  "pytorch": "2.9.1+cu126",
+  "particao_fixa": {
+    "epocas_executadas": 52,
+    "melhor_epoca": 32,
+    "validacao_acuracia_balanceada": 0.7814560108668696,
+    "teste_mlp": {
+      "n": 343,
+      "acuracia": 0.7521865889212828,
+      "acuracia_balanceada": 0.7544956596785589,
+      "f1_macro": 0.7545707291415784,
+      "classes_presentes": 7,
+      "ordem_classes": [
+        "Oxidorredutase",
+        "Transferase",
+        "Hidrolase",
+        "Liase",
+        "Isomerase",
+        "Ligase",
+        "Translocase"
+      ],
+      "matriz_confusao_linhas_reais_colunas_previstas": [
+        [
+          33,
+          8,
+          1,
+          2,
+          2,
+          0,
+          0
+        ],
+        [
+          0,
+          25,
+          2,
+          0,
+          2,
+          5,
+          1
+        ],
+        [
+          0,
+          2,
+          35,
+          8,
+          4,
+          4,
+          0
+        ],
+        [
+          2,
+          7,
+          2,
+          41,
+          2,
+          4,
+          0
+        ],
+        [
+          0,
+          4,
+          3,
+          2,
+          35,
+          3,
+          0
+        ],
+        [
+          0,
+          6,
+          0,
+          2,
+          2,
+          62,
+          2
+        ],
+        [
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          27
+        ]
+      ],
+      "sensibilidade_por_classe": {
+        "Oxidorredutase": 0.717391304347826,
+        "Transferase": 0.7142857142857143,
+        "Hidrolase": 0.660377358490566,
+        "Liase": 0.7068965517241379,
+        "Isomerase": 0.7446808510638298,
+        "Ligase": 0.8378378378378378,
+        "Translocase": 0.9
+      }
+    },
+    "teste_classe_majoritaria_do_treino": {
+      "n": 343,
+      "acuracia": 0.08746355685131195,
+      "acuracia_balanceada": 0.14285714285714285,
+      "f1_macro": 0.02297970126388357,
+      "classes_presentes": 7,
+      "ordem_classes": [
+        "Oxidorredutase",
+        "Transferase",
+        "Hidrolase",
+        "Liase",
+        "Isomerase",
+        "Ligase",
+        "Translocase"
+      ],
+      "matriz_confusao_linhas_reais_colunas_previstas": [
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          46
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          35
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          53
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          58
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          47
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          74
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          30
+        ]
+      ],
+      "sensibilidade_por_classe": {
+        "Oxidorredutase": 0.0,
+        "Transferase": 0.0,
+        "Hidrolase": 0.0,
+        "Liase": 0.0,
+        "Isomerase": 0.0,
+        "Ligase": 0.0,
+        "Translocase": 1.0
+      }
+    },
+    "teste_mlp_por_faixa_comprimento": {
+      "1-199": {
+        "n": 52,
+        "acuracia": 0.7692307692307693,
+        "acuracia_balanceada": 0.7056998556998556,
+        "f1_macro": 0.5164027956069034,
+        "classes_presentes": 6,
+        "ordem_classes": [
+          "Oxidorredutase",
+          "Transferase",
+          "Hidrolase",
+          "Liase",
+          "Isomerase",
+          "Ligase",
+          "Translocase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            0,
+            0,
+            1,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            15,
+            3,
+            2,
+            0,
+            0
+          ],
+          [
+            1,
+            1,
+            0,
+            3,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            20
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Oxidorredutase": 0.0,
+          "Transferase": 1.0,
+          "Hidrolase": 0.6818181818181818,
+          "Liase": 0.6,
+          "Isomerase": 1.0,
+          "Ligase": 0.0,
+          "Translocase": 0.9523809523809523
+        }
+      },
+      "200-299": {
+        "n": 61,
+        "acuracia": 0.819672131147541,
+        "acuracia_balanceada": 0.790633176347462,
+        "f1_macro": 0.7929064712834483,
+        "classes_presentes": 7,
+        "ordem_classes": [
+          "Oxidorredutase",
+          "Transferase",
+          "Hidrolase",
+          "Liase",
+          "Isomerase",
+          "Ligase",
+          "Translocase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            6,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            13,
+            0,
+            0,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            4,
+            1,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            1,
+            0,
+            8,
+            1,
+            3,
+            0
+          ],
+          [
+            0,
+            0,
+            2,
+            0,
+            10,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            8,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Oxidorredutase": 0.8571428571428571,
+          "Transferase": 0.9285714285714286,
+          "Hidrolase": 0.8,
+          "Liase": 0.6153846153846154,
+          "Isomerase": 0.8333333333333334,
+          "Ligase": 1.0,
+          "Translocase": 0.5
+        }
+      },
+      "300-399": {
+        "n": 103,
+        "acuracia": 0.5436893203883495,
+        "acuracia_balanceada": 0.45904761904761904,
+        "f1_macro": 0.4673179883006776,
+        "classes_presentes": 7,
+        "ordem_classes": [
+          "Oxidorredutase",
+          "Transferase",
+          "Hidrolase",
+          "Liase",
+          "Isomerase",
+          "Ligase",
+          "Translocase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            17,
+            5,
+            0,
+            1,
+            2,
+            0,
+            0
+          ],
+          [
+            0,
+            7,
+            2,
+            0,
+            0,
+            5,
+            0
+          ],
+          [
+            0,
+            0,
+            5,
+            2,
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            5,
+            2,
+            8,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            2,
+            0,
+            2,
+            8,
+            3,
+            0
+          ],
+          [
+            0,
+            6,
+            0,
+            2,
+            1,
+            11,
+            2
+          ],
+          [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Oxidorredutase": 0.68,
+          "Transferase": 0.5,
+          "Hidrolase": 0.5,
+          "Liase": 0.5,
+          "Isomerase": 0.5333333333333333,
+          "Ligase": 0.5,
+          "Translocase": 0.0
+        }
+      },
+      "400-512": {
+        "n": 127,
+        "acuracia": 0.8818897637795275,
+        "acuracia_balanceada": 0.8462206652996126,
+        "f1_macro": 0.8418767948843138,
+        "classes_presentes": 7,
+        "ordem_classes": [
+          "Oxidorredutase",
+          "Transferase",
+          "Hidrolase",
+          "Liase",
+          "Isomerase",
+          "Ligase",
+          "Translocase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            10,
+            2,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            4,
+            0,
+            0,
+            1,
+            0,
+            1
+          ],
+          [
+            0,
+            0,
+            11,
+            2,
+            0,
+            3,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            22,
+            1,
+            1,
+            0
+          ],
+          [
+            0,
+            2,
+            1,
+            0,
+            16,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            1,
+            43,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            6
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Oxidorredutase": 0.8333333333333334,
+          "Transferase": 0.6666666666666666,
+          "Hidrolase": 0.6875,
+          "Liase": 0.9166666666666666,
+          "Isomerase": 0.8421052631578947,
+          "Ligase": 0.9772727272727273,
+          "Translocase": 1.0
+        }
+      }
+    }
+  },
+  "validacao_cruzada_5_dobras_por_grupo": {
+    "regra_dobras": "SHA256(semente:grupo_global) mod 5; validacao interna = SHA256(semente:validacao_interna:grupo) mod 10 == 0",
+    "observacao": "Todas as proteinas da coleta participam; nenhuma escolha de hiperparametro foi feita com estas dobras.",
+    "acuracia_media": 0.7074231111048835,
+    "acuracia_dp": 0.040757207496658635,
+    "acuracia_balanceada_media": 0.7133573825312798,
+    "acuracia_balanceada_dp": 0.030298969499796363,
+    "f1_macro_media": 0.7096428839215976,
+    "f1_macro_dp": 0.036667041518744156,
+    "dobras": [
+      {
+        "n": 789,
+        "acuracia": 0.6375158428390367,
+        "acuracia_balanceada": 0.6651523726618559,
+        "f1_macro": 0.6485263777365581,
+        "classes_presentes": 7,
+        "ordem_classes": [
+          "Oxidorredutase",
+          "Transferase",
+          "Hidrolase",
+          "Liase",
+          "Isomerase",
+          "Ligase",
+          "Translocase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            74,
+            2,
+            3,
+            5,
+            6,
+            1,
+            0
+          ],
+          [
+            9,
+            71,
+            2,
+            8,
+            3,
+            3,
+            3
+          ],
+          [
+            4,
+            12,
+            77,
+            14,
+            7,
+            0,
+            4
+          ],
+          [
+            8,
+            16,
+            5,
+            57,
+            8,
+            1,
+            0
+          ],
+          [
+            1,
+            7,
+            14,
+            6,
+            80,
+            1,
+            0
+          ],
+          [
+            1,
+            2,
+            1,
+            12,
+            1,
+            97,
+            0
+          ],
+          [
+            3,
+            1,
+            98,
+            5,
+            2,
+            7,
+            47
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Oxidorredutase": 0.8131868131868132,
+          "Transferase": 0.7171717171717171,
+          "Hidrolase": 0.652542372881356,
+          "Liase": 0.6,
+          "Isomerase": 0.7339449541284404,
+          "Ligase": 0.8508771929824561,
+          "Translocase": 0.2883435582822086
+        },
+        "dobra": 0,
+        "treino": 2443,
+        "validacao_interna": 268,
+        "epocas": 62
+      },
+      {
+        "n": 666,
+        "acuracia": 0.7117117117117117,
+        "acuracia_balanceada": 0.7148547350040976,
+        "f1_macro": 0.7149808775681604,
+        "classes_presentes": 7,
+        "ordem_classes": [
+          "Oxidorredutase",
+          "Transferase",
+          "Hidrolase",
+          "Liase",
+          "Isomerase",
+          "Ligase",
+          "Translocase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            72,
+            6,
+            2,
+            9,
+            8,
+            2,
+            0
+          ],
+          [
+            3,
+            58,
+            10,
+            11,
+            5,
+            8,
+            3
+          ],
+          [
+            2,
+            4,
+            61,
+            8,
+            5,
+            3,
+            0
+          ],
+          [
+            1,
+            8,
+            18,
+            74,
+            3,
+            4,
+            10
+          ],
+          [
+            3,
+            2,
+            5,
+            13,
+            75,
+            0,
+            0
+          ],
+          [
+            1,
+            6,
+            7,
+            2,
+            1,
+            86,
+            2
+          ],
+          [
+            3,
+            3,
+            11,
+            0,
+            0,
+            0,
+            48
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Oxidorredutase": 0.7272727272727273,
+          "Transferase": 0.5918367346938775,
+          "Hidrolase": 0.7349397590361446,
+          "Liase": 0.6271186440677966,
+          "Isomerase": 0.7653061224489796,
+          "Ligase": 0.819047619047619,
+          "Translocase": 0.7384615384615385
+        },
+        "dobra": 1,
+        "treino": 2581,
+        "validacao_interna": 253,
+        "epocas": 50
+      },
+      {
+        "n": 667,
+        "acuracia": 0.7421289355322339,
+        "acuracia_balanceada": 0.7388848781010466,
+        "f1_macro": 0.7376906908774964,
+        "classes_presentes": 7,
+        "ordem_classes": [
+          "Oxidorredutase",
+          "Transferase",
+          "Hidrolase",
+          "Liase",
+          "Isomerase",
+          "Ligase",
+          "Translocase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            104,
+            7,
+            3,
+            2,
+            1,
+            1,
+            1
+          ],
+          [
+            5,
+            65,
+            6,
+            8,
+            3,
+            2,
+            3
+          ],
+          [
+            3,
+            7,
+            72,
+            7,
+            7,
+            3,
+            2
+          ],
+          [
+            1,
+            7,
+            0,
+            43,
+            27,
+            3,
+            3
+          ],
+          [
+            9,
+            8,
+            5,
+            9,
+            64,
+            7,
+            0
+          ],
+          [
+            0,
+            4,
+            2,
+            4,
+            0,
+            75,
+            0
+          ],
+          [
+            2,
+            2,
+            5,
+            2,
+            0,
+            1,
+            72
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Oxidorredutase": 0.8739495798319328,
+          "Transferase": 0.7065217391304348,
+          "Hidrolase": 0.7128712871287128,
+          "Liase": 0.5119047619047619,
+          "Isomerase": 0.6274509803921569,
+          "Ligase": 0.8823529411764706,
+          "Translocase": 0.8571428571428571
+        },
+        "dobra": 2,
+        "treino": 2552,
+        "validacao_interna": 281,
+        "epocas": 69
+      },
+      {
+        "n": 677,
+        "acuracia": 0.7282127031019202,
+        "acuracia_balanceada": 0.7392803123725608,
+        "f1_macro": 0.7383909572206321,
+        "classes_presentes": 7,
+        "ordem_classes": [
+          "Oxidorredutase",
+          "Transferase",
+          "Hidrolase",
+          "Liase",
+          "Isomerase",
+          "Ligase",
+          "Translocase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            67,
+            1,
+            6,
+            9,
+            2,
+            0,
+            2
+          ],
+          [
+            2,
+            66,
+            10,
+            3,
+            6,
+            7,
+            2
+          ],
+          [
+            5,
+            5,
+            68,
+            4,
+            5,
+            1,
+            7
+          ],
+          [
+            0,
+            3,
+            20,
+            81,
+            17,
+            6,
+            2
+          ],
+          [
+            6,
+            2,
+            5,
+            14,
+            74,
+            4,
+            0
+          ],
+          [
+            1,
+            3,
+            9,
+            3,
+            0,
+            71,
+            3
+          ],
+          [
+            0,
+            1,
+            2,
+            6,
+            0,
+            0,
+            66
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Oxidorredutase": 0.7701149425287356,
+          "Transferase": 0.6875,
+          "Hidrolase": 0.7157894736842105,
+          "Liase": 0.627906976744186,
+          "Isomerase": 0.7047619047619048,
+          "Ligase": 0.7888888888888889,
+          "Translocase": 0.88
+        },
+        "dobra": 3,
+        "treino": 2542,
+        "validacao_interna": 281,
+        "epocas": 96
+      },
+      {
+        "n": 701,
+        "acuracia": 0.717546362339515,
+        "acuracia_balanceada": 0.7086146145168382,
+        "f1_macro": 0.708625516205141,
+        "classes_presentes": 7,
+        "ordem_classes": [
+          "Oxidorredutase",
+          "Transferase",
+          "Hidrolase",
+          "Liase",
+          "Isomerase",
+          "Ligase",
+          "Translocase"
+        ],
+        "matriz_confusao_linhas_reais_colunas_previstas": [
+          [
+            77,
+            4,
+            5,
+            5,
+            9,
+            0,
+            4
+          ],
+          [
+            2,
+            85,
+            9,
+            8,
+            7,
+            4,
+            0
+          ],
+          [
+            4,
+            20,
+            57,
+            10,
+            7,
+            4,
+            1
+          ],
+          [
+            2,
+            7,
+            7,
+            45,
+            7,
+            4,
+            2
+          ],
+          [
+            9,
+            1,
+            11,
+            7,
+            55,
+            3,
+            0
+          ],
+          [
+            0,
+            8,
+            1,
+            5,
+            2,
+            88,
+            2
+          ],
+          [
+            3,
+            4,
+            0,
+            9,
+            0,
+            1,
+            96
+          ]
+        ],
+        "sensibilidade_por_classe": {
+          "Oxidorredutase": 0.7403846153846154,
+          "Transferase": 0.7391304347826086,
+          "Hidrolase": 0.5533980582524272,
+          "Liase": 0.6081081081081081,
+          "Isomerase": 0.6395348837209303,
+          "Ligase": 0.8301886792452831,
+          "Translocase": 0.8495575221238938
+        },
+        "dobra": 4,
+        "treino": 2530,
+        "validacao_interna": 269,
+        "epocas": 70
+      }
+    ]
+  },
+  "segundos": 1317.2,
+  "limites": [
+    "Experimento separado do painel: enzimas revisadas do Swiss-Prot, EC 1 a 7 (recorte por accession, nao aleatorio).",
+    "Proteinas com mais de uma classe EC foram excluidas; o modelo escolhe sempre uma das 7 e nao reconhece nao-enzimas.",
+    "Teste fixo de cerca de 10% da coleta; usar tambem a validacao cruzada.",
+    "Linclust a 50% nao elimina homologia remota entre treino e teste.",
+    "ESM-2 foi pre-treinado em UniRef50, que pode conter estas proteinas."
+  ]
+}

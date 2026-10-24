@@ -38,12 +38,13 @@ def _ler(p):
         return {}
 
 
+PUBLICADO = RAIZ / "dados/modelos/classificador_ec7"  # copia versionada no git (vale num clone sem o experimento)
+
+
 def ultimo_treino():
-    """(pasta, relatorio) do treino EC7 concluido mais recente, ou (None, None)."""
-    if not SAIDA.is_dir():
-        return None, None
-    candidatos = sorted(SAIDA.glob("swissprot_*/preparacao_ec_*/treino_ec_*"), key=lambda p: p.name, reverse=True)
-    for pasta in candidatos:
+    """(pasta, relatorio) do treino EC7 mais recente deste PC; sem nenhum, o modelo publicado no git."""
+    candidatos = sorted(SAIDA.glob("swissprot_*/preparacao_ec_*/treino_ec_*"), key=lambda p: p.name, reverse=True) if SAIDA.is_dir() else []
+    for pasta in [*candidatos, PUBLICADO]:
         r = _ler(pasta / "relatorio_treino_ec.json")
         if r.get("ok") is True and (pasta / "modelo_ec7.pt").is_file() and len(r.get("classes", [])) == 7:
             return pasta, r

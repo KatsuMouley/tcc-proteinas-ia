@@ -1,0 +1,14 @@
+Treino MLP 320 -> 64 -> 2 em cuda:0; CPU limitada a 2 threads.
+Treino: 803167; validacao: 98165; teste: 98668.
+Progresso e pesos parciais: C:\ai_tcc\dados\modelos\.classificador_regra_aa_esm2_parcial_myrjxj6m
+Epoca 1/10: perda treino 0.3374; acuracia balanceada validacao 0.8676; F1 macro 0.8312.
+Epoca 2/10: perda treino 0.2664; acuracia balanceada validacao 0.8730; F1 macro 0.8373.
+Epoca 3/10: perda treino 0.2492; acuracia balanceada validacao 0.8828; F1 macro 0.8448.
+Epoca 4/10: perda treino 0.2388; acuracia balanceada validacao 0.8825; F1 macro 0.8525.
+Epoca 5/10: perda treino 0.2313; acuracia balanceada validacao 0.8865; F1 macro 0.8544.
+Epoca 6/10: perda treino 0.2258; acuracia balanceada validacao 0.8881; F1 macro 0.8550.
+Epoca 7/10: perda treino 0.2211; acuracia balanceada validacao 0.8904; F1 macro 0.8598.
+Epoca 8/10: perda treino 0.2171; acuracia balanceada validacao 0.8900; F1 macro 0.8580.
+Epoca 9/10: perda treino 0.2142; acuracia balanceada validacao 0.8889; F1 macro 0.8600.
+Epoca 10/10: perda treino 0.2111; acuracia balanceada validacao 0.8924; F1 macro 0.8674.
+Treino concluido. Teste: acuracia balanceada 0.8934; F1 macro 0.8675.

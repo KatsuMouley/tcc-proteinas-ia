@@ -1,0 +1,72 @@
+{
+  "alvo": "presenca_literal_nove_aminoacidos",
+  "limites": "Rotulo calculado pela presenca literal de HILKMFTWV; nao avalia digestibilidade, qualidade nutricional ou funcao biologica.",
+  "epocas_maximas": 10,
+  "paciencia": 3,
+  "lote": 2048,
+  "semente_treino": 42,
+  "threads_cpu": 2,
+  "dispositivo": "cuda:0",
+  "normalizacao": "Media e desvio populacional calculados somente no treino; desvio minimo 1e-6.",
+  "pesos_classes_somente_treino": {
+    "Incompleta": 2.1048455238342285,
+    "Completa": 0.6557782292366028
+  },
+  "proveniencia": {
+    "base": "C:\\ai_tcc\\dados\\base_ia\\base_1m",
+    "particoes": "C:\\ai_tcc\\dados\\base_ia\\particoes_1m",
+    "agrupamento": "C:\\ai_tcc\\dados\\base_ia\\agrupamento_global_1m",
+    "relatorio_consolidacao_sha256": "e2f4b3e697300fc2afc0d7ce780b5bcc30858be557bebbda84997be69fa8cb3d",
+    "relatorio_particoes_sha256": "149b691166c33e28ad74f257c6a504bff1ef12842b64678278223cc42a1c1dd8",
+    "hashes_base": {
+      "sequencias.fasta": "e085d4348ddb2cefd9c4fd0868ac9f247eeeea1d1cb02d51d890e911dcaccdb6",
+      "indice.csv": "bafbff14d5d36b165a4b30258370eb5b0bac71b71aeb84397dd2040631c9e787",
+      "embeddings.npy": "2a5ac3a42441e95566e32167127be958b0d45273c364d430e69801829a8bb3f6"
+    },
+    "hashes_particoes": {
+      "particoes.csv": "68fd302cf08d497ff89208c91f21b979033dac34222909f8c5fbd6bf4ef358fd",
+      "grupos_por_linha.npy": "addd717692f994ca198e8cb03ed9d179edd8fe1948c85982cdd6efdc2cc08e2a",
+      "treino_indices.npy": "d7576c8374d5393ebad7a35d1c42d954ce3e6aa9523a2bdd5c60c71e71dacb84",
+      "validacao_indices.npy": "4bf66f2277a9165c4502a41d7c5abe7ed5e296d0ee98c58a43d979e626b69013",
+      "teste_indices.npy": "f4b158e9c49e77a31b8c76a7a3231ed1e5c6e2ae1b6248cd9479ee4a866eda91"
+    },
+    "tsv_sha256": "bbd56c24910b2b08ce0f812637455d0d35c69e39333ea5c5a86340315ba9c10c",
+    "semente_particoes": 42,
+    "distribuicao_particoes": {
+      "treino": {
+        "proteinas": 803167,
+        "grupos": 448747,
+        "fracao_observada": 0.803167,
+        "rotulos": {
+          "Completa": 612377,
+          "Incompleta": 190790
+        }
+      },
+      "validacao": {
+        "proteinas": 98165,
+        "grupos": 55894,
+        "fracao_observada": 0.098165,
+        "rotulos": {
+          "Completa": 74208,
+          "Incompleta": 23957
+        }
+      },
+      "teste": {
+        "proteinas": 98668,
+        "grupos": 56037,
+        "fracao_observada": 0.098668,
+        "rotulos": {
+          "Completa": 75534,
+          "Incompleta": 23134
+        }
+      }
+    },
+    "histograma_comprimentos": {
+      "1_a_9": 1931,
+      "10_a_29": 9117,
+      "30_a_99": 124959,
+      "100_a_512": 863993
+    },
+    "recorte_ncbi": "Primeiro milhao de sequencias unicas elegiveis na ordem do processamento; nao amostra aleatoria de todo NCBI."
+  }
+}

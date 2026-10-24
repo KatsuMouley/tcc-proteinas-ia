@@ -64,19 +64,63 @@ def _ordem(nome):
     return (m.group(1), int(m.group(2))) if m else (nome, 0)
 
 
-def listar(divisao):
-    exigir(divisao in DIVISOES, "Divisao desconhecida.")
-    ftp = FTP(FTP_HOST, timeout=60)
+HTTPS_URL = "https://" + FTP_HOST + FTP_DIR
+_protocolo = {"usado": None}  # "ftp" ou "https", decidido na listagem
+
+
+def _listar_ftp(divisao):
+    ftp = FTP(FTP_HOST, timeout=20)
     try:
         ftp.login()
         ftp.cwd(FTP_DIR)
-        nomes = [n for n in ftp.nlst() if n.startswith("gb" + divisao) and n.endswith(".fsa_aa.gz")]
+        return [n for n in ftp.nlst() if n.startswith("gb" + divisao) and n.endswith(".fsa_aa.gz")]
     finally:
         try:
             ftp.quit()
         except Exception:
             pass
+
+
+def _listar_https(divisao):
+    import urllib.request
+    with urllib.request.urlopen(HTTPS_URL, timeout=60) as r:
+        html = r.read().decode("utf-8", "replace")
+    return sorted(set(re.findall(r'href="(gb' + re.escape(divisao) + r'\d+\.fsa_aa\.gz)"', html)))
+
+
+def listar(divisao):
+    """Lista pelo FTP do NCBI; se a rede bloquear FTP, usa a mesma pasta por HTTPS."""
+    exigir(divisao in DIVISOES, "Divisao desconhecida.")
+    try:
+        nomes = _listar_ftp(divisao)
+        _protocolo["usado"] = "ftp"
+    except Exception as e:
+        print(f"FTP do NCBI indisponivel nesta rede ({type(e).__name__}); usando HTTPS: {HTTPS_URL}", flush=True)
+        nomes = _listar_https(divisao)
+        _protocolo["usado"] = "https"
     return sorted(nomes, key=_ordem)
+
+
+def _baixar_https(nome, idx, total):
+    """Mesmo resultado do baixar_arquivo_individual do Filipe, por HTTPS (grava .part e renomeia no fim)."""
+    import urllib.request
+    destino = DIR_GZ / nome
+    if destino.exists():
+        print(f"[{idx}/{total}] Ja existe: {nome}", flush=True)
+        return
+    parcial = destino.with_name(nome + ".part")
+    print(f"[{idx}/{total}] Iniciando (HTTPS): {nome}", flush=True)
+    try:
+        with urllib.request.urlopen(HTTPS_URL + nome, timeout=120) as r, parcial.open("wb") as f:
+            shutil.copyfileobj(r, f, 1 << 20)
+        parcial.replace(destino)
+        print(f"[{idx}/{total}] Concluido: {nome}", flush=True)
+    except Exception as e:
+        print(f"[{idx}/{total}] Erro ao baixar {nome}: {type(e).__name__}: {e}", flush=True)
+        try:
+            parcial.unlink()
+        except OSError:
+            pass
 
 
 HISTORICO_FILIPE = REPO / "historico_arquivos_processados.txt"
@@ -122,7 +166,7 @@ def baixar(divisao, quantidade, reserva_gib=10):
     livre = shutil.disk_usage(RAIZ).free / 1024**3
     exigir(livre - 0.2 * quantidade > reserva_gib, f"Pouco espaco: {livre:.1f} GiB livres, reserva {reserva_gib} GiB.")
     mod = _carregar("baixar_gz.py", PASTA_DESTINO=DIR_GZ)
-    print(f"Listando {DIVISOES[divisao]} (gb{divisao}) no FTP do NCBI...", flush=True)
+    print(f"Listando {DIVISOES[divisao]} (gb{divisao}) no NCBI...", flush=True)
     todos = listar(divisao)
     locais, processados = ja_temos()
     repetidos = [n for n in todos if n in locais]
@@ -138,7 +182,10 @@ def baixar(divisao, quantidade, reserva_gib=10):
         print(f"   Aviso: {len(ja_proc)} destes ja foram processados antes ({processados[ja_proc[0]]}); "
               "baixando porque nao estao neste PC. Duplicatas de sequencia sao removidas no fluxo (SHA-256).", flush=True)
     for i, nome in enumerate(novos, 1):
-        mod.baixar_arquivo_individual(nome, i, len(novos))  # funcao original do Filipe
+        if _protocolo["usado"] == "https":
+            _baixar_https(nome, i, len(novos))
+        else:
+            mod.baixar_arquivo_individual(nome, i, len(novos))  # funcao original do Filipe
         destino = DIR_GZ / nome
         if destino.exists() and not _gzip_integro(destino):
             print(f"Arquivo incompleto ou corrompido, removido: {nome}", flush=True)

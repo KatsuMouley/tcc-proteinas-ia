@@ -33,6 +33,8 @@ LIMITES = [
     "Classe EC prevista pelo modelo EC 2 × EC 3: ele sempre escolhe uma das duas, mesmo para proteínas de outra classe ou que não são enzimas. O modelo de 7 classes (experimento) também sempre escolhe uma classe e não reconhece não-enzimas.",
 ]
 
+BASE_AUSENTE = ("A base do milhão não está neste PC. Escolha uma execução nova no seletor do topo "
+                "ou extraia o pacote de dados (ferramentas/empacotar_dados.ps1).")
 _trava = threading.Lock()
 _memoria = {}
 _ec = None
@@ -113,6 +115,7 @@ def _assinatura(*arquivos):
 def _milhao(c):
     base, grupos, part = c.caminhos["base"], c.caminhos["grupos"], c.caminhos["particoes"]
     arq_g, arq_e = part / "grupos_por_linha.npy", base / "embeddings.npy"
+    exigir(arq_g.is_file() and arq_e.is_file() and (grupos / "global_rep_seq.fasta").is_file(), BASE_AUSENTE)
     assinatura = _assinatura(arq_g, arq_e)
     cache = c.raiz / "dados/sistema_tcc/explorar_original.json"
     if cache.is_file():
