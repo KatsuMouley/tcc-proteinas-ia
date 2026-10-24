@@ -636,7 +636,8 @@ class Executor:
     def prever(self, sequencia, execucao="original"):
         seq = validar_sequencia(sequencia)
         cat, config = self.catalogo_execucao(execucao)
-        exigir(cat.refresh(True)["treinar"]["estado"] == "concluido", "O modelo concluído ainda não está disponível. Consulte os arquivos indicados no painel.")
+        exigir(cat.refresh(True)["treinar"]["estado"] == "concluido" or (execucao == "original" and modelo_portatil(config) is not None),
+               "O modelo concluído ainda não está disponível. Consulte os arquivos indicados no painel.")
         exigir(not any(x["estado"] == "recuperacao" for x in self.store.tarefas()), "Concilie a tarefa interrompida antes de consultar.")
         tarefa, _ = self.store.criar("prever", "prever:" + uuid.uuid4().hex, {"sequencia": seq, "execucao": execucao}, "consulta")
         self.acordar.set()

@@ -10,9 +10,9 @@ O sistema lê proteínas do NCBI, agrupa sequências parecidas (MMseqs2), transf
 
 | Para… | Precisa de |
 |---|---|
-| Abrir o painel e ver os resultados do milhão | Windows 10/11, Python 3.13, pacote de dados do Drive |
-| Consultar uma proteína (EC 2 × EC 3) | o item acima; GPU NVIDIA **opcional** (sem ela roda no processador) |
-| Baixar e agrupar .gz do NCBI (Fase 1 do Filipe) | Git, internet (FTP do NCBI); o agrupamento também precisa de WSL + MMseqs2 |
+| Abrir o painel e consultar proteínas (regra, EC 2 × EC 3 e EC 7 classes) | Windows 10/11, Python 3.13 e o clone. **Os modelos vêm no git**; GPU NVIDIA **opcional** (sem ela roda no processador) |
+| Mapa, estatísticas e números completos do milhão | o item acima + pacote de dados (opcional, ~1,7 GB) |
+| Baixar e agrupar .gz do NCBI (Fase 1 do Filipe) | Git, internet (FTP do NCBI ou, se bloqueado, HTTPS automático); o agrupamento também precisa de WSL + MMseqs2 |
 | Rodar um fluxo novo com .gz do NCBI | o item acima + WSL (Ubuntu) com MMseqs2 + ~10 GB livres |
 
 ## Instalação em outro computador
@@ -22,7 +22,7 @@ O sistema lê proteínas do NCBI, agrupa sequências parecidas (MMseqs2), transf
    git clone https://github.com/KatsuMouley/tcc-proteinas-ia.git C:\ai_tcc
    ```
 2. **Rode `instalar.cmd`** (duplo clique). Ele cria o `.venv`, instala as bibliotecas, escolhe o PyTorch certo (GPU NVIDIA ou CPU), prepara o ESM-2 (~30 MB) e clona a Fase 1 do Filipe em `fase1_extrator\`. Leva de 5 a 15 minutos.
-3. **Baixe o pacote de dados** (`pacote_dados_tcc.zip`, ~1,7 GB) da pasta do grupo no Google Drive e extraia **dentro de `C:\ai_tcc`**, mantendo as pastas (`dados\…` e `cache\…`):
+3. *(Opcional)* **Pacote de dados** (`pacote_dados_tcc.zip`, ~1,7 GB): só para o mapa e as estatísticas da base do milhão. Sem ele, o painel já consulta proteínas com os modelos do repositório (aparece "Modelo do repositório"). Se tiver o pacote, extraia **dentro de `C:\ai_tcc`**, mantendo as pastas (`dados\…` e `cache\…`):
    ```powershell
    tar -xf "$env:USERPROFILE\Downloads\pacote_dados_tcc.zip" -C C:\ai_tcc
    ```
@@ -56,7 +56,8 @@ O sistema lê proteínas do NCBI, agrupa sequências parecidas (MMseqs2), transf
 | `testes\` | testes automáticos (`.venv\Scripts\python.exe -m unittest discover -s testes`) |
 | `docs\` | documentação técnica e resultados |
 | `legado\` | versões antigas, só para histórico |
-| `dados\` | bases, modelos e execuções (**fora do git**; vem no pacote do Drive) |
+| `dados\modelos\` | os três modelos do TCC (regra, EC 2 × EC 3, EC 7 classes), **no git** com hash conferido |
+| `dados\` (resto) | base do milhão e execuções (**fora do git**; base no pacote de dados opcional) |
 | `fase1_extrator\` | Fase 1 do Filipe (**fora do git**; o `instalar.cmd` clona): https://github.com/filipecamargoprado/genomic-data-extractor |
 | `arquivos .gz\`, `arquivos csv\` | fontes do NCBI e CSVs da Fase 1 (**fora do git**) |
 
@@ -67,7 +68,9 @@ O sistema lê proteínas do NCBI, agrupa sequências parecidas (MMseqs2), transf
 | "Sistema desconectado" | Confira se a janela preta está aberta e fora do modo "Selecionar" (Esc). Espere 1 minuto e F5. |
 | Etapa 2 (MMseqs2) falha por tempo | Abra o Ubuntu uma vez antes ou rode `wsl -d Ubuntu --exec mmseqs version`. |
 | "GPU (CUDA) escolhida… indisponível" | Em Configurações, escolha Automático ou CPU e reinicie. |
-| Consulta falha com "Modelo indisponível" | Falta o pacote de dados, ou o projeto não está em `C:\ai_tcc`. Veja o Diagnóstico. |
+| Consulta falha com "Modelo indisponível" | Rode `git pull` (os modelos vêm no repositório) e veja o Diagnóstico em Configurações. |
+| Explorar diz "A base do milhão não está neste PC" | Normal sem o pacote de dados: escolha uma execução nova no seletor do topo ou extraia o pacote. |
+| Baixar do NCBI falha por FTP | O sistema tenta HTTPS sozinho; se também falhar, a rede bloqueia o NCBI. |
 
 ## Documentação
 
