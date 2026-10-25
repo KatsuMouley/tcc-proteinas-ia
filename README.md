@@ -17,6 +17,8 @@ O sistema lê proteínas do NCBI, agrupa sequências parecidas (MMseqs2), transf
 
 ## Instalação em outro computador
 
+> Guia completo, com verificação e problemas comuns: [`docs/INSTALACAO.md`](docs/INSTALACAO.md).
+
 1. **Clone em `C:\ai_tcc`** (os relatórios da base do milhão registram esse caminho):
    ```powershell
    git clone https://github.com/KatsuMouley/tcc-proteinas-ia.git C:\ai_tcc
@@ -34,9 +36,11 @@ O sistema lê proteínas do NCBI, agrupa sequências parecidas (MMseqs2), transf
 ## Usar
 
 - **Visão geral:** resultados do milhão (vetores, grupos, acurácia, partições).
-- **Consultar proteína:** cole uma sequência (1 a 512 aminoácidos). Resposta: **Transferase (EC 2)** ou **Hidrolase (EC 3)** com a confiança, e a regra dos nove aminoácidos como prova de conceito.
+- **Consultar proteína:** cole uma sequência (1 a 512 aminoácidos). Resposta: **Transferase (EC 2)** ou **Hidrolase (EC 3)** com a confiança, a classe entre as **7 classes EC** (experimento, 71,3% ± 3,0) e a regra dos nove aminoácidos como prova de conceito.
+- **Explorar e analisar:** mapa dos grupos (PCA dos embeddings, clique para ver a proteína) e estatística do teste (boxplot + Mann-Whitney, histogramas, correlação, dispersão, matriz 7 × 7). O mapa e a estatística do milhão precisam do pacote de dados.
 - **Pipeline automático → Fontes do NCBI:** escolha a divisão (bactérias, plantas…) e quantos arquivos baixar; depois, se quiser, "Agrupar por arquivo" gera os CSVs da Fase 1 em `arquivos csv\`. Usa os scripts originais do Filipe, sem alterá-los.
 - **Pipeline automático → Novo experimento completo:** fluxo novo com .gz do NCBI (10 etapas: leitura → MMseqs2 → rótulos → ESM-2 → auditoria → consolidação → agrupamento global → partições → treino → banco). **Use limite 1.000**; o padrão de 1 milhão ocupa mais de 20 GB.
+- **Pipeline automático → Experimento EC7:** coleta, agrupa e treina o modelo das 7 classes, separado do modelo principal (precisa de internet e WSL + MMseqs2).
 - **Tarefas e logs:** acompanhe cada etapa ao vivo.
 
 ## Fluxo novo (opcional): WSL + Ubuntu + MMseqs2
@@ -84,6 +88,7 @@ O TCC usou o MMseqs2 **18-8cc5c**. Outra versão do Ubuntu pode instalar outra v
 ## Documentação
 
 - Dossiê técnico do TCC (pipeline, matemática, justificativas): link na pasta do grupo.
-- `docs\COMECE_AQUI_SISTEMA.md` (operação do painel), `docs\ARQUITETURA.md`, `docs\piloto_ec_analise_e_referencias.md`.
+- `docs\INSTALACAO.md` (guia de instalação atual), `experimentos\ec7\README.md` (experimento das 7 classes EC).
+- Registro de 13 e 14/10: `docs\COMECE_AQUI_SISTEMA.md` (operação do painel), `docs\ARQUITETURA.md`, `docs\piloto_ec_analise_e_referencias.md`.
 
 Grupo: Caio, Filipe, Guilherme, Lohanna, Vitor (Katsu) e Yuri · Orientador: Prof. Aryel.
