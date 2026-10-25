@@ -123,9 +123,9 @@ def diagnosticar(c):
         r = subprocess.run(cmd, capture_output=True, timeout=90)
         saida = r.stdout.decode("utf-8", "replace").replace("\x00", "").strip()
         itens.append(_item("WSL + MMseqs2", r.returncode == 0 and bool(saida), f"{distro}: MMseqs2 {saida}" if r.returncode == 0
-                           else f"{distro}: não respondeu. Veja o README (instalar WSL e MMseqs2).", "Fluxo novo"))
+                           else f"{distro}: não respondeu. Rode instalar_wsl_mmseqs.cmd (na pasta do projeto).", "Fluxo novo"))
     except Exception as e:
-        itens.append(_item("WSL + MMseqs2", False, f"{distro}: {type(e).__name__}. Veja o README (instalar WSL e MMseqs2).", "Fluxo novo"))
+        itens.append(_item("WSL + MMseqs2", False, f"{distro}: {type(e).__name__}. Rode instalar_wsl_mmseqs.cmd (na pasta do projeto).", "Fluxo novo"))
     livre = shutil.disk_usage(c.raiz).free / 1024**3
     reserva = c.valores.get("reserva_gib", 10)
     itens.append(_item("Espaço em disco", livre > reserva + 5, f"{livre:.1f} GiB livres · reserva mínima {reserva} GiB", "Fluxo novo"))

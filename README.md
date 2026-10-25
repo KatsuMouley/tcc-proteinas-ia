@@ -39,12 +39,19 @@ O sistema lê proteínas do NCBI, agrupa sequências parecidas (MMseqs2), transf
 - **Pipeline automático → Novo experimento completo:** fluxo novo com .gz do NCBI (10 etapas: leitura → MMseqs2 → rótulos → ESM-2 → auditoria → consolidação → agrupamento global → partições → treino → banco). **Use limite 1.000**; o padrão de 1 milhão ocupa mais de 20 GB.
 - **Tarefas e logs:** acompanhe cada etapa ao vivo.
 
-## Fluxo novo (opcional): WSL + MMseqs2
+## Fluxo novo (opcional): WSL + Ubuntu + MMseqs2
 
-1. No PowerShell como administrador: `wsl --install -d Ubuntu` e reinicie.
-2. No Ubuntu: `sudo apt update && sudo apt install -y mmseqs2`.
+Só é preciso para **agrupar** (Fase 1), rodar um **fluxo novo** ou o **experimento EC7**. A consulta não precisa.
+
+1. Dê dois cliques em **`instalar_wsl_mmseqs.cmd`** (janela normal, não "como administrador"). Ele:
+   - instala o Ubuntu no WSL, se faltar (pede permissão de administrador sozinho);
+   - instala o MMseqs2 dentro do Ubuntu (como root, sem pedir senha);
+   - confere com `mmseqs version` e mostra a solução se aparecer o erro do *systemd*.
+2. Se ele instalou o Ubuntu agora: **reinicie o PC**, abra "Ubuntu" no menu Iniciar, crie usuário e senha, e **rode o `instalar_wsl_mmseqs.cmd` de novo**.
 3. Baixe os `.gz` pelo painel (Fontes do NCBI) ou coloque `.gz`/`.zip` em `C:\ai_tcc\arquivos .gz\`.
-4. Confira em **Configurações → Diagnóstico** a linha "WSL + MMseqs2".
+4. Confira em **Configurações → Diagnóstico** a linha "WSL + MMseqs2". Se o seu Ubuntu tiver outro nome (ex.: `Ubuntu-24.04`), escreva esse nome em **Configurações → Distribuição WSL**.
+
+O TCC usou o MMseqs2 **18-8cc5c**. Outra versão do Ubuntu pode instalar outra versão: funciona, mas o agrupamento de um fluxo novo pode sair um pouco diferente. A consulta e os modelos não são afetados.
 
 ## Pastas
 
@@ -67,6 +74,8 @@ O sistema lê proteínas do NCBI, agrupa sequências parecidas (MMseqs2), transf
 |---|---|
 | "Sistema desconectado" | Confira se a janela preta está aberta e fora do modo "Selecionar" (Esc). Espere 1 minuto e F5. |
 | Etapa 2 (MMseqs2) falha por tempo | Abra o Ubuntu uma vez antes ou rode `wsl -d Ubuntu --exec mmseqs version`. |
+| "WSL + MMseqs2" pendente no Diagnóstico | Rode `instalar_wsl_mmseqs.cmd`. |
+| `Failed to start the systemd user session` | `wsl -d Ubuntu -u root --exec sed -i 's/systemd=true/systemd=false/' /etc/wsl.conf`, depois `wsl --shutdown`. |
 | "GPU (CUDA) escolhida… indisponível" | Em Configurações, escolha Automático ou CPU e reinicie. |
 | Consulta falha com "Modelo indisponível" | Rode `git pull` (os modelos vêm no repositório) e veja o Diagnóstico em Configurações. |
 | Explorar diz "A base do milhão não está neste PC" | Normal sem o pacote de dados: escolha uma execução nova no seletor do topo ou extraia o pacote. |
