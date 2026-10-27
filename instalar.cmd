@@ -13,9 +13,9 @@ if /i not "%~dp0"=="C:\ai_tcc\" (
     if errorlevel 2 exit /b 1
 )
 
-rem Rede lenta ou antivirus da faculdade: mais tempo por download, menos downloads em paralelo, copia em vez de link
+rem Rede lenta ou antivirus da faculdade: mais tempo por download, um download por vez, copia em vez de link
 set "UV_HTTP_TIMEOUT=300"
-set "UV_CONCURRENT_DOWNLOADS=4"
+set "UV_CONCURRENT_DOWNLOADS=1"
 set "UV_LINK_MODE=copy"
 
 rem 1. uv: baixa um executavel pequeno para dentro do projeto (sem instalar nada no Windows)
