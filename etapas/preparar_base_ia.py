@@ -258,6 +258,17 @@ def executar_curto(comando, timeout=30):
     return p.returncode, texto(p.stdout), texto(p.stderr)
 
 
+def exe_nativo():
+    """Executavel do MMseqs2 para Windows baixado em ferramentas/mmseqs (None se nao existir)."""
+    base = Path(__file__).resolve().parents[1] / "ferramentas" / "mmseqs"
+    if base.is_dir():
+        for nome in ("mmseqs.bat", "mmseqs.exe"):
+            achados = sorted(base.rglob(nome), key=lambda p: len(p.parts))
+            if achados:
+                return str(achados[0])
+    return None
+
+
 class Backend:
     def __init__(self, distro=None, executavel=None):
         self.distro = distro
@@ -266,10 +277,13 @@ class Backend:
             self.prefixo = ["wsl.exe", "--distribution", distro, "--exec"]
             self.programa = executavel or "mmseqs"
         else:
-            exigir(os.name != "nt", "No Windows, escolha a distribuicao com --wsl NOME apos o diagnostico.")
             self.prefixo = []
-            self.programa = executavel or shutil.which("mmseqs")
-            exigir(self.programa, "MMseqs2 nao foi encontrado no PATH deste Linux.")
+            if os.name == "nt":  # MMseqs2 nativo do Windows (ferramentas/mmseqs), sem WSL
+                self.programa = executavel or exe_nativo()
+                exigir(self.programa, "No Windows, use --wsl NOME ou instale o MMseqs2 nativo (instalar_mmseqs_nativo.cmd).")
+            else:
+                self.programa = executavel or shutil.which("mmseqs")
+                exigir(self.programa, "MMseqs2 nao foi encontrado no PATH deste Linux.")
 
     def cmd(self, *args):
         return self.prefixo + [str(self.programa)] + list(args)
@@ -354,7 +368,7 @@ def agrupar(args):
         temporario = tmp / "temporario_mmseqs"
         temporario.mkdir()
         # Temporario em Linux nativo para evitar muitas operacoes pequenas em /mnt/c.
-        if args.wsl:
+        if backend.distro:
             code, out, err = executar_curto(backend.prefixo + ["mktemp", "-d", "-p", "/var/tmp", "tcc_mmseqs.XXXXXXXX"])
             exigir(code == 0 and re.fullmatch(r"/var/tmp/tcc_mmseqs\.[A-Za-z0-9]+", out.strip()),
                    "Nao foi possivel criar pasta privada temporaria no Linux.")
@@ -365,7 +379,7 @@ def agrupar(args):
         else:
             tmp_mmseqs = str(temporario)
         comando = backend.cmd("easy-linclust", backend.path(fasta), backend.path(tmp / "global"), tmp_mmseqs, *parametros)
-        if args.wsl:
+        if backend.distro:
             comando = backend.prefixo + ["env", f"MMSEQS_NUM_THREADS={args.threads}"] + comando[len(backend.prefixo):]
         env = os.environ.copy()
         env["MMSEQS_NUM_THREADS"] = str(args.threads)
@@ -398,7 +412,7 @@ def agrupar(args):
                              "limites": "Linclust e heuristico. Grupos disjuntos nao provam ausencia de toda homologia entre conjuntos; limiares e sensibilidade devem ser relatados."})
             del grupos
             salvar_json(tmp / "relatorio_agrupamento.json", registro)
-            if args.wsl:
+            if backend.distro:
                 # rmdir so remove a pasta privada se estiver vazia; nao apaga arquivos.
                 executar_curto(backend.prefixo + ["rmdir", "--", tmp_mmseqs])
             return registro

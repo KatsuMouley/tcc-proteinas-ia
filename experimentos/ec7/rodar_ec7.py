@@ -31,7 +31,8 @@ def ajustes():
     try:
         from sistema_tcc.core import Config
         v = Config.carregar(PROJETO).valores
-        return {"wsl": v.get("wsl", "Ubuntu"), "threads_mmseqs": int(v.get("threads_mmseqs", 4)),
+        from sistema_tcc.mmseqs import distro_wsl
+        return {"wsl": distro_wsl(v, PROJETO), "threads_mmseqs": int(v.get("threads_mmseqs", 4)),
                 "threads_pytorch": int(v.get("threads_pytorch", 2)), "dispositivo": v.get("dispositivo", "auto")}
     except Exception:
         return {"wsl": "Ubuntu", "threads_mmseqs": 4, "threads_pytorch": 2, "dispositivo": "auto"}
@@ -88,7 +89,7 @@ def preparar():
         return 1
     a = ajustes()
     args = ["--coleta", str(coleta), "--threads", str(a["threads_mmseqs"])]
-    if os.name == "nt":
+    if a["wsl"]:  # None = MMseqs2 nativo (Windows) ou Linux
         if not acordar_wsl(a["wsl"]):
             return 1
         args += ["--wsl", a["wsl"]]

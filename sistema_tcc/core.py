@@ -42,6 +42,7 @@ ATIVOS = ("pendente", "executando", "recuperacao")
 CONFIG_LOCAL = "config_local.json"
 AJUSTES_LOCAIS = {"dispositivo": "Processamento (auto, cuda ou cpu)", "threads_pytorch": "Threads do PyTorch (1 a 4)",
     "threads_mmseqs": "Threads do MMseqs2 (1 a 12)", "wsl": "Distribuição WSL com MMseqs2", "reserva_gib": "Espaço livre mínimo em disco (GiB)",
+    "mmseqs_modo": "MMseqs2: auto, wsl ou nativo (Windows)",
     "pasta_nuvem": "Pasta na nuvem (Google Drive, OneDrive…)", "salvar_fontes": "Salvar os .gz e CSVs do NCBI na pasta na nuvem",
     "copiar_resultados": "Copiar execuções e treinos EC7 para a pasta na nuvem ao terminar"}
 
@@ -150,6 +151,7 @@ class Config:
         reserva = valores.get("reserva_gib")
         exigir(type(reserva) in (int, float) and math.isfinite(reserva) and reserva >= 0, "Reserva de disco inválida.")
         exigir(isinstance(valores.get("wsl"), str) and len(valores["wsl"]) <= 100, "Distribuição WSL inválida.")
+        exigir(valores.setdefault("mmseqs_modo", "auto") in ("auto", "wsl", "nativo"), "MMseqs2: use auto, wsl ou nativo.")
         nuvem = valores.get("pasta_nuvem") or ""
         exigir(isinstance(nuvem, str) and len(nuvem) <= 260 and (not nuvem or Path(nuvem).is_absolute()), "Pasta na nuvem inválida.")
         for chave in ("salvar_fontes", "copiar_resultados"):

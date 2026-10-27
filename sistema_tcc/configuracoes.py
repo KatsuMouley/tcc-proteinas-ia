@@ -40,6 +40,8 @@ def salvar(c, obj):
         obj["wsl"] = obj["wsl"].strip()
     if "reserva_gib" in obj:
         exigir(type(obj["reserva_gib"]) in (int, float) and 0 <= obj["reserva_gib"] <= 500, "Reserva de disco: 0 a 500 GiB.")
+    if "mmseqs_modo" in obj:
+        exigir(obj["mmseqs_modo"] in ("auto", "wsl", "nativo"), "MMseqs2: use auto, wsl ou nativo.")
     if "pasta_nuvem" in obj:
         exigir(isinstance(obj["pasta_nuvem"], str), "Pasta na nuvem inválida.")
         if obj["pasta_nuvem"].strip():

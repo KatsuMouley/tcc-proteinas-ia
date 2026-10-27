@@ -232,7 +232,8 @@ class Fluxo:
 
     def backend(self):
         p = self.modulo("etapas/preparar_base_ia.py")
-        return p.Backend(self.m["wsl"] if os.name == "nt" else None)
+        from .mmseqs import distro_wsl
+        return p.Backend(distro_wsl(self.m, self.projeto))
 
     def mmseqs_inicial(self):
         p = self.modulo("etapas/preparar_base_ia.py")
@@ -244,7 +245,7 @@ class Fluxo:
         exigir(not destino.exists(), "Saída inicial do MMseqs2 já existe sem etapa aprovada.")
         tmp = Path(tempfile.mkdtemp(prefix=".mmseqs_inicial_", dir=self.pasta))
         temporario = str(tmp / "temporario")
-        if os.name == "nt":
+        if b.distro:
             code, out, err = p.executar_curto(b.prefixo + ["mktemp", "-d", "-p", "/var/tmp", "tcc_fluxo.XXXXXXXX"])
             exigir(code == 0 and out.strip().startswith("/var/tmp/tcc_fluxo."), "Não foi possível criar temporário no WSL.")
             temporario = out.strip()
@@ -318,7 +319,8 @@ class Fluxo:
     def agrupar(self):
         args = ["agrupar", "--base", self.pasta / "base", "--saida", self.pasta / "grupos",
             "--threads", self.m["threads_mmseqs"], "--reserva-gib", self.m["reserva_gib"]]
-        if os.name == "nt":
+        from .mmseqs import distro_wsl
+        if distro_wsl(self.m, self.projeto):
             args += ["--wsl", self.m["wsl"]]
         self.script("preparar_base_ia.py", *args)
         p = self.pasta / "grupos/relatorio_agrupamento.json"

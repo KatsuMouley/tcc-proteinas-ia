@@ -141,6 +141,9 @@
             <p class="muted small">CPU funciona em qualquer PC. A consulta leva cerca de 1 segundo; um fluxo de 1.000 proteínas fica alguns minutos mais lento.</p>
             <label for="cfg-threads_pytorch">Threads do PyTorch (1 a 4)</label><input id="cfg-threads_pytorch" type="number" min="1" max="4" step="1">
             <label for="cfg-threads_mmseqs">Threads do MMseqs2 (1 a 12)</label><input id="cfg-threads_mmseqs" type="number" min="1" max="12" step="1">
+            <label for="cfg-mmseqs_modo">MMseqs2 (agrupamento)</label>
+            <select id="cfg-mmseqs_modo"><option value="auto">Automático: nativo se instalado, senão WSL</option><option value="nativo">Nativo do Windows (sem Linux)</option><option value="wsl">WSL com Ubuntu</option></select>
+            <p class="muted small">O modo nativo usa o MMseqs2 baixado por instalar_mmseqs_nativo.cmd. A Fase 1 (baixar/agrupar .gz) ainda usa o WSL.</p>
             <label for="cfg-wsl">Distribuição WSL com MMseqs2</label><input id="cfg-wsl" type="text" maxlength="100">
             <label for="cfg-reserva_gib">Espaço livre mínimo em disco (GiB)</label><input id="cfg-reserva_gib" type="number" min="0" max="500" step="1">
             <label for="cfg-pasta_nuvem">Pasta na nuvem (Google Drive, OneDrive… sincronizada neste PC)</label><input id="cfg-pasta_nuvem" type="text" maxlength="260" placeholder="Ex.: G:\Meu Drive\TCC — deixe vazio para salvar só neste PC">
