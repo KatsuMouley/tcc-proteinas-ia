@@ -143,6 +143,11 @@
             <label for="cfg-threads_mmseqs">Threads do MMseqs2 (1 a 12)</label><input id="cfg-threads_mmseqs" type="number" min="1" max="12" step="1">
             <label for="cfg-wsl">Distribuição WSL com MMseqs2</label><input id="cfg-wsl" type="text" maxlength="100">
             <label for="cfg-reserva_gib">Espaço livre mínimo em disco (GiB)</label><input id="cfg-reserva_gib" type="number" min="0" max="500" step="1">
+            <label for="cfg-pasta_nuvem">Pasta na nuvem (Google Drive, OneDrive… sincronizada neste PC)</label><input id="cfg-pasta_nuvem" type="text" maxlength="260" placeholder="Ex.: G:\Meu Drive\TCC — deixe vazio para salvar só neste PC">
+            <p id="cfg-nuvens" class="muted small"></p>
+            <label class="check"><input id="cfg-salvar_fontes" type="checkbox"> Salvar os .gz e CSVs do NCBI na pasta na nuvem</label>
+            <label class="check"><input id="cfg-copiar_resultados" type="checkbox"> Copiar execuções e treinos EC7 para a pasta na nuvem ao terminar</label>
+            <p class="muted small">Fila, logs, cache e modelos ficam sempre neste PC (banco de dados em pasta sincronizada pode corromper). Os arquivos só chegam à nuvem pelo app de sincronização.</p>
             <button class="button primary" type="submit">Salvar configurações</button>
             <p id="config-msg" class="muted"></p>
           </form>

@@ -12,6 +12,7 @@ import uuid
 import zipfile
 
 from .core import Config, ETAPAS, SCRIPTS, exigir, ler_json, serial, sha
+from .pastas import raizes_permitidas
 
 FASES = ("extrair", "mmseqs_inicial", "rotular", "embeddings", "auditoria", "consolidar", "agrupar", "separar", "treinar", "banco")
 TITULOS = ("Ler e selecionar proteínas dos GZ", "MMseqs2 sobre a entrada", "Preparar CSV e rótulos",
@@ -43,7 +44,7 @@ class Execucoes:
                     if not path.is_file() or path.resolve() in arquivos:
                         continue
                     path = path.resolve()
-                    exigir(path.is_relative_to(self.c.raiz), "Fonte aponta para fora do projeto.")
+                    exigir(any(path.is_relative_to(r) for r in raizes_permitidas(self.c.raiz)), "Fonte aponta para fora do projeto e da pasta na nuvem.")
                     arquivos.add(path)
                     if path.suffix.lower() == ".gz":
                         fontes.append(self.fonte(path))

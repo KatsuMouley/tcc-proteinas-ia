@@ -27,10 +27,11 @@ import sys
 import threading
 import time
 
+from .pastas import pastas_fontes
+
 RAIZ = Path(__file__).resolve().parents[1]
 REPO = RAIZ / "fase1_extrator/genomic-data-extractor"
-DIR_GZ = RAIZ / "arquivos .gz"
-DIR_CSV = RAIZ / "arquivos csv"
+DIR_GZ, DIR_CSV = pastas_fontes(RAIZ)  # pasta na nuvem se o usuario escolheu salvar as fontes la
 PASTA = RAIZ / "dados/fase1"
 TEMP = PASTA / "temp"
 HISTORICO = PASTA / "historico_arquivos_processados.txt"

@@ -11,6 +11,7 @@ import shutil
 import subprocess
 import sys
 
+from .pastas import detectar
 from .core import AJUSTES_LOCAIS, CONFIG_LOCAL, MODELO_ESM, REVISAO_ESM, exigir, ler_json
 
 LIMITES = {"threads_pytorch": (1, 4), "threads_mmseqs": (1, 12)}
@@ -23,6 +24,7 @@ def ler(c):
     return {"ok": True, "arquivo_local": str(local_path), "descricoes": AJUSTES_LOCAIS,
             "padrao": {k: padrao.get(k, "auto" if k == "dispositivo" else None) for k in AJUSTES_LOCAIS},
             "local": local, "em_uso": {k: c.valores.get(k) for k in AJUSTES_LOCAIS},
+            "nuvens_detectadas": detectar(),
             "reiniciar_para_aplicar": any(local.get(k) != c.valores.get(k) for k in local)}
 
 
@@ -38,6 +40,21 @@ def salvar(c, obj):
         obj["wsl"] = obj["wsl"].strip()
     if "reserva_gib" in obj:
         exigir(type(obj["reserva_gib"]) in (int, float) and 0 <= obj["reserva_gib"] <= 500, "Reserva de disco: 0 a 500 GiB.")
+    if "pasta_nuvem" in obj:
+        exigir(isinstance(obj["pasta_nuvem"], str), "Pasta na nuvem inválida.")
+        if obj["pasta_nuvem"].strip():
+            from .pastas import validar_pasta
+            try:
+                obj["pasta_nuvem"] = validar_pasta(obj["pasta_nuvem"])
+            except ValueError as e:
+                exigir(False, str(e))
+        else:
+            obj["pasta_nuvem"] = ""
+    for k in ("salvar_fontes", "copiar_resultados"):
+        if k in obj:
+            exigir(type(obj[k]) is bool, f"{AJUSTES_LOCAIS[k]}: use verdadeiro ou falso.")
+    if obj.get("salvar_fontes") or obj.get("copiar_resultados"):
+        exigir(obj.get("pasta_nuvem"), "Informe a pasta na nuvem antes de escolher o que salvar nela.")
     destino = c.raiz / CONFIG_LOCAL
     atual = ler_json(destino) if destino.is_file() else {}
     tmp = destino.with_suffix(".tmp")

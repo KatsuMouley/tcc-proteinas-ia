@@ -137,6 +137,18 @@ def resumo():
     return 0
 
 
+def copiar_para_nuvem(codigo):
+    """Se o usuario escolheu copiar resultados para a nuvem, copia a pasta do experimento ao terminar."""
+    if codigo:
+        return codigo
+    try:
+        from sistema_tcc.pastas import copiar_resultado
+        copiar_resultado(PROJETO / "dados/experimento_ec7", "experimento_ec7", PROJETO)
+    except Exception as e:  # nunca derruba o treino por causa da copia
+        print(f"Aviso: copia para a nuvem ignorada ({e}).")
+    return codigo
+
+
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
     if hasattr(sys.stdout, "reconfigure"):
@@ -147,7 +159,7 @@ def main(argv=None):
     if acao == "preparar":
         return preparar()
     if acao == "treinar":
-        return treinar(argv[1:])
+        return copiar_para_nuvem(treinar(argv[1:]))
     if acao == "resumo":
         return resumo()
     if acao in ("tudo", "continuar"):
@@ -156,7 +168,7 @@ def main(argv=None):
             if codigo:
                 print(f"Parado em {etapa.__name__} (codigo {codigo}). Corrija e rode a partir dessa etapa.")
                 return codigo
-        return resumo()
+        return copiar_para_nuvem(resumo())
     print(__doc__)
     return 2
 

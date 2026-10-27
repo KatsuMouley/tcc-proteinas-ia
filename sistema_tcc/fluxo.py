@@ -22,6 +22,7 @@ import time
 
 from .core import agora, exigir, ler_json, pid_ativo, serial, sha
 from .execucoes import FASES, NOMES_FASES
+from .pastas import raizes_permitidas
 
 
 class Pausado(Exception):
@@ -185,7 +186,7 @@ class Fluxo:
                 for fonte in self.m["fontes"]:
                     p = Path(fonte["arquivo"])
                     st = p.stat()
-                    exigir(p.is_relative_to(self.projeto) and st.st_size == fonte["bytes_arquivo"] and st.st_mtime_ns == fonte["mtime_ns"], "Fonte alterada desde a criação da execução.")
+                    exigir(any(p.is_relative_to(r) for r in raizes_permitidas(self.projeto)) and st.st_size == fonte["bytes_arquivo"] and st.st_mtime_ns == fonte["mtime_ns"], "Fonte alterada desde a criação da execução.")
                     f = piloto.Fonte(p, fonte["membro"], fonte["bytes_gz"])
                     print("Lendo GZ: " + f.local, flush=True)
                     ate_fim = True

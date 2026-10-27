@@ -41,7 +41,9 @@ ALFABETO = frozenset("ACDEFGHIKLMNPQRSTVWYBXZUO")
 ATIVOS = ("pendente", "executando", "recuperacao")
 CONFIG_LOCAL = "config_local.json"
 AJUSTES_LOCAIS = {"dispositivo": "Processamento (auto, cuda ou cpu)", "threads_pytorch": "Threads do PyTorch (1 a 4)",
-    "threads_mmseqs": "Threads do MMseqs2 (1 a 12)", "wsl": "Distribuição WSL com MMseqs2", "reserva_gib": "Espaço livre mínimo em disco (GiB)"}
+    "threads_mmseqs": "Threads do MMseqs2 (1 a 12)", "wsl": "Distribuição WSL com MMseqs2", "reserva_gib": "Espaço livre mínimo em disco (GiB)",
+    "pasta_nuvem": "Pasta na nuvem (Google Drive, OneDrive…)", "salvar_fontes": "Salvar os .gz e CSVs do NCBI na pasta na nuvem",
+    "copiar_resultados": "Copiar execuções e treinos EC7 para a pasta na nuvem ao terminar"}
 
 
 def agora():
@@ -148,6 +150,10 @@ class Config:
         reserva = valores.get("reserva_gib")
         exigir(type(reserva) in (int, float) and math.isfinite(reserva) and reserva >= 0, "Reserva de disco inválida.")
         exigir(isinstance(valores.get("wsl"), str) and len(valores["wsl"]) <= 100, "Distribuição WSL inválida.")
+        nuvem = valores.get("pasta_nuvem") or ""
+        exigir(isinstance(nuvem, str) and len(nuvem) <= 260 and (not nuvem or Path(nuvem).is_absolute()), "Pasta na nuvem inválida.")
+        for chave in ("salvar_fontes", "copiar_resultados"):
+            exigir(type(valores.get(chave, False)) is bool, f"{chave} deve ser verdadeiro ou falso.")
         def caminho(valor):
             exigir(isinstance(valor, str) and valor, "Caminho vazio na configuração.")
             p = (raiz / valor).resolve()
@@ -166,6 +172,8 @@ class Config:
             for fonte in [*caminhos["fontes"], caminhos["cache"], raiz / "etapas", raiz / "sistema_tcc"]:
                 exigir(not saida.is_relative_to(fonte) and not fonte.is_relative_to(saida),
                     "Pastas de saída não podem se sobrepor às fontes, ao cache ou ao código.")
+        if nuvem and valores.get("salvar_fontes") is True:  # fontes na nuvem primeiro; as do projeto continuam lidas
+            caminhos["fontes"] = [Path(nuvem) / "arquivos .gz", Path(nuvem) / "arquivos csv", *caminhos["fontes"]]
         return cls(raiz, valores, caminhos)
 
     @property
@@ -762,6 +770,8 @@ class Executor:
                     cat, _ = self.catalogo_execucao(task["parametros"]["execucao"])
                     exigir(all(x["estado"] == "concluido" for x in cat.refresh(True).values()), "Uma saída científica do fluxo não foi aprovada.")
                     self.store.atualizar(ident, resultado=resultado)
+                    from .pastas import copiar_resultado
+                    copiar_resultado(row["pasta"], "execucoes_tcc/" + Path(row["pasta"]).name, self.c.raiz, log.write)
                 else:
                     self.catalogo.refresh(True)
                     erro = self.catalogo.bloqueio(etapa)
