@@ -25,3 +25,5 @@ config_local.json
 # Os modelos do TCC (pequenos) vao no git, para o painel consultar sem o pacote de dados.
 !dados/modelos/**/*.pt
 saida/
+.venv_antigo*/
+ferramentas/uv/
