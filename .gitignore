@@ -27,3 +27,4 @@ config_local.json
 saida/
 .venv_antigo*/
 ferramentas/uv/
+teste_tcc/

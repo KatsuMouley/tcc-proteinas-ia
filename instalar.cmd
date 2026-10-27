@@ -13,6 +13,11 @@ if /i not "%~dp0"=="C:\ai_tcc\" (
     if errorlevel 2 exit /b 1
 )
 
+rem Rede lenta ou antivirus da faculdade: mais tempo por download, menos downloads em paralelo, copia em vez de link
+set "UV_HTTP_TIMEOUT=300"
+set "UV_CONCURRENT_DOWNLOADS=4"
+set "UV_LINK_MODE=copy"
+
 rem 1. uv: baixa um executavel pequeno para dentro do projeto (sem instalar nada no Windows)
 set "UV=%~dp0ferramentas\uv\uv.exe"
 if not exist "%UV%" (
@@ -41,17 +46,17 @@ if not exist ".venv\Scripts\python.exe" (
 set "VPY=%~dp0.venv\Scripts\python.exe"
 
 rem 3. dependencias
-"%UV%" pip install --python "%VPY%" -r requirements.txt
+call :uvpip -r requirements.txt
 if errorlevel 1 goto falhou
 nvidia-smi >nul 2>&1
 if errorlevel 1 goto cpu
 echo Placa NVIDIA encontrada: instalando PyTorch com CUDA 12.6. Download grande, aguarde.
-"%UV%" pip install --python "%VPY%" "torch==2.9.1+cu126" --index-url https://download.pytorch.org/whl/cu126
+call :uvpip "torch==2.9.1+cu126" --index-url https://download.pytorch.org/whl/cu126
 if errorlevel 1 goto falhou
 goto fase1
 :cpu
 echo Sem placa NVIDIA: instalando PyTorch para CPU. O sistema funciona no processador.
-"%UV%" pip install --python "%VPY%" "torch==2.9.1" --index-url https://download.pytorch.org/whl/cpu
+call :uvpip "torch==2.9.1" --index-url https://download.pytorch.org/whl/cpu
 if errorlevel 1 goto falhou
 :fase1
 if not exist "fase1_extrator\genomic-data-extractor\agrupar_gz_ncbi.py" (
@@ -82,4 +87,18 @@ exit /b 0
 echo.
 echo ERRO na instalacao. Copie as mensagens acima e envie ao grupo.
 pause
+exit /b 1
+
+rem Instala com ate 3 tentativas (o que ja baixou fica no cache e nao baixa de novo)
+:uvpip
+set "N=0"
+:uvpip_tenta
+"%UV%" pip install --python "%VPY%" %*
+if not errorlevel 1 exit /b 0
+set /a N+=1
+if %N% lss 3 (
+    echo Falha ao baixar ou extrair. Nova tentativa %N%/3 em 5 segundos ...
+    timeout /t 5 >nul
+    goto uvpip_tenta
+)
 exit /b 1
