@@ -18,7 +18,7 @@ Para consultar proteínas no painel basta clonar o repositório e rodar dois arq
 | Item | Detalhe |
 | --- | --- |
 | Windows | 10 (versão 2004 ou mais nova) ou 11 |
-| Python | **3.13** ([python.org](https://www.python.org/downloads/)); na instalação, marque "Add python.exe to PATH" |
+| Python | **não precisa instalar**: o `instalar.cmd` baixa um Python 3.13 próprio (via uv) para dentro do projeto, mesmo que o PC tenha o 3.11 ou outro |
 | Git | [git-scm.com](https://git-scm.com/download/win) |
 | Internet | para instalar as bibliotecas e baixar o ESM-2 (~30 MB, uma vez só) |
 | GPU NVIDIA | **opcional**; sem ela tudo roda no processador (consulta em cerca de 1 s) |
@@ -33,7 +33,7 @@ Use um PowerShell **normal** (não "Executar como administrador").
    ```powershell
    git clone https://github.com/KatsuMouley/tcc-proteinas-ia.git C:\ai_tcc
    ```
-2. **Dê dois cliques em `instalar.cmd`.** Ele cria o ambiente `.venv`, instala as bibliotecas, escolhe o PyTorch certo (GPU NVIDIA se houver, senão CPU), baixa o ESM-2 e clona a Fase 1 do Filipe em `fase1_extrator\`. Leva de 5 a 15 minutos. Se ele avisar que a pasta não é C:\ai_tcc, cancele e clone no lugar certo.
+2. **Dê dois cliques em `instalar.cmd`.** Ele baixa o uv, cria o ambiente `.venv` com Python 3.13 (se existir um `.venv` de outra versão, guarda como `.venv_antigo_*`), instala as bibliotecas, escolhe o PyTorch certo (GPU NVIDIA se houver, senão CPU), baixa o ESM-2 e clona a Fase 1 do Filipe em `fase1_extrator\`. No meio, pergunta **onde salvar os arquivos** (só neste PC, ou uma pasta sincronizada do Google Drive/OneDrive/Dropbox) e o que enviar para lá. Leva de 5 a 15 minutos. Se ele avisar que a pasta não é C:\ai_tcc, cancele e clone no lugar certo.
 3. **Dê dois cliques em `iniciar_sistema.cmd`.** Uma janela preta abre e o painel aparece em http://127.0.0.1:8765. Deixe a janela aberta e **não clique dentro dela** (se clicar, aperte Esc).
 4. **Abra Configurações no painel.** Escolha o processamento (Automático, GPU ou CPU) e confira o Diagnóstico (seção "Como conferir"). Mudou algo? Feche a janela preta com Ctrl+C **uma vez** e abra o `iniciar_sistema.cmd` de novo.
 5. **Faça a primeira consulta** em Consultar proteína, com a sequência de teste da seção "Como conferir".
@@ -103,7 +103,7 @@ Termina com `OK` (114 testes). Se um teste de tempo falhar com o PC ocupado, rod
 
 | Sintoma | Solução |
 | --- | --- |
-| `instalar.cmd` não acha o Python | Instale o Python 3.13 marcando "Add python.exe to PATH" e rode de novo |
+| `instalar.cmd` falha ao baixar o uv ou o Python | Verifique internet/antivírus/proxy (precisa de acesso ao github.com) e rode de novo |
 | Painel mostra "Sistema desconectado" | Confira se a janela preta está aberta e fora do modo "Selecionar" (Esc). Espere 1 minuto e aperte F5 |
 | Consulta bloqueada com "Modelo indisponível" | `git pull` na pasta C:\ai_tcc e veja o Diagnóstico |
 | "GPU (CUDA) escolhida… indisponível" | Em Configurações, escolha Automático ou CPU e reinicie o sistema |
@@ -128,3 +128,7 @@ Depois abra o `iniciar_sistema.cmd` de novo. Só rode o `instalar.cmd` outra vez
 **O que vem no git:** o código, o painel, os testes, a documentação e os três modelos em `dados\modelos\`.
 
 **O que fica só no seu PC:** o `.venv`, o cache do ESM-2, a base do milhão, as execuções novas, os `.gz` baixados, a Fase 1 do Filipe (o instalador clona) e o `config_local.json` com as suas Configurações.
+
+## Salvar na nuvem (opcional)
+
+Na pergunta do instalador ou em **Configurações → Pasta na nuvem**, aponte uma pasta já sincronizada neste PC (ex.: `G:\Meu Drive\TCC`). Você escolhe o que vai para lá: (a) os `.gz`/CSVs do NCBI (o sistema também os lê dessa pasta) e/ou (b) cópia das execuções e dos treinos EC7 ao terminarem. A fila (`controle.sqlite3`), logs, cache e modelos ficam sempre no PC, porque banco SQLite em pasta sincronizada pode corromper. Reinicie o sistema após mudar. Para ler dados de colegas, basta eles compartilharem a pasta no Drive e você adicioná-la ao seu Drive.
