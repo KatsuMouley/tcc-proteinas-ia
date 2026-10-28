@@ -232,8 +232,11 @@ class Fluxo:
 
     def backend(self):
         p = self.modulo("etapas/preparar_base_ia.py")
-        from .mmseqs import distro_wsl
-        return p.Backend(distro_wsl(self.m, self.projeto))
+        from .mmseqs import distro_wsl, exe_nativo
+        distro = distro_wsl(self.m, self.projeto)
+        # O módulo vem da cópia do código desta execução: o executável nativo precisa ser informado.
+        exe = None if distro else exe_nativo(self.projeto)
+        return p.Backend(distro, str(exe) if exe else None)
 
     def mmseqs_inicial(self):
         p = self.modulo("etapas/preparar_base_ia.py")
@@ -319,9 +322,11 @@ class Fluxo:
     def agrupar(self):
         args = ["agrupar", "--base", self.pasta / "base", "--saida", self.pasta / "grupos",
             "--threads", self.m["threads_mmseqs"], "--reserva-gib", self.m["reserva_gib"]]
-        from .mmseqs import distro_wsl
+        from .mmseqs import distro_wsl, exe_nativo
         if distro_wsl(self.m, self.projeto):
             args += ["--wsl", self.m["wsl"]]
+        elif exe_nativo(self.projeto):
+            args += ["--executavel", str(exe_nativo(self.projeto))]
         self.script("preparar_base_ia.py", *args)
         p = self.pasta / "grupos/relatorio_agrupamento.json"
         r = ler_json(p)

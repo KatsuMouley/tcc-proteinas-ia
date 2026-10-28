@@ -64,11 +64,12 @@
           <div><label for="fase1-qtd">Quantidade de arquivos (~150 MB cada)</label><input id="fase1-qtd" type="number" min="1" max="20" value="1"></div>
           <div class="fase1-actions"><button id="fase1-baixar" class="button" type="button">Baixar do NCBI</button><button id="fase1-agrupar" class="button ghost" type="button">Agrupar por arquivo (MMseqs2)</button></div>
         </div>
+        <div class="fase1-mmseqs" id="fase1-mmseqs-box"><label for="fase1-mmseqs">Agrupar com</label><select id="fase1-mmseqs"><option value="nativo">MMseqs2 nativo do Windows (sem Linux)</option><option value="wsl">MMseqs2 no WSL (Ubuntu)</option></select><p id="fase1-mmseqs-info" class="muted small"></p></div>
         <div class="table-wrap"><table class="fase1-table"><thead><tr><th>Arquivo .gz</th><th>Tamanho</th><th>Agrupado (Fase 1)</th></tr></thead><tbody id="fase1-arquivos"><tr><td colspan="3" class="muted">Carregando…</td></tr></tbody></table></div>
         <pre id="fase1-log" class="fase1-log" hidden></pre>
       </article>
       <article class="panel fase1-panel" id="ec7-pipeline">
-        <div class="panel-heading"><div><p class="eyebrow">EXPERIMENTO SEPARADO · 7 CLASSES EC</p><h2>Experimento EC7</h2><p>Coleta até 500 enzimas revisadas por classe no Swiss-Prot (precisa de internet), agrupa com MMseqs2 (WSL), gera os embeddings e treina o MLP de 7 classes com validação cruzada. O modelo EC 2 × EC 3 do painel não muda.</p></div><span id="ec7p-status" class="badge">—</span></div>
+        <div class="panel-heading"><div><p class="eyebrow">EXPERIMENTO SEPARADO · 7 CLASSES EC</p><h2>Experimento EC7</h2><p>Coleta até 500 enzimas revisadas por classe no Swiss-Prot (precisa de internet), agrupa com MMseqs2 (nativo ou WSL, conforme Configurações), gera os embeddings e treina o MLP de 7 classes com validação cruzada. O modelo EC 2 × EC 3 do painel não muda.</p></div><span id="ec7p-status" class="badge">—</span></div>
         <div class="fase1-actions ec7-acoes"><button class="button" type="button" data-ec7="tudo">Rodar tudo</button><button class="button ghost" type="button" data-ec7="continuar">Continuar (reaproveita a coleta)</button><button class="button ghost compact" type="button" data-ec7="coletar">1 · Coletar</button><button class="button ghost compact" type="button" data-ec7="preparar">2 · Agrupar</button><button class="button ghost compact" type="button" data-ec7="treinar">3 · Treinar</button></div>
         <p id="ec7p-resultado" class="muted"></p>
         <pre id="ec7p-log" class="fase1-log" hidden></pre>
@@ -143,7 +144,7 @@
             <label for="cfg-threads_mmseqs">Threads do MMseqs2 (1 a 12)</label><input id="cfg-threads_mmseqs" type="number" min="1" max="12" step="1">
             <label for="cfg-mmseqs_modo">MMseqs2 (agrupamento)</label>
             <select id="cfg-mmseqs_modo"><option value="auto">Automático: nativo se instalado, senão WSL</option><option value="nativo">Nativo do Windows (sem Linux)</option><option value="wsl">WSL com Ubuntu</option></select>
-            <p class="muted small">O modo nativo usa o MMseqs2 baixado por instalar_mmseqs_nativo.cmd. A Fase 1 (baixar/agrupar .gz) ainda usa o WSL.</p>
+            <p class="muted small">O modo nativo usa o MMseqs2 baixado por instalar_mmseqs_nativo.cmd, sem WSL nem administrador. Na Fase 1 (Pipeline automático) você também escolhe o modo a cada agrupamento.</p>
             <label for="cfg-wsl">Distribuição WSL com MMseqs2</label><input id="cfg-wsl" type="text" maxlength="100">
             <label for="cfg-reserva_gib">Espaço livre mínimo em disco (GiB)</label><input id="cfg-reserva_gib" type="number" min="0" max="500" step="1">
             <label for="cfg-pasta_nuvem">Pasta na nuvem (Google Drive, OneDrive… sincronizada neste PC)</label><input id="cfg-pasta_nuvem" type="text" maxlength="260" placeholder="Ex.: G:\Meu Drive\TCC — deixe vazio para salvar só neste PC">

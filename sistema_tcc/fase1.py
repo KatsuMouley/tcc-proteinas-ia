@@ -27,6 +27,7 @@ import sys
 import threading
 import time
 
+from .mmseqs import exe_nativo, modo as modo_mmseqs
 from .pastas import pastas_fontes
 
 RAIZ = Path(__file__).resolve().parents[1]
@@ -223,20 +224,73 @@ class _SubprocessVisivel:
         return r
 
 
+_MARCA = "LINUX_TCC"  # no modo nativo, no lugar do 'wsl' que o script do Filipe coloca na frente dos comandos
+
+
+class _SubprocessNativo(_SubprocessVisivel):
+    """Roda no Windows, sem WSL, os comandos Linux do script do Filipe (mkdir, mmseqs, cp, rm -rf).
+
+    Traduz /mnt/c/... para C:/... e /tmp/... para dados/fase1/temp/nativo/..., sem alterar o arquivo dele."""
+
+    def __init__(self, exe, base, threads):
+        self.exe, self.base, self.threads = str(exe), Path(base), int(threads)
+
+    def _p(self, texto):
+        s = str(texto)
+        if s.startswith("/mnt/") and len(s) > 6 and s[6] == "/":
+            return s[5].upper() + ":" + s[6:]
+        if s.startswith("/tmp/"):
+            return str(self.base / s[5:])
+        return s
+
+    def run(self, cmd, check=False, stdout=None, stderr=None, **kw):
+        if not cmd or cmd[0] != _MARCA:
+            return super().run(cmd, check=check, stdout=stdout, stderr=stderr, **kw)
+        a = [str(x) for x in cmd[1:]]
+        try:
+            if a[0] == "mkdir":
+                os.makedirs(self._p(a[-1]), exist_ok=True)
+            elif a[0] == "cp":
+                shutil.copyfile(self._p(a[1]), self._p(a[2]))
+            elif a[0] == "rm":
+                shutil.rmtree(self._p(a[-1]), ignore_errors=True)
+            elif a[0] == "mmseqs":
+                env = {**os.environ, "MMSEQS_NUM_THREADS": str(self.threads)}
+                return super().run([self.exe, *map(self._p, a[1:])], check=check, env=env, **kw)
+            else:
+                raise ValueError("comando Linux sem equivalente no modo nativo: " + a[0])
+        except Exception as e:
+            print("Comando falhou (modo nativo): %s -> %s: %s" % (" ".join(a[:2]), type(e).__name__, e), flush=True)
+            if check:
+                raise subprocess.CalledProcessError(1, cmd, b"", str(e).encode())
+            return subprocess.CompletedProcess(cmd, 1, b"", str(e).encode())
+        return subprocess.CompletedProcess(cmd, 0, b"", b"")
+
+
 def pendentes():
     feitos = set(HISTORICO.read_text(encoding="utf-8").split()) if HISTORICO.is_file() else set()
     return sorted([p.name for p in DIR_GZ.glob("*.gz") if p.name not in feitos], key=_ordem) if DIR_GZ.is_dir() else []
 
 
-def agrupar(distro="Ubuntu"):
-    exigir(str(RAIZ).lower().startswith("c:") or os.name != "nt", "O agrupamento da Fase 1 exige o projeto no disco C:.")
+def agrupar(distro="Ubuntu", modo="wsl", threads=4):
+    exigir(modo in ("wsl", "nativo"), "Modo do MMseqs2 invalido: use nativo ou wsl.")
+    nativo = modo == "nativo" and os.name == "nt"
+    exigir(nativo or str(RAIZ).lower().startswith("c:") or os.name != "nt", "O agrupamento da Fase 1 pelo WSL exige o projeto no disco C:.")
+    exe = exe_nativo(RAIZ) if nativo else None
+    exigir(not nativo or exe, "O MMseqs2 nativo nao esta instalado. Rode ferramentas\\instalar_mmseqs_nativo.cmd.")
     for p in (DIR_CSV, TEMP):
         p.mkdir(parents=True, exist_ok=True)
     mod = _carregar("agrupar_gz_ncbi.py", DIR_GZ=DIR_GZ, DIR_CSV_DRIVE=DIR_CSV, DIR_TEMP_LOCAL=TEMP,
                     ARQUIVO_LOG=HISTORICO, ARQUIVO_LOG_SISTEMA=PASTA / "log_fase1.txt", g_drive=PASTA)
-    if os.name == "nt":
-        mod.EXECUTAVEL_LINUX = _wsl_cmd(distro)
-    mod.subprocess = _SubprocessVisivel()  # mostra no log o erro que o script original descarta
+    if nativo:
+        mod.EXECUTAVEL_LINUX = _MARCA
+        mod.subprocess = _SubprocessNativo(exe, TEMP / "nativo", threads)
+        print(f"MMseqs2 nativo do Windows: {exe}", flush=True)
+    else:
+        if os.name == "nt":
+            mod.EXECUTAVEL_LINUX = _wsl_cmd(distro)
+            print(f"MMseqs2 pelo WSL ({distro})", flush=True)
+        mod.subprocess = _SubprocessVisivel()  # mostra no log o erro que o script original descarta
     mod.setup_logging(str(PASTA / "log_fase1.txt"))
     fila = pendentes()
     print(f"{len(fila)} arquivo(s) .gz para agrupar com MMseqs2 (50% identidade, 80% cobertura).", flush=True)
@@ -246,7 +300,7 @@ def agrupar(distro="Ubuntu"):
         try:
             ok = mod.descompactar_gz(str(DIR_GZ / arquivo), str(fasta))
             ok = ok and (mod.rodar_mmseqs(str(fasta), str(TEMP))
-                         or (print("Nova tentativa (o WSL pode ter demorado a iniciar)...", flush=True) or mod.rodar_mmseqs(str(fasta), str(TEMP))))
+                         or (print("Nova tentativa...", flush=True) or mod.rodar_mmseqs(str(fasta), str(TEMP))))
             if ok:
                 mod.salvar_resultados_no_csv(str(TEMP), arquivo, str(fasta))
                 mod.registrar_sucesso(arquivo)
@@ -283,9 +337,15 @@ class Gerenciador:
                 cmd += ["baixar", "--divisao", obj["divisao"], "--quantidade", str(obj["quantidade"]),
                         "--reserva", str(self.c.valores.get("reserva_gib", 10))]
             elif acao == "agrupar":
-                exigir(set(obj) == {"acao"}, "Agrupar nao recebe parametros.")
+                exigir(set(obj) <= {"acao", "modo"}, "Agrupar so recebe o modo (nativo ou wsl).")
+                padrao = "nativo" if modo_mmseqs(self.c.valores, RAIZ) == "nativo" else "wsl"
+                modo = obj.get("modo") or padrao
+                exigir(modo in ("nativo", "wsl"), "Modo do MMseqs2 invalido: use nativo ou wsl.")
+                if modo == "nativo" and os.name == "nt":
+                    exigir(exe_nativo(RAIZ), "O MMseqs2 nativo nao esta instalado. Rode ferramentas\\instalar_mmseqs_nativo.cmd.")
                 exigir(pendentes(), "Nenhum .gz pendente de agrupamento.")
-                cmd += ["agrupar", "--wsl", self.c.valores.get("wsl", "Ubuntu")]
+                cmd += ["agrupar", "--wsl", self.c.valores.get("wsl", "Ubuntu"), "--modo", modo,
+                        "--threads", str(self.c.valores.get("threads_mmseqs", 4))]
             else:
                 raise ValueError("Acao desconhecida: use baixar ou agrupar.")
             PASTA.mkdir(parents=True, exist_ok=True)
@@ -307,7 +367,10 @@ class Gerenciador:
         return {"ok": True, "rodando": self.rodando(), "acao": self.acao,
                 "codigo_saida": None if self.proc is None or self.rodando() else self.proc.returncode,
                 "divisoes": DIVISOES, "max_arquivos": MAX_ARQUIVOS, "arquivos": arquivos,
-                "fase1_presente": (REPO / "agrupar_gz_ncbi.py").is_file(), "log": linhas}
+                "fase1_presente": (REPO / "agrupar_gz_ncbi.py").is_file(), "log": linhas,
+                "mmseqs": {"windows": os.name == "nt", "nativo": bool(exe_nativo(RAIZ)), "wsl": bool(shutil.which("wsl.exe")),
+                           "padrao": "nativo" if modo_mmseqs(self.c.valores, RAIZ) == "nativo" else "wsl",
+                           "distro": self.c.valores.get("wsl", "Ubuntu")}}
 
 
 def main():
@@ -317,6 +380,7 @@ def main():
     s = sub.add_parser("baixar"); s.add_argument("--divisao", required=True); s.add_argument("--quantidade", type=int, default=1)
     s.add_argument("--reserva", type=float, default=10)
     s = sub.add_parser("agrupar"); s.add_argument("--wsl", default="Ubuntu")
+    s.add_argument("--modo", choices=("wsl", "nativo"), default="wsl"); s.add_argument("--threads", type=int, default=4)
     a = ap.parse_args()
     if sys.platform == "win32":
         sys.stdout.reconfigure(encoding="utf-8")
@@ -327,7 +391,7 @@ def main():
         elif a.acao == "baixar":
             baixar(a.divisao, a.quantidade, a.reserva)
         else:
-            agrupar(a.wsl)
+            agrupar(a.wsl, a.modo, a.threads)
     except Exception as e:
         print(f"ERRO: {type(e).__name__}: {e}", flush=True)
         return 1
