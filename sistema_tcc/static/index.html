@@ -10,6 +10,7 @@
   <aside class="sidebar">
     <a class="brand" href="#visao"><span class="brand-mark">P</span><span>Proteínas<span class="brand-sub">CENTRAL DO TCC</span></span></a>
     <p class="nav-label">SEU EXPERIMENTO</p>
+    <a class="button ghost compact" href="/">✦ Voltar ao assistente guiado</a>
     <nav aria-label="Navegação principal">
       <a href="#visao" data-tab="visao" class="selected"><span class="nav-icon">▦</span> Visão geral</a>
       <a href="#pipeline" data-tab="pipeline"><span class="nav-icon">↳</span> Pipeline automático</a>
@@ -69,7 +70,7 @@
         <pre id="fase1-log" class="fase1-log" hidden></pre>
       </article>
       <article class="panel fase1-panel" id="ec7-pipeline">
-        <div class="panel-heading"><div><p class="eyebrow">EXPERIMENTO SEPARADO · 7 CLASSES EC</p><h2>Experimento EC7</h2><p>Coleta até 500 enzimas revisadas por classe no Swiss-Prot (precisa de internet), agrupa com MMseqs2 (nativo ou WSL, conforme Configurações), gera os embeddings e treina o MLP de 7 classes com validação cruzada. O modelo EC 2 × EC 3 do painel não muda.</p></div><span id="ec7p-status" class="badge">—</span></div>
+        <div class="panel-heading"><div><p class="eyebrow">MODELO PRINCIPAL · 7 CLASSES EC</p><h2>Modelo EC 1 a EC 7</h2><p>Coleta até 500 enzimas revisadas por classe no Swiss-Prot (precisa de internet), agrupa com MMseqs2 (nativo ou WSL, conforme Configurações), gera os embeddings e treina o MLP de 7 classes com validação cruzada. O modelo EC 2 × EC 3 continua como modelo complementar.</p></div><span id="ec7p-status" class="badge">—</span></div>
         <div class="fase1-actions ec7-acoes"><button class="button" type="button" data-ec7="tudo">Rodar tudo</button><button class="button ghost" type="button" data-ec7="continuar">Continuar (reaproveita a coleta)</button><button class="button ghost compact" type="button" data-ec7="coletar">1 · Coletar</button><button class="button ghost compact" type="button" data-ec7="preparar">2 · Agrupar</button><button class="button ghost compact" type="button" data-ec7="treinar">3 · Treinar</button></div>
         <p id="ec7p-resultado" class="muted"></p>
         <pre id="ec7p-log" class="fase1-log" hidden></pre>
@@ -102,7 +103,7 @@
       <div class="page-heading"><div><p class="eyebrow">MAPA DOS GRUPOS · ESTATÍSTICA DO TESTE</p><h1 id="heading-explorar">Explorar e analisar</h1><p>No mapa, cada bolha é o representante de um grupo MMseqs2: clique para ver sequência, ID, grupo, tipo e classe. Abaixo, os gráficos estatísticos do conjunto de teste.</p></div><span id="explorar-base" class="badge">—</span></div>
       <article class="panel">
         <div class="explorar-controles">
-          <div><label for="explorar-cor">Agrupar e colorir por</label><select id="explorar-cor"><option value="tipo">Tipo nutricional (regra dos 9 aminoácidos)</option><option value="ec">Classe enzimática prevista (EC 2 × EC 3)</option><option value="ec7">Classe enzimática entre as 7 (experimento EC7)</option></select></div>
+          <div><label for="explorar-cor">Agrupar e colorir por</label><select id="explorar-cor"><option value="tipo">Tipo nutricional (regra dos 9 aminoácidos)</option><option value="ec">Classe enzimática prevista (EC 2 × EC 3)</option><option value="ec7">Classe enzimática entre as 7 (modelo principal)</option></select></div>
           <div><span class="rotulo-campo" id="explorar-n-rotulo">Representantes por categoria</span><div class="segmentado" role="group" aria-labelledby="explorar-n-rotulo"><button type="button" data-n="10" aria-pressed="true">10</button><button type="button" data-n="50" aria-pressed="false">50</button><button type="button" data-n="100" aria-pressed="false">100</button></div></div>
           <div id="explorar-legenda" class="legenda" aria-label="Legenda"></div>
         </div>
@@ -121,7 +122,7 @@
       </div>
       <div id="estat-limites" class="note"></div>
       <article class="panel wide" id="ec7-painel">
-        <div class="panel-heading"><div><p class="eyebrow">EXPERIMENTO SEPARADO · 7 CLASSES EC</p><h2>Modelo EC 1 a EC 7</h2><p>Mesmo pipeline (ESM-2 + MLP 320 → 64 → 7) com 3.500 enzimas revisadas do Swiss-Prot. Não substitui o modelo EC 2 × EC 3.</p></div><span id="ec7-badge" class="badge">—</span></div>
+        <div class="panel-heading"><div><p class="eyebrow">MODELO PRINCIPAL · 7 CLASSES EC</p><h2>Modelo EC 1 a EC 7</h2><p>Mesmo pipeline (ESM-2 + MLP 320 → 64 → 7) com 3.500 enzimas revisadas do Swiss-Prot. É o modelo principal; o EC 2 × EC 3 é complementar.</p></div><span id="ec7-badge" class="badge">—</span></div>
         <div id="ec7-metricas" class="ec7-metricas"></div>
         <div class="ec7-layout"><div><h3>Matriz de confusão no teste (% de cada classe real)</h3><svg id="ec7-matriz" class="estat-svg" viewBox="0 0 520 400" role="img" aria-label="Matriz de confusão das 7 classes EC"></svg></div><div><h3>Sensibilidade por classe (teste)</h3><div id="ec7-sens" class="ec7-sens"></div><p id="ec7-txt" class="estat-txt"></p></div></div>
         <div id="ec7-limites" class="note"></div>

@@ -1,4 +1,4 @@
-"""Integra o experimento EC7 (experimentos/ec7) ao painel, sem alterar o modelo EC 2 x EC 3.
+"""Integra o modelo principal EC7 (experimentos/ec7) ao painel, sem alterar o modelo complementar EC 2 x EC 3.
 
 - localiza o treino EC7 concluido mais recente em dados/experimento_ec7/;
 - resume suas metricas para a tela Explorar e analisar;
@@ -25,7 +25,7 @@ ACOES = ("coletar", "preparar", "treinar", "continuar", "tudo")
 ROTULOS = {"Oxidorredutase": "EC 1", "Transferase": "EC 2", "Hidrolase": "EC 3", "Liase": "EC 4",
            "Isomerase": "EC 5", "Ligase": "EC 6", "Translocase": "EC 7"}
 LIMITES = [
-    "Experimento separado do modelo EC 2 × EC 3: 3.500 enzimas revisadas do Swiss-Prot (500 por classe), até 512 resíduos.",
+    "Modelo principal (EC 1 a EC 7): 3.500 enzimas revisadas do Swiss-Prot (500 por classe), até 512 resíduos. O modelo EC 2 × EC 3 continua como complementar.",
     "Proteínas com mais de uma classe EC foram excluídas. O modelo sempre escolhe uma das 7 e não reconhece proteínas que não são enzimas.",
     "Acaso com 7 classes = 14,3%. Compare a acurácia balanceada com esse valor, não com os 86% do modelo binário.",
 ]

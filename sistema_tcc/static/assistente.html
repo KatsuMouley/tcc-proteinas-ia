@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Proteínas · Assistente guiado</title>
+  <link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/assistente.css">
+  <script src="/assistente.js" defer></script>
+</head>
+<body class="modo-intro">
+  <header class="topo">
+    <a class="marca" href="/"><span class="marca-sinal">P</span><span class="marca-nome">Proteínas<small>ASSISTENTE GUIADO</small></span></a>
+    <ol class="trilha" id="trilha" aria-label="Etapas da jornada"></ol>
+    <nav class="topo-links"><a class="link" href="/avancado">Modo avançado</a><span id="conexao" class="conexao">Conectando…</span></nav>
+    <div class="barra" aria-hidden="true"><i id="barra-i"></i></div>
+  </header>
+
+  <main class="palco" id="palco">
+
+    <!-- 0 · Boas-vindas -->
+    <section class="cena hero" data-n="0" aria-labelledby="t0"><div class="cena-in centro">
+      <div class="helice" id="helice" aria-hidden="true"></div>
+      <p class="sobre rev">TCC · ENGENHARIA DE COMPUTAÇÃO · UNIVERSIDADE POSITIVO</p>
+      <h1 id="t0" class="rev">Bem-vindo ao projeto<br><em>IA aplicada à Bioinformática</em></h1>
+      <p class="lead rev">Vamos mostrar, passo a passo, como a inteligência artificial pode <strong>ler proteínas</strong>, agrupá-las e <strong>classificar enzimas em suas 7 classes</strong>. Você roda o experimento de verdade, no seu computador, e aprende no caminho.</p>
+      <div class="acoes rev"><button class="botao grande" type="button" data-ir="1">Começar a jornada <span>→</span></button><button class="botao fantasma-claro" type="button" data-ir="6">Já conheço, ir direto aos dados</button></div>
+      <p class="peq rev">Leitura de cerca de 5 minutos · seus dados ficam neste computador</p>
+    </div></section>
+
+    <!-- 1 · O problema -->
+    <section class="cena" data-n="1" aria-labelledby="t1" hidden><div class="cena-in">
+      <p class="sobre rev">1 DE 5 · O PROBLEMA</p>
+      <h2 id="t1" class="grande rev">Sequenciamos proteínas muito mais rápido do que conseguimos entendê-las</h2>
+      <div class="trio rev">
+        <article class="cartao"><span class="icone">🧬</span><h3>Milhões de sequências</h3><p>Bancos públicos como o <span class="termo" tabindex="0" data-dica="National Center for Biotechnology Information: repositório público de dados biológicos.">NCBI</span> guardam sequências de proteínas de todo tipo de organismo, e o número cresce todo dia.</p></article>
+        <article class="cartao"><span class="icone">🔬</span><h3>Poucas analisadas</h3><p>Descobrir a função de uma proteína em laboratório é lento e caro. A maioria das sequências nunca passa por isso.</p></article>
+        <article class="cartao"><span class="icone">🤖</span><h3>Onde entra a IA</h3><p>Um modelo treinado pode fazer uma triagem rápida e barata, apontando onde vale a pena olhar primeiro.</p></article>
+      </div>
+      <p class="nota rev">Este projeto é uma <strong>prova de conceito</strong>: mostra o caminho completo, dos dados brutos ao classificador, de forma reproduzível.</p>
+    </div></section>
+
+    <!-- 2 · Proteína é um texto -->
+    <section class="cena" data-n="2" aria-labelledby="t2" hidden><div class="cena-in">
+      <p class="sobre rev">2 DE 5 · A IDEIA</p>
+      <h2 id="t2" class="grande rev">Uma proteína é um texto escrito com 20 letras</h2>
+      <p class="lead rev">Cada letra é um <span class="termo" tabindex="0" data-dica="Bloco que forma as proteínas. Existem 20 tipos, cada um com uma letra (A, C, D, E…).">aminoácido</span>. Como a IA aprende a ler linguagem, ela também pode aprender a ler proteínas. Experimente: digite uma sequência e veja uma regra simples do projeto em ação. Ela é o nosso modelo de prova de conceito (complementar); o modelo principal classifica enzimas em 7 classes.</p>
+      <div class="lab rev">
+        <label for="seq-demo">Sequência de aminoácidos</label>
+        <input id="seq-demo" class="campo mono" maxlength="120" spellcheck="false" autocomplete="off" value="MKTAYIAKQRQISFVKSHFSRQLEERLGLIEVQ">
+        <div class="mini-acoes"><button type="button" class="link-btn" data-seq="MHILKFTWVAGSDE">Exemplo completa</button><button type="button" class="link-btn" data-seq="ACDEFGHIKLMNPQRSTY">Exemplo incompleta</button></div>
+        <div id="demo-letras" class="letras" aria-live="polite"></div>
+        <div class="essenciais" id="demo-ess" aria-label="Nove aminoácidos essenciais"></div>
+        <div id="demo-veredito" class="veredito"></div>
+        <p class="peq">A regra de prova de conceito: a proteína é <strong>Completa</strong> se contém os 9 aminoácidos essenciais (H, I, L, K, M, F, T, W, V) e <strong>Incompleta</strong> se faltar algum. É um rótulo de prova de conceito, não uma medida de qualidade nutricional.</p>
+      </div>
+    </div></section>
+
+    <!-- 3 · Como funciona -->
+    <section class="cena" data-n="3" aria-labelledby="t3" hidden><div class="cena-in">
+      <p class="sobre rev">3 DE 5 · COMO FUNCIONA</p>
+      <h2 id="t3" class="grande rev">O sistema tem 4 passos. Toque em cada um.</h2>
+      <div class="abas rev" role="tablist" aria-label="Passos do sistema">
+        <button class="aba" type="button" role="tab" data-aba="0" aria-selected="true"><b>1</b> Agrupar</button>
+        <button class="aba" type="button" role="tab" data-aba="1" aria-selected="false"><b>2</b> Representar</button>
+        <button class="aba" type="button" role="tab" data-aba="2" aria-selected="false"><b>3</b> Classificar</button>
+        <button class="aba" type="button" role="tab" data-aba="3" aria-selected="false"><b>4</b> Avaliar</button>
+      </div>
+      <div class="paineis rev">
+        <article class="painel-aba" data-painel="0">
+          <div class="dois">
+            <div><h3>Juntar as sequências parecidas</h3><p>O <span class="termo" tabindex="0" data-dica="Ferramenta que compara milhões de sequências muito rápido e as reúne em grupos por semelhança.">MMseqs2</span> compara as proteínas e junta as parecidas em <strong>grupos</strong>. Isso evita repetição e, mais adiante, impede que o modelo seja testado com algo quase idêntico ao que já viu.</p>
+              <label for="id-slider">Semelhança mínima para juntar: <b id="id-val">70%</b></label>
+              <input id="id-slider" type="range" min="30" max="90" step="5" value="70">
+              <p class="peq" id="id-out"></p></div>
+            <svg id="demo-cluster" class="figura" viewBox="0 0 460 260" role="img" aria-label="Pontos que se agrupam conforme a semelhança mínima"></svg>
+          </div>
+        </article>
+        <article class="painel-aba" data-painel="1" hidden>
+          <div class="dois">
+            <div><h3>Transformar cada proteína em números</h3><p>O <span class="termo" tabindex="0" data-dica="Modelo de linguagem para proteínas, pré-treinado pela Meta AI. Aqui usamos a versão pequena de 8 milhões de parâmetros.">ESM-2</span> lê a sequência e devolve um <span class="termo" tabindex="0" data-dica="Lista de números que resume o significado de uma sequência. Proteínas parecidas têm listas parecidas.">embedding</span>: <strong>320 números</strong> que resumem a proteína. Computadores trabalham com números, não com letras.</p>
+              <p class="peq">As barras ao lado são ilustrativas (mostramos 40 dos 320). Os valores reais vêm do ESM-2.</p></div>
+            <div class="figura barras" id="demo-barras" aria-hidden="true"></div>
+          </div>
+        </article>
+        <article class="painel-aba" data-painel="2" hidden>
+          <div class="dois">
+            <div><h3>Aprender a classificar</h3><p>Uma pequena rede neural, o <span class="termo" tabindex="0" data-dica="Perceptron multicamadas: rede neural simples. Aqui são 320 entradas, 64 neurônios escondidos e uma saída por classe.">MLP</span>, recebe os 320 números e aprende, vendo exemplos, a dizer a classe da enzima: uma entre as <strong>7 classes EC</strong> (modelo principal), <em>Transferase ou Hidrolase</em> ou <em>Completa ou Incompleta</em>.</p>
+              <p class="peq">320 entradas → 64 neurônios → uma saída por classe.</p></div>
+            <svg id="demo-rede" class="figura" viewBox="0 0 460 260" role="img" aria-label="Rede neural com três camadas"></svg>
+          </div>
+        </article>
+        <article class="painel-aba" data-painel="3" hidden>
+          <div class="dois">
+            <div><h3>Testar com proteínas que ele nunca viu</h3><p>Os dados são divididos em <strong>treino</strong>, <strong>validação</strong> e <strong>teste</strong>. Cada grupo do passo 1 fica inteiro em um só lado. Assim o resultado mede se o modelo aprendeu de verdade, e não se decorou parentes das proteínas do treino (o chamado <span class="termo" tabindex="0" data-dica="Quando informação do teste vaza para o treino e a nota fica melhor do que a realidade.">vazamento</span>).</p></div>
+            <div class="figura divisao" aria-hidden="true"><div class="faixa"><span class="tr">Treino</span><span class="va">Val.</span><span class="te">Teste</span></div><div class="grupos-mini"><i class="g1"></i><i class="g1"></i><i class="g2"></i><i class="g3"></i><i class="g1"></i><i class="g2"></i><i class="g4"></i><i class="g1"></i><i class="g3"></i><i class="g5"></i><i class="g1"></i><i class="g2"></i></div><p class="peq">Cores = grupos. Nunca dividimos um grupo entre os conjuntos.</p></div>
+          </div>
+        </article>
+      </div>
+    </div></section>
+
+    <!-- 4 · O que descobrimos -->
+    <section class="cena" data-n="4" aria-labelledby="t4" hidden><div class="cena-in">
+      <p class="sobre rev">4 DE 5 · O QUE A IA APRENDE</p>
+      <h2 id="t4" class="grande rev">A pergunta principal: de qual classe é esta enzima?</h2>
+      <div class="trio rev">
+        <article class="cartao num destaque-card"><span class="rot">MODELO PRINCIPAL · Qual das 7 classes EC?</span><strong>75,4%</strong><p>Acurácia balanceada no teste (n = 343). Chutar ao acaso acertaria só 14,3%. Validação cruzada: 71,3% ± 3,0.</p></article>
+        <article class="cartao num"><span class="rot">COMPLEMENTAR · Transferase ou Hidrolase?</span><strong>83,0%</strong><p>No teste (EC 2 × EC 3, n = 107). A validação cruzada ficou em 86,0% ± 3,9.</p></article>
+        <article class="cartao num"><span class="rot">PROVA DE CONCEITO · Completa ou Incompleta?</span><strong>89,3%</strong><p>Aproximando a regra dos 9 aminoácidos em 1 milhão de proteínas.</p></article>
+      </div>
+      <p class="nota rev">São resultados de prova de conceito, medidos em proteínas de grupos que o modelo não viu. Mais adiante você gera os seus próprios números.</p>
+    </div></section>
+
+    <!-- 5 · Escolha seu caminho -->
+    <section class="cena" data-n="5" aria-labelledby="t5" hidden><div class="cena-in">
+      <p class="sobre rev">5 DE 5 · SUA VEZ</p>
+      <h2 id="t5" class="grande rev">Por onde você quer começar?</h2>
+      <div class="trio rev">
+        <button type="button" class="cartao botao-cartao" data-ir="6"><span class="icone">▶</span><h3>Treinar o modelo EC 1–7</h3><p>Colete enzimas, agrupe, treine e veja o resultado. Passo a passo.</p></button>
+        <button type="button" class="cartao botao-cartao" data-ir="9"><span class="icone">📊</span><h3>Ver resultados existentes</h3><p>Abra os números e gráficos do experimento já salvo, sem rodar nada.</p></button>
+        <button type="button" class="cartao botao-cartao" data-ir="10"><span class="icone">🔎</span><h3>Consultar uma proteína</h3><p>Cole uma sequência e veja a classe EC prevista pelo modelo principal.</p></button>
+      </div>
+    </div></section>
+
+    <!-- 6 · Dados -->
+    <section class="cena" data-n="6" aria-labelledby="t6" hidden><div class="cena-in">
+      <p class="sobre rev">PASSO 1 · DADOS</p>
+      <h2 id="t6" class="grande rev">Qual experimento você quer rodar?</h2>
+      <div class="opcoes opcoes-trilha rev" id="d-trilha" role="radiogroup" aria-label="Experimento">
+        <button type="button" class="opc" role="radio" aria-checked="true" data-trilha="ec7"><b>EC 1–7 · modelo principal</b><span>Classifica enzimas em 7 classes. Dados do Swiss-Prot (precisa de internet).</span></button>
+        <button type="button" class="opc" role="radio" aria-checked="false" data-trilha="gz"><b>Completa × Incompleta · complementar</b><span>Usa seus arquivos .gz do NCBI e a regra dos 9 aminoácidos.</span></button>
+      </div>
+
+      <div id="d-ec7" class="rev">
+        <div class="dois-col">
+          <article class="cartao">
+            <h3>Enzimas do Swiss-Prot</h3>
+            <p>O sistema coleta até <strong>500 enzimas revisadas por classe</strong> (3.500 no total, até 512 resíduos). Proteínas com mais de uma classe EC são excluídas.</p>
+            <ul class="classes-ec" id="d-classes"></ul>
+          </article>
+          <article class="cartao">
+            <h3>Coleta</h3>
+            <p><span class="chip" id="d-ec7-chip">verificando…</span></p>
+            <p class="peq" id="d-ec7-info">Consultando o estado do experimento.</p>
+            <div class="acoes"><button type="button" class="botao" id="d-ec7-coletar">Coletar enzimas</button></div>
+            <pre class="log" id="d-ec7-log" hidden></pre>
+            <p class="peq">Precisa de internet. Já existe um modelo EC 1–7 no repositório: você pode pular direto para os Resultados e treinar depois.</p>
+          </article>
+        </div>
+      </div>
+
+      <div id="d-gz" class="rev" hidden>
+        <p class="lead">As sequências vêm de arquivos do NCBI (<span class="mono">.gz</span>). Escolha o arquivo e o tamanho do experimento.</p>
+        <div class="dois-col">
+          <article class="cartao">
+            <h3>Arquivo de entrada</h3>
+            <label for="d-fonte" class="vh">Arquivo de entrada</label>
+            <select id="d-fonte" class="campo"><option value="todas">Todas as fontes, até o limite</option></select>
+            <p class="peq" id="d-fonte-info">Procurando arquivos…</p>
+            <p class="peq">Não tem arquivos? Baixe do NCBI no <a href="/avancado#pipeline" class="link-btn">modo avançado → Pipeline</a>.</p>
+          </article>
+          <article class="cartao">
+            <h3>Tamanho do experimento</h3>
+            <div class="opcoes" id="d-limite" role="radiogroup" aria-label="Tamanho do experimento">
+              <button type="button" class="opc" role="radio" aria-checked="true" data-v="1000"><b>1.000</b><span>Primeiro teste completo · poucos minutos</span></button>
+              <button type="button" class="opc" role="radio" aria-checked="false" data-v="10000"><b>10.000</b><span>Mais representativo · dezenas de minutos</span></button>
+              <button type="button" class="opc" role="radio" aria-checked="false" data-v="100000"><b>100.000</b><span>Horas · recomendado com GPU</span></button>
+            </div>
+            <p class="peq">O tempo depende do seu PC. Valem os candidatos elegíveis; o MMseqs2 reduz a quantidade final de vetores.</p>
+          </article>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 7 · Agrupar -->
+    <section class="cena" data-n="7" aria-labelledby="t7" hidden><div class="cena-in">
+      <p class="sobre rev">PASSO 2 · AGRUPAR</p>
+      <h2 id="t7" class="grande rev">Como agrupar as sequências?</h2>
+      <p class="lead rev">O agrupamento usa o <span class="termo" tabindex="0" data-dica="Ferramenta de linha de comando, feita para Linux, com versão nativa para Windows.">MMseqs2</span>. No Windows há duas formas de rodá-lo.</p>
+      <div class="dois-col rev" id="m-cartoes">
+        <article class="cartao" data-modo="nativo"><h3>MMseqs2 nativo do Windows</h3><p>Roda direto no Windows, sem Linux e sem administrador. É o caminho mais simples, inclusive em PCs com instalação bloqueada.</p><p><span class="chip" id="m-st-nativo">verificando…</span></p><button type="button" class="botao fantasma" data-usar="nativo">Usar este</button></article>
+        <article class="cartao" data-modo="wsl"><h3>MMseqs2 no WSL</h3><p>Roda dentro do Linux do Windows (WSL). Exige o WSL com uma distribuição instalada, o que normalmente pede administrador.</p><p><span class="chip" id="m-st-wsl">verificando…</span></p><button type="button" class="botao fantasma" data-usar="wsl">Usar este</button></article>
+      </div>
+      <p class="nota rev" id="m-info">Verificando o que existe neste computador…</p>
+      <div class="rev" id="m-ec7" hidden>
+        <article class="cartao">
+          <h3>Agrupar as enzimas coletadas</h3>
+          <p>Depois de coletar (passo anterior), rode o agrupamento. Ele separa as enzimas parecidas em grupos para o treino e o teste não compartilharem parentes próximos.</p>
+          <div class="acoes"><button type="button" class="botao" id="m-rodar">Agrupar agora</button><span class="chip" id="m-chip">—</span></div>
+          <pre class="log" id="m-log" hidden></pre>
+        </article>
+      </div>
+    </div></section>
+
+    <!-- 8 · Treinar -->
+    <section class="cena" data-n="8" aria-labelledby="t8" hidden><div class="cena-in">
+      <p class="sobre rev">PASSO 3 · TREINAR</p>
+      <h2 id="t8" class="grande rev">Treinar o classificador</h2>
+
+      <div id="t-ec7" class="rev">
+        <article class="cartao resumo">
+          <h3>MLP de 7 classes (EC 1–7)</h3>
+          <dl class="campos"><dt>Modelo</dt><dd>MLP 320 → 64 → 7 sobre embeddings do ESM-2</dd><dt>Validação</dt><dd>Cruzada em 5 dobras, por grupo, e teste fixo separado</dd><dt>Agrupamento</dt><dd id="t7-mmseqs">—</dd></dl>
+          <div class="acoes">
+            <button type="button" class="botao grande" id="t7-treinar">Treinar agora</button>
+            <button type="button" class="botao fantasma" id="t7-continuar">Continuar (reaproveita a coleta)</button>
+            <button type="button" class="botao fantasma" id="t7-tudo">Rodar tudo do começo</button>
+          </div>
+          <p class="peq">Ordem do experimento: 1 coletar, 2 agrupar, 3 treinar. "Rodar tudo" faz as três em sequência.</p>
+        </article>
+        <div class="progresso-topo"><h3 id="t7-titulo">Pronto</h3><span class="chip" id="t7-estado">—</span></div>
+        <article class="cartao aprendendo"><span class="rot">ENQUANTO ISSO…</span><p id="t7-explica">Escolha uma ação acima.</p></article>
+        <pre class="log" id="t7-log" hidden></pre>
+      </div>
+
+      <div id="t-gz" class="rev" hidden>
+        <div id="t-form">
+          <article class="cartao resumo">
+            <h3>Resumo da sua escolha</h3>
+            <dl class="campos"><dt>Arquivo</dt><dd id="t-r-fonte">—</dd><dt>Tamanho</dt><dd id="t-r-limite">—</dd><dt>Agrupamento</dt><dd id="t-r-mmseqs">—</dd></dl>
+            <p class="peq">O fluxo faz tudo em sequência: lê os arquivos, agrupa, gera os embeddings, confere, divide e treina o MLP. Você pode acompanhar aqui.</p>
+            <button type="button" class="botao grande" id="t-iniciar">Iniciar experimento <span>→</span></button>
+          </article>
+          <p class="peq" id="t-anteriores"></p>
+        </div>
+        <div id="t-prog" hidden>
+          <div class="progresso-topo"><h3 id="t-titulo">Executando…</h3><span class="chip" id="t-estado">—</span></div>
+          <div class="trilho-grande" aria-hidden="true"><i id="t-barra"></i></div>
+          <ol class="linha-fases" id="t-fases"></ol>
+          <article class="cartao aprendendo"><span class="rot">ENQUANTO ISSO…</span><p id="t-explica">Aguardando início.</p></article>
+          <p class="peq" id="t-detalhe"></p>
+          <div class="acoes"><button type="button" class="botao" id="t-retomar" hidden>Retomar execução</button><button type="button" class="botao fantasma" id="t-nova" hidden>Nova execução</button></div>
+        </div>
+      </div>
+    </div></section>
+
+    <!-- 9 · Resultados -->
+    <section class="cena" data-n="9" aria-labelledby="t9" hidden><div class="cena-in">
+      <p class="sobre rev">PASSO 4 · RESULTADOS</p>
+      <h2 id="t9" class="grande rev">Como o modelo se saiu?</h2>
+
+      <div id="r-ec7" class="rev">
+        <div class="destaque" id="r7-destaque">
+          <div class="medidor"><strong id="r7-acc">—</strong><span>acurácia balanceada no teste · 7 classes</span></div>
+          <p id="r7-explica" class="lead">Carregando resultados…</p>
+        </div>
+        <div class="trio">
+          <article class="cartao num"><span class="rot">Validação cruzada (5 dobras)</span><strong id="r7-cv">—</strong><p>Média e desvio entre as dobras; é a estimativa mais estável.</p></article>
+          <article class="cartao num"><span class="rot">Enzimas no teste</span><strong id="r7-n">—</strong><p id="r7-prot">Teste fixo, grupos não vistos no treino.</p></article>
+          <article class="cartao num"><span class="rot">Acaso com 7 classes</span><strong id="r7-acaso">—</strong><p>Quanto acertaria quem chutasse.</p></article>
+        </div>
+        <div class="dois-col">
+          <article class="cartao"><h3>Acerto por classe</h3><div id="r7-sens" class="comp"></div></article>
+          <article class="cartao"><h3>Matriz de confusão</h3><p class="peq">Linhas: classe real. Colunas: prevista. Cada linha soma 100%.</p><div id="r7-matriz" class="matriz"></div></article>
+        </div>
+        <article class="cartao"><ul class="limites" id="r7-limites"></ul></article>
+      </div>
+
+      <div id="r-gz" class="rev" hidden>
+        <div class="linha-sel"><label for="r-exec">Execução</label><select id="r-exec" class="campo"><option value="original">Base original · 1 milhão</option></select></div>
+        <div class="destaque" id="r-destaque">
+          <div class="medidor"><strong id="r-acc">—</strong><span>acurácia balanceada no teste</span></div>
+          <p id="r-explica" class="lead">Carregando resultados…</p>
+        </div>
+        <div class="trio">
+          <article class="cartao num"><span class="rot">Proteínas (vetores)</span><strong id="r-vet">—</strong><p>Cada uma resumida em 320 números.</p></article>
+          <article class="cartao num"><span class="rot">Grupos (MMseqs2)</span><strong id="r-gru">—</strong><p>Conjuntos de sequências parecidas.</p></article>
+          <article class="cartao num"><span class="rot">Completa / Incompleta</span><strong id="r-rot">—</strong><p>Rótulos da regra dos 9 aminoácidos.</p></article>
+        </div>
+        <article class="cartao"><h3>Comparação no teste</h3><div id="r-comp" class="comp"></div>
+          <p class="peq">Ser melhor que a classe majoritária mostra que o modelo aprendeu algo. A regra direta define os rótulos, então sua concordância é esperada por construção. Os escores do modelo não são probabilidades calibradas.</p></article>
+      </div>
+      <p class="acoes rev"><a class="botao fantasma" href="/avancado#explorar">Ver mapa e gráficos estatísticos no modo avançado</a></p>
+    </div></section>
+
+    <!-- 10 · Consultar -->
+    <section class="cena" data-n="10" aria-labelledby="t10" hidden><div class="cena-in">
+      <p class="sobre rev">PASSO 5 · CONSULTAR</p>
+      <h2 id="t10" class="grande rev">Teste com uma proteína sua</h2>
+      <div class="dois-col rev">
+        <article class="cartao">
+          <label for="c-seq">Sequência de aminoácidos (sem cabeçalho FASTA)</label>
+          <textarea id="c-seq" class="campo mono" rows="6" maxlength="512" spellcheck="false" placeholder="Cole a sequência aqui"></textarea>
+          <div class="letras mini" id="c-letras" aria-hidden="true"></div>
+          <div class="mini-acoes"><span class="peq" id="c-tam">0 / 512 resíduos</span><button type="button" class="link-btn" id="c-exemplo">Usar exemplo</button></div>
+          <button type="button" class="botao grande" id="c-enviar">Comparar regra e IA <span>→</span></button>
+          <p class="peq" id="c-estado" role="status"></p>
+        </article>
+        <article class="cartao" id="c-saida" aria-live="polite"><p class="peq">O resultado aparece aqui. A consulta entra na fila e usa os modelos salvos, sem novo treino.</p></article>
+      </div>
+    </div></section>
+
+    <!-- 11 · Aprender mais -->
+    <section class="cena" data-n="11" aria-labelledby="t11" hidden><div class="cena-in">
+      <p class="sobre rev">PARA IR ALÉM</p>
+      <h2 id="t11" class="grande rev">Quer aprender mais?</h2>
+      <p class="lead rev">Fontes gratuitas e confiáveis de livros, cursos e artigos de biologia e biotecnologia, mais os termos usados no projeto.</p>
+      <div id="a-grupos" class="rev"></div>
+      <article class="cartao rev"><h3>Glossário rápido</h3><dl class="glossario" id="a-gloss"></dl></article>
+      <p class="acoes rev"><button type="button" class="botao" data-ir="0">Rever a introdução</button><a class="botao fantasma" href="/avancado">Abrir o modo avançado</a></p>
+    </div></section>
+
+  </main>
+
+  <footer class="rodape">
+    <button id="voltar" class="botao fantasma" type="button">← Voltar</button>
+    <div class="pontos" id="pontos" aria-hidden="true"></div>
+    <button id="avancar" class="botao" type="button">Próximo →</button>
+  </footer>
+</body>
+</html>

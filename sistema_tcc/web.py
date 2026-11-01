@@ -55,10 +55,14 @@ def servidor(executor, porta=8765):
     fase1 = Gerenciador(executor.c)
     exp_ec7 = ec7.Gerenciador()
     assets = Path(__file__).parent / "static"
-    rotas = {"/": ("index.html", "text/html; charset=utf-8"),
+    rotas = {"/": ("assistente.html", "text/html; charset=utf-8"),
+        "/avancado": ("index.html", "text/html; charset=utf-8"),
         "/app.js": ("app.js", "text/javascript; charset=utf-8"),
         "/styles.css": ("styles.css", "text/css; charset=utf-8"),
-        "/favicon.svg": ("favicon.svg", "image/svg+xml")}
+        "/favicon.svg": ("favicon.svg", "image/svg+xml"),
+        "/assistente": ("assistente.html", "text/html; charset=utf-8"),
+        "/assistente.css": ("assistente.css", "text/css; charset=utf-8"),
+        "/assistente.js": ("assistente.js", "text/javascript; charset=utf-8")}
 
     class Handler(BaseHTTPRequestHandler):
         server_version = "SistemaProteinasTCC/1"
