@@ -28,3 +28,4 @@ saida/
 .venv_antigo*/
 ferramentas/uv/
 teste_tcc/
+ferramentas/mmseqs/
