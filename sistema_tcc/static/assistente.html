@@ -19,7 +19,7 @@
     <!-- 0 · Boas-vindas -->
     <section class="cena hero" data-n="0" aria-labelledby="t0"><div class="cena-in centro">
       <div class="helice" id="helice" aria-hidden="true"></div>
-      <p class="sobre rev">TCC · ENGENHARIA DE COMPUTAÇÃO · UNIVERSIDADE POSITIVO</p>
+      <p class="sobre rev">TCC · ENGENHARIA DE SOFTWARE · UNIVERSIDADE POSITIVO</p>
       <h1 id="t0" class="rev">Bem-vindo ao projeto<br><em>IA aplicada à Bioinformática</em></h1>
       <p class="lead rev">Vamos mostrar, passo a passo, como a inteligência artificial pode <strong>ler proteínas</strong>, agrupá-las e <strong>classificar enzimas em suas 7 classes</strong>. Você roda o experimento de verdade, no seu computador, e aprende no caminho.</p>
       <div class="acoes rev"><button class="botao grande" type="button" data-ir="1">Começar a jornada <span>→</span></button><button class="botao fantasma-claro" type="button" data-ir="6">Já conheço, ir direto aos dados</button></div>
@@ -42,7 +42,7 @@
     <section class="cena" data-n="2" aria-labelledby="t2" hidden><div class="cena-in">
       <p class="sobre rev">2 DE 5 · A IDEIA</p>
       <h2 id="t2" class="grande rev">Uma proteína é um texto escrito com 20 letras</h2>
-      <p class="lead rev">Cada letra é um <span class="termo" tabindex="0" data-dica="Bloco que forma as proteínas. Existem 20 tipos, cada um com uma letra (A, C, D, E…).">aminoácido</span>. Como a IA aprende a ler linguagem, ela também pode aprender a ler proteínas. Experimente: digite uma sequência e veja uma regra simples do projeto em ação. Ela é o nosso modelo de prova de conceito (complementar); o modelo principal classifica enzimas em 7 classes.</p>
+      <p class="lead rev">Cada letra é um <span class="termo" tabindex="0" data-dica="Bloco que forma as proteínas. Existem 20 tipos, cada um com uma letra (A, C, D, E…).">aminoácido</span>. Como a IA aprende a ler linguagem, ela também pode aprender a ler proteínas. Experimente: digite uma sequência e veja uma regra simples do projeto em ação. Ela é o nosso modelo de prova de conceito; o modelo principal classifica enzimas em 7 classes.</p>
       <div class="lab rev">
         <label for="seq-demo">Sequência de aminoácidos</label>
         <input id="seq-demo" class="campo mono" maxlength="120" spellcheck="false" autocomplete="off" value="MKTAYIAKQRQISFVKSHFSRQLEERLGLIEVQ">
@@ -126,7 +126,7 @@
       <h2 id="t6" class="grande rev">Qual experimento você quer rodar?</h2>
       <div class="opcoes opcoes-trilha rev" id="d-trilha" role="radiogroup" aria-label="Experimento">
         <button type="button" class="opc" role="radio" aria-checked="true" data-trilha="ec7"><b>EC 1–7 · modelo principal</b><span>Classifica enzimas em 7 classes. Dados do Swiss-Prot (precisa de internet).</span></button>
-        <button type="button" class="opc" role="radio" aria-checked="false" data-trilha="gz"><b>Completa × Incompleta · complementar</b><span>Usa seus arquivos .gz do NCBI e a regra dos 9 aminoácidos.</span></button>
+        <button type="button" class="opc" role="radio" aria-checked="false" data-trilha="gz"><b>Completa × Incompleta · prova de conceito</b><span>Usa seus arquivos .gz do NCBI e a regra dos 9 aminoácidos.</span></button>
       </div>
 
       <div id="d-ec7" class="rev">
