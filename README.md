@@ -1,94 +1,92 @@
 # Sistema TCC — IA aplicada à classificação de proteínas
 
-TCC de Engenharia de Computação (Universidade Positivo) — *Inteligência Artificial Aplicada à Genética e Bioinformática*.
+Trabalho de Conclusão de Curso do **Bacharelado em Engenharia de Software** da **Universidade Positivo** (Curitiba, 2026) — *Inteligência Artificial Aplicada à Genética e Bioinformática*.
 
-O sistema lê proteínas do NCBI, agrupa sequências parecidas (MMseqs2), transforma cada proteína em um vetor de 320 números com o modelo de linguagem de proteínas **ESM-2** e treina classificadores **MLP**. Tudo roda localmente, com um painel no navegador.
+Esta é a **terceira versão** da pipeline do TCC. As duas primeiras (coleta via FTP do NCBI e agrupamento com MMseqs2) estão em [`genomic-data-extractor`](https://github.com/filipecamargoprado/genomic-data-extractor) e são usadas aqui sem alterações. Este repositório transforma essa base em um sistema local de IA: agrupa proteínas parecidas com o MMseqs2, representa cada uma por um vetor de 320 números gerado pelo modelo de linguagem de proteínas **ESM-2** (congelado) e treina classificadores **MLP**. Tudo roda no próprio computador, com um assistente guiado e um painel técnico no navegador.
 
-**Resultado principal:** separar enzimas **Transferase (EC 2)** de **Hidrolase (EC 3)** — 86,0% ± 3,9 de acurácia balanceada (validação cruzada por grupo) e 83,0% no teste fixo, contra no máximo 70,4% das referências simples. Prova de conceito: regra dos nove aminoácidos (HILKMFTWV) em 1 milhão de proteínas do NCBI, 89,3%.
+## Resultados
 
-## O que você precisa
+| Modelo | Papel | Acurácia balanceada no teste | Validação cruzada (5 dobras por grupo) | Referência |
+|---|---|---|---|---|
+| **EC 1 a EC 7** | **principal** | **75,4%** (n = 343, F1 macro 0,755) | 71,3% ± 3,0 | acaso: 14,3% |
+| EC 2 × EC 3 (transferase × hidrolase) | complementar | 83,0% (n = 107) | 86,0% ± 3,9 | melhor referência sem ESM-2: 70,4% |
+| Completa × Incompleta (regra dos nove aminoácidos) | prova de conceito em escala | 89,3% (base histórica, n = 98.668) · 87,7% (fluxo de dez fases, n = 34.615) | — | só comprimento: 74,9% |
+
+- O modelo principal foi treinado com **3.500 enzimas revisadas do Swiss-Prot** (500 por classe EC).
+- Treino, validação e teste são divididos **por grupo de similaridade** do MMseqs2 (50% de identidade, 80% de cobertura), com sorteio determinístico por SHA-256 (semente 42). Assim, nenhum grupo aparece em dois conjuntos.
+- A prova de conceito tem rótulo calculado da própria sequência: ela valida a engenharia em um milhão de proteínas, **não** é um resultado biológico.
+- O sistema serve para **triagem**, não para atribuir função de forma definitiva. Os escores não são calibrados, e o modelo sempre escolhe uma classe, mesmo para proteínas que não são enzimas.
+
+## Instalação (Windows 10/11)
+
+**Caminho recomendado:** baixe e rode [`instalador/Instalar_TCC.cmd`](instalador/Instalar_TCC.cmd) em uma janela normal (não "como administrador"). Ele:
+
+1. pergunta a pasta (padrão **`C:\ai_tcc`**) e faz o `git clone` (ou `git pull`, se o projeto já existir);
+2. roda o `instalar.cmd`, que baixa o **uv**, cria um `.venv` com **Python 3.13 próprio** (não depende do Python do PC), instala as dependências, escolhe o **PyTorch com CUDA 12.6** se houver placa NVIDIA ou **para CPU** nos demais casos, clona a coleta da segunda versão em `fase1_extrator\` e baixa o ESM-2 (~30 MB);
+3. pergunta onde salvar os arquivos grandes: só neste PC ou em uma pasta sincronizada (Google Drive, OneDrive ou Dropbox);
+4. pergunta como instalar o MMseqs2: **nativo do Windows** (recomendado, sem Linux e sem administrador), **WSL/Ubuntu** (pede administrador), os dois ou nenhum;
+5. oferece abrir o sistema.
+
+Já clonou o repositório? Rode `instalar.cmd` e depois `ferramentas\instalar_mmseqs_nativo.cmd` (ou `instalar_wsl_mmseqs.cmd`, para usar o WSL).
+
+Guia completo, com verificação e problemas comuns: [`docs/INSTALACAO.md`](docs/INSTALACAO.md).
 
 | Para… | Precisa de |
 |---|---|
-| Abrir o painel e consultar proteínas (regra, EC 2 × EC 3 e EC 7 classes) | Windows 10/11, Python 3.13 e o clone. **Os modelos vêm no git**; GPU NVIDIA **opcional** (sem ela roda no processador) |
-| Mapa, estatísticas e números completos do milhão | o item acima + pacote de dados (opcional, ~1,7 GB) |
-| Baixar e agrupar .gz do NCBI (Fase 1 do Filipe) | Git, internet (FTP do NCBI ou, se bloqueado, HTTPS automático); o agrupamento também precisa de WSL + MMseqs2 |
-| Rodar um fluxo novo com .gz do NCBI | o item acima + WSL (Ubuntu) com MMseqs2 + ~10 GB livres |
-
-## Instalação em outro computador
-
-> Guia completo, com verificação e problemas comuns: [`docs/INSTALACAO.md`](docs/INSTALACAO.md).
-
-1. **Clone em `C:\ai_tcc`** (os relatórios da base do milhão registram esse caminho):
-   ```powershell
-   git clone https://github.com/KatsuMouley/tcc-proteinas-ia.git C:\ai_tcc
-   ```
-2. **Rode `instalar.cmd`** (duplo clique). Ele cria o `.venv`, instala as bibliotecas, escolhe o PyTorch certo (GPU NVIDIA ou CPU), prepara o ESM-2 (~30 MB) e clona a Fase 1 do Filipe em `fase1_extrator\`. Leva de 5 a 15 minutos.
-3. *(Opcional)* **Pacote de dados** (`pacote_dados_tcc.zip`, ~1,7 GB): só para o mapa e as estatísticas da base do milhão. Sem ele, o painel já consulta proteínas com os modelos do repositório (aparece "Modelo do repositório"). Se tiver o pacote, extraia **dentro de `C:\ai_tcc`**, mantendo as pastas (`dados\…` e `cache\…`):
-   ```powershell
-   tar -xf "$env:USERPROFILE\Downloads\pacote_dados_tcc.zip" -C C:\ai_tcc
-   ```
-4. **Abra `iniciar_sistema.cmd`**. O painel abre em http://127.0.0.1:8765.
-5. Vá em **Configurações**: escolha o processamento (Automático, GPU ou CPU) e veja o **Diagnóstico do ambiente**. Se mudar algo, reinicie o sistema (Ctrl+C na janela preta e abra o `iniciar_sistema.cmd` de novo).
-
-> Não clique dentro da janela preta: o Windows entra em modo "Selecionar" e pausa o sistema. Se acontecer, aperte Esc.
+| Consultar proteínas | Instalação básica. Os três modelos já vêm no Git (`dados\modelos\`). GPU NVIDIA **opcional** |
+| Treinar o EC 1 a EC 7, rodar um fluxo novo ou agrupar arquivos do NCBI | + MMseqs2 (nativo ou WSL), internet e ~10 GiB livres |
+| Ver o mapa e as estatísticas da base de um milhão | + pacote de dados opcional (~1,7 GB, pasta do grupo) |
 
 ## Usar
 
-- **Visão geral:** resultados do milhão (vetores, grupos, acurácia, partições).
-- **Consultar proteína:** cole uma sequência (1 a 512 aminoácidos). Resposta: **Transferase (EC 2)** ou **Hidrolase (EC 3)** com a confiança, a classe entre as **7 classes EC** (experimento, 71,3% ± 3,0) e a regra dos nove aminoácidos como prova de conceito.
-- **Explorar e analisar:** mapa dos grupos (PCA dos embeddings, clique para ver a proteína) e estatística do teste (boxplot + Mann-Whitney, histogramas, correlação, dispersão, matriz 7 × 7). O mapa e a estatística do milhão precisam do pacote de dados.
-- **Pipeline automático → Fontes do NCBI:** escolha a divisão (bactérias, plantas…) e quantos arquivos baixar; depois, se quiser, "Agrupar por arquivo" gera os CSVs da Fase 1 em `arquivos csv\`. Usa os scripts originais do Filipe, sem alterá-los.
-- **Pipeline automático → Novo experimento completo:** fluxo novo com .gz do NCBI (10 etapas: leitura → MMseqs2 → rótulos → ESM-2 → auditoria → consolidação → agrupamento global → partições → treino → banco). **Use limite 1.000**; o padrão de 1 milhão ocupa mais de 20 GB.
-- **Pipeline automático → Experimento EC7:** coleta, agrupa e treina o modelo das 7 classes, separado do modelo principal (precisa de internet e WSL + MMseqs2).
-- **Tarefas e logs:** acompanhe cada etapa ao vivo.
+Abra **`iniciar_sistema.cmd`**. A janela preta é o servidor: deixe-a aberta e não clique dentro dela (se clicar, aperte Esc).
 
-## Fluxo novo (opcional): WSL + Ubuntu + MMseqs2
+- **http://127.0.0.1:8765/** — **assistente guiado**, a página inicial. Linear e educativo, ele apresenta o problema e os três modelos e oferece três caminhos: treinar o EC 1 a EC 7, ver os resultados ou consultar uma proteína. Também mostra as dez fases do sistema e traz fontes para aprender mais.
+- **http://127.0.0.1:8765/avancado** — **painel técnico**, com sete abas:
+  - *Visão geral*: métricas e partições;
+  - *Pipeline automático*: coleta da segunda versão, modelo EC 1 a EC 7, novo experimento e fila;
+  - *Consultar proteína*: o EC 1 a EC 7 em destaque e os demais modelos em "Ver outros modelos";
+  - *Tarefas e logs*;
+  - *Banco de proteínas*;
+  - *Explorar e analisar*: mapa PCA, boxplot com Mann-Whitney, histogramas, correlação e matriz 7 × 7;
+  - *Configurações*: GPU/CPU, threads, modo do MMseqs2, pasta de nuvem e diagnóstico.
 
-Só é preciso para **agrupar** (Fase 1), rodar um **fluxo novo** ou o **experimento EC7**. A consulta não precisa.
+**Novo experimento completo** executa dez fases: extrair → MMseqs2 na entrada → rotular → embeddings ESM-2 → auditar → consolidar → MMseqs2 global → separar por grupo → treinar e avaliar → registrar em SQLite. **Use o limite de 1.000 proteínas** para testes; o fluxo de um milhão levou cerca de 2 h 23 min e ocupa mais de 20 GB.
 
-1. Dê dois cliques em **`instalar_wsl_mmseqs.cmd`** (janela normal, não "como administrador"). Ele:
-   - instala o Ubuntu no WSL, se faltar (pede permissão de administrador sozinho);
-   - instala o MMseqs2 dentro do Ubuntu (como root, sem pedir senha);
-   - confere com `mmseqs version` e mostra a solução se aparecer o erro do *systemd*.
-2. Se ele instalou o Ubuntu agora: **reinicie o PC**, abra "Ubuntu" no menu Iniciar, crie usuário e senha, e **rode o `instalar_wsl_mmseqs.cmd` de novo**.
-3. Baixe os `.gz` pelo painel (Fontes do NCBI) ou coloque `.gz`/`.zip` em `C:\ai_tcc\arquivos .gz\`.
-4. Confira em **Configurações → Diagnóstico** a linha "WSL + MMseqs2". Se o seu Ubuntu tiver outro nome (ex.: `Ubuntu-24.04`), escreva esse nome em **Configurações → Distribuição WSL**.
+Também é possível rodar o modelo EC 1 a EC 7 pela linha de comando: veja [`experimentos/ec7/README.md`](experimentos/ec7/README.md).
 
-O TCC usou o MMseqs2 **18-8cc5c**. Outra versão do Ubuntu pode instalar outra versão: funciona, mas o agrupamento de um fluxo novo pode sair um pouco diferente. A consulta e os modelos não são afetados.
+## Reprodutibilidade
+
+- ESM-2 `facebook/esm2_t6_8M_UR50D`, revisão `c731040fcd8d73dceaa04b0a8e6329b345b0f5df`, float32.
+- MMseqs2 `easy-linclust`: `--min-seq-id 0.5 -c 0.8 --cov-mode 0 --cluster-mode 1 --alignment-mode 3 --kmer-per-seq 80 -e 0.001`. O TCC usou a versão **18-8cc5c**.
+- Partição: `SHA-256("42:" + representante)` → treino (< 0,8), validação (< 0,9) e teste.
+- Cada execução guarda um manifesto com fontes, semente e o SHA-256 do código copiado para a sua pasta. Ao iniciar ou retomar o fluxo, o sistema confere esses hashes.
+- Versões fixadas: Python 3.13, PyTorch 2.9.1, Transformers 4.57.6, NumPy 2.2.6.
+- Testes: `.venv\Scripts\python.exe -m unittest discover -s testes` (com o sistema fechado).
+
+## Limitações conhecidas
+
+- O sistema foi desenvolvido e testado só no Windows; Linux, macOS e contêineres ficam como trabalho futuro.
+- Enzimas com mais de 512 resíduos ou com mais de uma classe EC ficaram de fora do treino.
+- Os testes dos modelos enzimáticos são pequenos (343 e 107 proteínas).
 
 ## Pastas
 
 | Pasta | Conteúdo |
 |---|---|
-| `sistema_tcc\` | painel (servidor local + interface), fila de tarefas, fluxo de 10 etapas, consulta |
-| `etapas\` | scripts de cada etapa (embeddings, auditoria, base, agrupamento, treino, piloto EC) |
-| `ferramentas\` | instalação, diagnóstico, conferência do modelo EC, empacotamento |
-| `testes\` | testes automáticos (`.venv\Scripts\python.exe -m unittest discover -s testes`) |
-| `docs\` | documentação técnica e resultados |
+| `sistema_tcc\` | servidor local, assistente guiado e painel (`static\`), fila de tarefas, fluxo de dez fases, consulta |
+| `etapas\` | scripts de cada fase (embeddings, auditoria, base, agrupamento, treino, piloto EC 2 × EC 3) |
+| `experimentos\ec7\` | coleta, agrupamento e treino do modelo EC 1 a EC 7 |
+| `ferramentas\` | instalação (MMseqs2 nativo, WSL, ESM-2), diagnóstico, empacotamento de dados |
+| `instalador\` | `Instalar_TCC.cmd` e `construir_exe.cmd` (gera um `.exe` com o IExpress) |
+| `testes\` | testes automáticos |
+| `docs\` | instalação e registros técnicos (os arquivos de 16 a 19/10 descrevem a versão daquela data) |
 | `legado\` | versões antigas, só para histórico |
-| `dados\modelos\` | os três modelos do TCC (regra, EC 2 × EC 3, EC 7 classes), **no git** com hash conferido |
-| `dados\` (resto) | base do milhão e execuções (**fora do git**; base no pacote de dados opcional) |
-| `fase1_extrator\` | Fase 1 do Filipe (**fora do git**; o `instalar.cmd` clona): https://github.com/filipecamargoprado/genomic-data-extractor |
-| `arquivos .gz\`, `arquivos csv\` | fontes do NCBI e CSVs da Fase 1 (**fora do git**) |
+| `dados\modelos\` | os três modelos treinados, **no Git** |
+| `dados\` (resto), `cache\`, `.venv\`, `fase1_extrator\`, `arquivos .gz\`, `arquivos csv\` | **fora do Git** |
 
-## Problemas comuns
+## Autores
 
-| Sintoma | Solução |
-|---|---|
-| "Sistema desconectado" | Confira se a janela preta está aberta e fora do modo "Selecionar" (Esc). Espere 1 minuto e F5. |
-| Etapa 2 (MMseqs2) falha por tempo | Abra o Ubuntu uma vez antes ou rode `wsl -d Ubuntu --exec mmseqs version`. |
-| "WSL + MMseqs2" pendente no Diagnóstico | Rode `instalar_wsl_mmseqs.cmd`. |
-| `Failed to start the systemd user session` | `wsl -d Ubuntu -u root --exec sed -i 's/systemd=true/systemd=false/' /etc/wsl.conf`, depois `wsl --shutdown`. |
-| "GPU (CUDA) escolhida… indisponível" | Em Configurações, escolha Automático ou CPU e reinicie. |
-| Consulta falha com "Modelo indisponível" | Rode `git pull` (os modelos vêm no repositório) e veja o Diagnóstico em Configurações. |
-| Explorar diz "A base do milhão não está neste PC" | Normal sem o pacote de dados: escolha uma execução nova no seletor do topo ou extraia o pacote. |
-| Baixar do NCBI falha por FTP | O sistema tenta HTTPS sozinho; se também falhar, a rede bloqueia o NCBI. |
+Caio Tsutiya Marcidele · Filipe Camargo Prado · Guilherme Fernando Nascimento · Lohanna Bieti Vieira · Vitor Luiz Mougenot · Yuri Congeca Terato Ramos
 
-## Documentação
-
-- Dossiê técnico do TCC (pipeline, matemática, justificativas): link na pasta do grupo.
-- `docs\INSTALACAO.md` (guia de instalação atual), `experimentos\ec7\README.md` (experimento das 7 classes EC).
-- Registro de 13 e 14/10: `docs\COMECE_AQUI_SISTEMA.md` (operação do painel), `docs\ARQUITETURA.md`, `docs\piloto_ec_analise_e_referencias.md`.
-
-Grupo: Caio, Filipe, Guilherme, Lohanna, Vitor (Katsu) e Yuri · Orientador: Prof. Aryel.
+**Orientador:** Prof. Aryel Marlus Repula de Oliveira — Universidade Positivo, Curitiba, 2026.

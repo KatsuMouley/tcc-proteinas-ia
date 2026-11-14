@@ -1,13 +1,8 @@
-# Experimento EC7 — classificador das 7 classes enzimáticas
+# Modelo EC 1 a EC 7 — classificador das sete classes enzimáticas
 
-**Separado do painel.** O sistema principal continua com o modelo EC 2 × EC 3
-(`dados/modelos/classificador_ec2_ec3`). Nada nesta pasta altera o painel, esse modelo
-ou os scripts de `etapas/`. Os resultados ficam em `dados/experimento_ec7/` (fora do git).
+**Este é o modelo principal do TCC** desde a versão 3.4 (31/10/2026). Ele está integrado ao assistente guiado (caminho "Treinar o modelo EC 1 a EC 7"), à consulta (resultado em destaque), ao mapa e à matriz 7 × 7 de Explorar e analisar e à aba Pipeline automático do painel avançado. O modelo treinado fica em `dados/modelos/classificador_ec7` (no Git). Treinos novos ficam em `dados/experimento_ec7/` (fora do Git).
 
-## Objetivo
-
-Testar se a mesma receita do piloto EC 2 × EC 3 (ESM-2 → MLP 320 → 64 → N) funciona com as
-7 classes EC. Se o resultado for bom, ele entra no TCC como resultado extra; se não for, vira trabalho futuro.
+O EC 2 × EC 3 (transferase × hidrolase, `dados/modelos/classificador_ec2_ec3`) foi o piloto que validou o método e continua no sistema como **modelo complementar**.
 
 | EC | Classe | EC | Classe |
 |---|---|---|---|
@@ -16,46 +11,53 @@ Testar se a mesma receita do piloto EC 2 × EC 3 (ESM-2 → MLP 320 → 64 → N
 | 3 | Hidrolase | 7 | Translocase |
 | 4 | Liase | | |
 
+## Resultado registrado no TCC
+
+| Medida | Valor |
+|---|---|
+| Acurácia balanceada no teste fixo | **75,4%** (F1 macro 0,755; 343 enzimas de 175 grupos) |
+| Validação cruzada, 5 dobras por grupo | 71,3% ± 3,0 (dobras de 66,5% a 73,9%) |
+| Acaso | 14,3% |
+| Dados | 3.500 enzimas do Swiss-Prot (500 por classe), 1.968 grupos; treino 2.823 / validação 334 / teste 343 |
+| Tempo (embeddings + seis treinos, GTX 1650) | cerca de 22 min |
+
+Sensibilidade por classe no teste: EC 7 90,0% · EC 6 83,8% · EC 5 74,5% · EC 1 71,7% · EC 2 71,4% · EC 4 70,7% · EC 3 66,0%.
+
 ## Como rodar
 
-Dois cliques em `experimentos\ec7\rodar_ec7.cmd` roda tudo. Também dá para rodar uma etapa por vez:
+**Pela interface (recomendado):** no assistente guiado, escolha "Treinar o modelo EC 1 a EC 7" e siga as telas Dados → Agrupar → Treinar → Resultados. No painel avançado, use Pipeline automático → modelo EC 1 a EC 7 (coletar, preparar, treinar, continuar ou fazer tudo).
+
+**Pela linha de comando:** dois cliques em `experimentos\ec7\rodar_ec7.cmd` rodam tudo. Também dá para rodar uma etapa por vez:
 
 ```
 experimentos\ec7\rodar_ec7.cmd coletar    1. Swiss-Prot, até 500 enzimas revisadas por classe (internet)
-experimentos\ec7\rodar_ec7.cmd preparar   2. MMseqs2 (50% id., 80% cob.) + partições por grupo (WSL)
+experimentos\ec7\rodar_ec7.cmd preparar   2. MMseqs2 (50% id., 80% cob.) + partições por grupo
 experimentos\ec7\rodar_ec7.cmd treinar    3. Embeddings ESM-2 + MLP + validação cruzada de 5 dobras
 experimentos\ec7\rodar_ec7.cmd continuar  2 e 3, reaproveitando a última coleta
 experimentos\ec7\rodar_ec7.cmd resumo     Mostra o resultado do último treino
 ```
 
-WSL, threads e GPU/CPU vêm da tela **Configurações** do painel. Cada etapa usa a pasta
-concluída mais recente da etapa anterior. Se uma etapa falhar, a pasta fica preservada com
-o relatório do erro, e basta rodar de novo a partir dessa etapa.
+O modo do MMseqs2 (nativo ou WSL), as threads e GPU/CPU vêm da tela **Configurações**. Cada etapa usa a pasta concluída mais recente da etapa anterior. Se uma etapa falhar, a pasta fica preservada com o relatório do erro: basta rodar de novo a partir dessa etapa. Se o UniProt responder erro (HTTP 500), a coleta para com segurança e preserva os arquivos parciais. O treino do EC 1 a EC 7 não roda junto com outra tarefa, para não disputar a placa de vídeo.
 
-## Protocolo (igual ao piloto EC 2 × EC 3)
+## Protocolo (o mesmo do piloto EC 2 × EC 3)
 
-- Swiss-Prot revisado, até 512 resíduos, uma única classe EC por proteína, sequências duplicadas
-  removidas e seleção determinística (SHA-256 com semente 42).
-- Agrupamento MMseqs2 e grupo inteiro numa só partição: 80% treino, 10% validação e 10% teste.
-- MLP 320 → 64 → 7, Adam (lr 0,001, weight decay 0,0001), lote 64, até 200 épocas, paciência 20,
-  pesos por classe e escolha da época pela acurácia balanceada na validação.
+- Swiss-Prot revisado (release 2026_03), com EC explícito, uma única classe EC de primeiro nível e até 512 resíduos. Sequências repetidas são removidas por SHA-256. A seleção é determinística, pelos menores valores de SHA-256("42:" + hash da sequência).
+- Agrupamento com MMseqs2 `easy-linclust` (50% de identidade, 80% de cobertura). Cada grupo inteiro vai para uma só partição: cerca de 80% treino, 10% validação e 10% teste.
+- MLP 320 → 64 → 7 (20.999 parâmetros), Adam (lr 0,001, weight decay 0,0001), lote 64, até 200 épocas, parada após 20 épocas sem melhora, entropia cruzada com pesos por classe e escolha da época pela acurácia balanceada na validação.
 - Validação cruzada de 5 dobras por grupo. O teste não é usado para escolher nada.
 
 ## Como ler o resultado
 
-- **Acaso com 7 classes = 14,3%** (contra 50% no binário). Compare a acurácia balanceada com isso,
-  não com os 86% do modelo EC 2 × EC 3.
-- Use principalmente a **validação cruzada** (média ± desvio). O teste fixo tem cerca de 10% da coleta.
-- Algumas classes (sobretudo EC 7) podem ficar abaixo de 500 proteínas por causa do limite de
-  512 resíduos. O relatório da coleta mostra quantas entraram por classe; os pesos por classe
-  compensam o desbalanceamento no treino.
+- Compare a acurácia balanceada com o **acaso de 14,3%**, não com os 86% do modelo EC 2 × EC 3: o número de classes muda a dificuldade.
+- Com 343 proteínas no teste, a validação cruzada (média ± desvio) é a estimativa mais estável.
+- O modelo sempre escolhe uma das sete classes, mesmo para proteínas que não são enzimas, e os escores não são calibrados. Use o resultado para **triagem**, não para atribuir função de forma definitiva.
 
 ## Arquivos
 
 | Arquivo | Origem |
 |---|---|
-| `coletar_ec7.py` | cópia generalizada de `etapas/baixar_piloto_swissprot_ec.py` |
-| `preparar_ec7.py` | cópia generalizada de `etapas/preparar_piloto_ec.py` |
-| `treinar_ec7.py` | cópia generalizada de `etapas/piloto_ec_embeddings_treino.py` |
-| `ec7_comum.py` | as 7 classes; aplicadas só no processo deste experimento |
+| `coletar_ec7.py` | versão generalizada de `etapas/baixar_piloto_swissprot_ec.py` |
+| `preparar_ec7.py` | versão generalizada de `etapas/preparar_piloto_ec.py` |
+| `treinar_ec7.py` | versão generalizada de `etapas/piloto_ec_embeddings_treino.py` |
+| `ec7_comum.py` | as sete classes |
 | `rodar_ec7.py` / `.cmd` | orquestra as etapas e mostra o resumo |
